@@ -163,7 +163,6 @@ namespace Sigil.Impl
             // quick and dirty base case
             if (t1 == typeof(object) && !t2.IsValueType) return true;
 
-            var t1Bases = GetBases(t1);
             var t2Bases = GetBases(t2);
 
             if (t2Bases.Any(t2b => TypeOnStack.Get(t1).IsAssignableFrom(TypeOnStack.Get(t2b)))) return true;

@@ -60,8 +60,6 @@ namespace Sigil
                     }
                 };
 
-            var newType = TypeOnStack.Get(referenceType);
-
             var transitions =
                     new[] 
                     {

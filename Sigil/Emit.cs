@@ -29,8 +29,6 @@ namespace Sigil
         private Type[] ParameterTypes;
         private CallingConventions CallingConventions;
 
-        private LinqList<VerifiableTracker> Trackers;
-
         private ushort NextLocalIndex = 0;
 
         private LinqList<Local> AllLocals;
@@ -140,8 +138,6 @@ namespace Sigil
 
             IL = new BufferedILGenerator<DelegateType>();
             
-            Trackers = new LinqList<VerifiableTracker>();
-
             AllLocals = new LinqList<Local>();
 
             UnusedLocals = new LinqHashSet<Local>();
@@ -810,8 +806,6 @@ namespace Sigil
             {
                 if (elem.Item1 >= index)
                 {
-                    var update = SigilTuple.Create(elem.Item1 - 1, elem.Item2);
-
                     ReadonlyPatches.Remove(elem);
                     ReadonlyPatches.Add(elem);
                 }
@@ -885,8 +879,6 @@ namespace Sigil
             {
                 if (elem.Item1 >= index)
                 {
-                    var update = SigilTuple.Create(elem.Item1 + 1, elem.Item2);
-
                     ReadonlyPatches.Remove(elem);
                     ReadonlyPatches.Add(elem);
                 }

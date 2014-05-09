@@ -24,13 +24,7 @@ namespace Sigil
                 throw new ArgumentException("Only non-static methods can be passed to LoadVirtualFunctionPointer, found " + method);
             }
 
-            var thisType =
-                HasFlag(method.CallingConvention, CallingConventions.HasThis) ?
-                    method.DeclaringType :
-                    null;
-
             var parameters = method.GetParameters();
-            var paramList = LinqAlternative.Select(parameters, p => p.ParameterType).ToList();
 
             var declaring = method.DeclaringType;
 
@@ -38,16 +32,6 @@ namespace Sigil
             {
                 declaring = declaring.MakePointerType();
             }
-
-            paramList.Insert(0, declaring);
-
-            var type =
-                TypeOnStack.GetKnownFunctionPointer(
-                    method.CallingConvention,
-                    thisType,
-                    method.ReturnType,
-                    paramList.ToArray()
-                );
 
             var transitions = 
                 new[]
