@@ -123,7 +123,7 @@ namespace SigilTests
         public void PartialTypeMapping2()
         {
             {
-                var asm = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("Foo"), AssemblyBuilderAccess.Run);
+				var asm = AppDomain.CurrentDomain.DefineDynamicAssembly(new AssemblyName("Foo"), AssemblyBuilderAccess.Run);
                 var mod = asm.DefineDynamicModule("Bar");
                 var t = mod.DefineType("T");
                 var dictOfT = typeof(IDictionary<,>).MakeGenericType(t, t);
@@ -162,7 +162,7 @@ namespace SigilTests
         public void PartialTypeMapping1()
         {
             {
-                var asm = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("Foo"), AssemblyBuilderAccess.Run);
+				var asm = AppDomain.CurrentDomain.DefineDynamicAssembly(new AssemblyName("Foo"), AssemblyBuilderAccess.Run);
                 var mod = asm.DefineDynamicModule("Bar");
                 var t = mod.DefineType("T");
                 var listOfT = typeof(List<>).MakeGenericType(t);
