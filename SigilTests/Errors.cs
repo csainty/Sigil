@@ -22,7 +22,7 @@ namespace SigilTests
 
             try
             {
-                var e = ops.EmitAll();
+                ops.EmitAll();
                 Assert.True(false, "Expected exception was not thrown");
             }
             catch (InvalidOperationException e)
@@ -495,12 +495,12 @@ namespace SigilTests
         {
             {
                 var e1 = Emit<Action>.NewDynamicMethod();
-                var t = e1.BeginExceptionBlock();
+                e1.BeginExceptionBlock();
                 e1.Return();
 
                 try
                 {
-                    var d1 = e1.CreateDelegate();
+                    e1.CreateDelegate();
                     Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
@@ -516,7 +516,7 @@ namespace SigilTests
 
                 try
                 {
-                    var d1 = e1.CreateDelegate();
+                    e1.CreateDelegate();
                     Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
@@ -856,7 +856,7 @@ namespace SigilTests
             {
                 var e1 = Emit<Action>.NewDynamicMethod();
                 var t = e1.BeginExceptionBlock();
-                var c = e1.BeginCatchAllBlock(t);
+                e1.BeginCatchAllBlock(t);
 
                 try
                 {
@@ -872,7 +872,7 @@ namespace SigilTests
             {
                 var e1 = Emit<Action>.NewDynamicMethod();
                 var t = e1.BeginExceptionBlock();
-                var f = e1.BeginFinallyBlock(t);
+                e1.BeginFinallyBlock(t);
 
                 try
                 {
@@ -903,7 +903,7 @@ namespace SigilTests
             {
                 var e1 = Emit<Action>.NewDynamicMethod();
                 var t1 = e1.BeginExceptionBlock();
-                var t2 = e1.BeginExceptionBlock();
+                e1.BeginExceptionBlock();
 
                 try
                 {
@@ -1848,7 +1848,7 @@ namespace SigilTests
             {
                 var e1 = Emit<Action>.NewDynamicMethod();
                 var t = e1.BeginExceptionBlock();
-                var c = e1.BeginCatchAllBlock(t);
+                e1.BeginCatchAllBlock(t);
                 try
                 {
                     e1.LocalAllocate();
@@ -1866,7 +1866,7 @@ namespace SigilTests
                 var c = e1.BeginCatchAllBlock(t);
                 e1.Pop();
                 e1.EndCatchBlock(c);
-                var f = e1.BeginFinallyBlock(t);
+                e1.BeginFinallyBlock(t);
                 try
                 {
                     e1.LocalAllocate();
@@ -2701,7 +2701,7 @@ namespace SigilTests
 
                 try
                 {
-                    var d1 = e1.CreateDelegate();
+                    e1.CreateDelegate();
                     Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
@@ -4017,11 +4017,11 @@ namespace SigilTests
         {
             var e1 = Emit<Action>.NewDynamicMethod("e1");
             var t = e1.BeginExceptionBlock();
-            var c1 = e1.BeginCatchBlock<StackOverflowException>(t);
+            e1.BeginCatchBlock<StackOverflowException>(t);
 
             try
             {
-                var c2 = e1.BeginCatchBlock<Exception>(t);
+                e1.BeginCatchBlock<Exception>(t);
                 Assert.True(false, "Shouldn't be legal to have two catches open at the same time");
             }
             catch (InvalidOperationException s)
@@ -4072,7 +4072,7 @@ namespace SigilTests
 
             try
             {
-                var c = e1.BeginCatchAllBlock(t);
+                e1.BeginCatchAllBlock(t);
                 Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
@@ -4093,7 +4093,7 @@ namespace SigilTests
 
             try
             {
-                var c2 = e1.BeginCatchAllBlock(t);
+                e1.BeginCatchAllBlock(t);
                 Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
@@ -4110,7 +4110,7 @@ namespace SigilTests
 
             try
             {
-                var c1 = e1.BeginCatchBlock(t, null);
+                e1.BeginCatchBlock(t, null);
                 Assert.True(false, "Shouldn't be possible");
             }
             catch (ArgumentNullException e)
@@ -4124,11 +4124,11 @@ namespace SigilTests
         {
             var e1 = Emit<Action>.NewDynamicMethod("e1");
             var t1 = e1.BeginExceptionBlock();
-            var t2 = e1.BeginExceptionBlock();
+            e1.BeginExceptionBlock();
 
             try
             {
-                var c1 = e1.BeginCatchAllBlock(t1);
+                e1.BeginCatchAllBlock(t1);
                 Assert.True(false, "Shouldn't be possible");
             }
             catch (InvalidOperationException e)
@@ -4141,7 +4141,7 @@ namespace SigilTests
         public void MixedOwners()
         {
             var e1 = Emit<Action>.NewDynamicMethod("e1");
-            var t1 = e1.BeginExceptionBlock();
+            e1.BeginExceptionBlock();
 
             var e2 = Emit<Action>.NewDynamicMethod("e2");
             var t2 = e2.BeginExceptionBlock();
@@ -4576,7 +4576,7 @@ namespace SigilTests
 
             try
             {
-                var d1 = e1.CreateDelegate();
+                e1.CreateDelegate();
                 Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
@@ -4603,7 +4603,7 @@ namespace SigilTests
 
             try
             {
-                var d1 = e1.CreateDelegate();
+                e1.CreateDelegate();
                 Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
@@ -4631,7 +4631,7 @@ namespace SigilTests
 
             try
             {
-                var d1 = e1.CreateDelegate();
+                e1.CreateDelegate();
                 Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
@@ -4660,7 +4660,7 @@ namespace SigilTests
 
             try
             {
-                var d1 = e1.CreateDelegate();
+                e1.CreateDelegate();
                 Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
@@ -4717,11 +4717,11 @@ namespace SigilTests
 
             var e5 = Emit<Action>.NewDynamicMethod("E5");
             var t5 = e5.BeginExceptionBlock();
-            var t55 = e5.BeginExceptionBlock();
+            e5.BeginExceptionBlock();
 
             try
             {
-                var f5 = e5.BeginFinallyBlock(t5);
+                e5.BeginFinallyBlock(t5);
                 Assert.True(false, "Shouldn't be possible");
             }
             catch (InvalidOperationException e)

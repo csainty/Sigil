@@ -55,7 +55,7 @@ namespace SigilTests
                 il.CallVirtual(invoke);
                 il.Return();
 
-                var d1 = il.CreateDelegate<Func<string, Func<string, int>, string>>();
+                il.CreateDelegate<Func<string, Func<string, int>, string>>();
 
                 Assert.True(false, "Expected exception was not thrown");
             }

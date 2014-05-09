@@ -22,7 +22,7 @@ namespace SigilTests
             }
 
             {
-                var asm = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("Foo"), AssemblyBuilderAccess.Run);
+				var asm = AppDomain.CurrentDomain.DefineDynamicAssembly(new AssemblyName("Foo"), AssemblyBuilderAccess.Run);
                 var mod = asm.DefineDynamicModule("Bar");
 
                 TypeBuilder myBuilder = mod.DefineType("T");
@@ -32,7 +32,7 @@ namespace SigilTests
             }
 
             {
-                var asm = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("Foo"), AssemblyBuilderAccess.Run);
+				var asm = AppDomain.CurrentDomain.DefineDynamicAssembly(new AssemblyName("Foo"), AssemblyBuilderAccess.Run);
                 var mod = asm.DefineDynamicModule("Bar");
 
                 TypeBuilder myBuilder = mod.DefineType("T");

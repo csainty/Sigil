@@ -21,7 +21,7 @@ namespace SigilTests
             string instr2;
 
             {
-                var asm = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("Foo"), AssemblyBuilderAccess.Run);
+				var asm = AppDomain.CurrentDomain.DefineDynamicAssembly(new AssemblyName("Foo"), AssemblyBuilderAccess.Run);
                 var mod = asm.DefineDynamicModule("Bar");
                 var t = mod.DefineType("T");
 

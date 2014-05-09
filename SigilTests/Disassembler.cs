@@ -246,7 +246,7 @@ namespace SigilTests
                     try
                     {
 
-                        var c = Math.Pow(a, 3);
+                        Math.Pow(a, 3);
                         try
                         {
                             var b = a * a - a;

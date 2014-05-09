@@ -22,7 +22,7 @@ namespace SigilTests
         public void OrderBy()
         {
             var sigilTypes = typeof(Emit<>).Assembly.GetTypes();
-            var linq = sigilTypes.Single(t => t.Name == "LinqAlternative");
+            sigilTypes.Single(t => t.Name == "LinqAlternative");
 
             var sigilListGeneric = sigilTypes.Single(t => t.Name == "LinqList`1");
             var sigilListT = sigilListGeneric.MakeGenericType(typeof(Tuple<int, double>));
@@ -69,7 +69,7 @@ namespace SigilTests
         public void OrderByDescending()
         {
             var sigilTypes = typeof(Emit<>).Assembly.GetTypes();
-            var linq = sigilTypes.Single(t => t.Name == "LinqAlternative");
+			sigilTypes.Single(t => t.Name == "LinqAlternative");
 
             var sigilListGeneric = sigilTypes.Single(t => t.Name == "LinqList`1");
             var sigilListT = sigilListGeneric.MakeGenericType(typeof(Tuple<int, double>));

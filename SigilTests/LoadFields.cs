@@ -63,7 +63,7 @@ namespace SigilTests
             e2.LoadField(typeof(B).GetField("X"));
             e2.Return();
 
-            var d2 = e2.CreateDelegate();
+            e2.CreateDelegate();
 
             Assert.Equal(255, d1(new B { X = 255 }));
         }

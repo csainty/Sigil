@@ -53,7 +53,7 @@ namespace SigilTests
                 il.CallVirtual(invoke);
                 il.Return();
 
-                var d1 = il.CreateDelegate();
+                il.CreateDelegate();
 
                 Assert.True(false, "Expected exception was not thrown");
             }
