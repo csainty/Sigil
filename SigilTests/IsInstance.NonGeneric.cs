@@ -1,16 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class IsInstance
     {
-        [TestMethod]
+        [Fact]
         public void NotElidedNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(string), new [] { typeof(string) });
@@ -21,12 +22,12 @@ namespace SigilTests
             string instrs;
             var d1 = e1.CreateDelegate<Func<string, string>>(out instrs, Sigil.OptimizationOptions.None);
 
-            Assert.AreEqual("hello", d1("hello"));
+            Assert.Equal("hello", d1("hello"));
 
-            Assert.IsTrue(instrs.Contains("isinst"));
+            Assert.True(instrs.Contains("isinst"));
         }
 
-        [TestMethod]
+        [Fact]
         public void ElidedNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(string), new [] { typeof(string) });
@@ -37,12 +38,12 @@ namespace SigilTests
             string instrs;
             var d1 = e1.CreateDelegate<Func<string, string>>(out instrs);
 
-            Assert.AreEqual("hello", d1("hello"));
+            Assert.Equal("hello", d1("hello"));
 
-            Assert.IsFalse(instrs.Contains("isinst"));
+            Assert.False(instrs.Contains("isinst"));
         }
 
-        [TestMethod]
+        [Fact]
         public void SimpleNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(string), new [] { typeof(object) });
@@ -53,10 +54,10 @@ namespace SigilTests
             string instrs;
             var d1 = e1.CreateDelegate<Func<object, string>>(out instrs);
 
-            Assert.AreEqual(null, d1(123));
-            Assert.AreEqual("hello", d1("hello"));
+            Assert.Equal(null, d1(123));
+            Assert.Equal("hello", d1("hello"));
 
-            Assert.IsTrue(instrs.Contains("isinst"));
+            Assert.True(instrs.Contains("isinst"));
         }
     }
 }

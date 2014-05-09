@@ -1,14 +1,14 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class LoadFields
     {
         public class A
@@ -18,7 +18,7 @@ namespace SigilTests
             public static int Y;
         }
 
-        [TestMethod]
+        [Fact]
         public void Simple()
         {
             var e1 = Emit<Func<A, int>>.NewDynamicMethod("E1");
@@ -28,7 +28,7 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual(255, d1(new A { X = 255 }));
+            Assert.Equal(255, d1(new A { X = 255 }));
 
             var e2 = Emit<Func<int>>.NewDynamicMethod("E2");
             e2.LoadField(typeof(A).GetField("Y"));
@@ -38,7 +38,7 @@ namespace SigilTests
 
             A.Y = 31415926;
 
-            Assert.AreEqual(31415926, d2());
+            Assert.Equal(31415926, d2());
         }
 
         public struct B
@@ -46,7 +46,7 @@ namespace SigilTests
             public int X;
         }
 
-        [TestMethod]
+        [Fact]
         public void ValueType()
         {
             var e1 = Emit<Func<B, int>>.NewDynamicMethod("E1");
@@ -56,7 +56,7 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual(255, d1(new B { X = 255 }));
+            Assert.Equal(255, d1(new B { X = 255 }));
 
             var e2 = Emit<Func<B, int>>.NewDynamicMethod("E2");
             e2.LoadArgument(0);
@@ -65,7 +65,7 @@ namespace SigilTests
 
             var d2 = e2.CreateDelegate();
 
-            Assert.AreEqual(255, d1(new B { X = 255 }));
+            Assert.Equal(255, d1(new B { X = 255 }));
         }
     }
 }

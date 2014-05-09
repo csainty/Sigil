@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
@@ -7,12 +7,13 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class Calls
     {
-        [TestMethod]
+        [Fact]
         public void ValueTypeCallIndirectNonGeneric()
         {
             var hasValue = typeof(int?).GetProperty("HasValue");
@@ -27,11 +28,11 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<int?, bool>>();
 
-            Assert.IsTrue(d1(1));
-            Assert.IsFalse(d1(null));
+            Assert.True(d1(1));
+            Assert.False(d1(null));
         }
 
-        [TestMethod]
+        [Fact]
         public void ValueTypeCallVirtualNonGeneric()
         {
             var hasValue = typeof(int?).GetProperty("HasValue");
@@ -44,11 +45,11 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<int?, bool>>();
 
-            Assert.IsTrue(d1(1));
-            Assert.IsFalse(d1(null));
+            Assert.True(d1(1));
+            Assert.False(d1(null));
         }
 
-        [TestMethod]
+        [Fact]
         public void ValueTypeCallNonGeneric()
         {
             var hasValue = typeof(int?).GetProperty("HasValue");
@@ -61,11 +62,11 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<int?, bool>>();
 
-            Assert.IsTrue(d1(1));
-            Assert.IsFalse(d1(null));
+            Assert.True(d1(1));
+            Assert.False(d1(null));
         }
 
-        [TestMethod]
+        [Fact]
         public void MultipleTailcallsNonGeneric()
         {
             var toString = typeof(object).GetMethod("ToString");
@@ -111,15 +112,15 @@ namespace SigilTests
             string instrs;
             var d1 = e1.CreateDelegate<Func<int, string>>(out instrs);
 
-            Assert.AreEqual("123", d1(0));
-            Assert.AreEqual("System.Object", d1(1));
-            Assert.AreEqual("", d1(2));
-            Assert.AreEqual("System.String", d1(314));
+            Assert.Equal("123", d1(0));
+            Assert.Equal("System.Object", d1(1));
+            Assert.Equal("", d1(2));
+            Assert.Equal("System.String", d1(314));
 
-            Assert.AreEqual("ldarg.0\r\nldc.i4.0\r\nbeq.s l1\r\nldarg.0\r\nldc.i4.1\r\nbeq.s l2\r\nldarg.0\r\nldc.i4.2\r\nbeq.s l3\r\nldstr 'Foo'\r\ntail.call System.String ToString()\r\nret\r\n\r\nl1:\r\nldc.i4.s 123\r\nbox System.Int32\r\ntail.callvirt System.String ToString()\r\nret\r\n\r\nl2:\r\nnewobj Void .ctor()\r\ndup\r\nldvirtftn System.String ToString()\r\ncalli Standard, HasThis System.String \r\nret\r\n\r\nl3:\r\nldstr ''\r\nret\r\n", instrs);
+            Assert.Equal("ldarg.0\r\nldc.i4.0\r\nbeq.s l1\r\nldarg.0\r\nldc.i4.1\r\nbeq.s l2\r\nldarg.0\r\nldc.i4.2\r\nbeq.s l3\r\nldstr 'Foo'\r\ntail.call System.String ToString()\r\nret\r\n\r\nl1:\r\nldc.i4.s 123\r\nbox System.Int32\r\ntail.callvirt System.String ToString()\r\nret\r\n\r\nl2:\r\nnewobj Void .ctor()\r\ndup\r\nldvirtftn System.String ToString()\r\ncalli Standard, HasThis System.String \r\nret\r\n\r\nl3:\r\nldstr ''\r\nret\r\n", instrs);
         }
 
-        [TestMethod]
+        [Fact]
         public void PartialTypeMapping2NonGeneric()
         {
             {
@@ -153,12 +154,12 @@ namespace SigilTests
 
                 var x = dictInst;
 
-                Assert.IsTrue(d1(x, x));
-                Assert.IsFalse(d1(x, new List<int> { 1, 2, 3 }));
+                Assert.True(d1(x, x));
+                Assert.False(d1(x, new List<int> { 1, 2, 3 }));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void PartialTypeMapping1NonGeneric()
         {
             {
@@ -192,12 +193,12 @@ namespace SigilTests
 
                 var x = listInst;
 
-                Assert.IsTrue(d1(x, x));
-                Assert.IsFalse(d1(x, new List<int> { 1, 2, 3 }));
+                Assert.True(d1(x, x));
+                Assert.False(d1(x, new List<int> { 1, 2, 3 }));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void EnumParamsNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(void), new [] { typeof(int) });
@@ -209,14 +210,14 @@ namespace SigilTests
 
             _EnumParamsMethod = null;
             d1((int)EnumParamsEnum.A);
-            Assert.AreEqual(EnumParamsEnum.A, _EnumParamsMethod.Value);
+            Assert.Equal(EnumParamsEnum.A, _EnumParamsMethod.Value);
 
             _EnumParamsMethod = null;
             d1((int)EnumParamsEnum.B);
-            Assert.AreEqual(EnumParamsEnum.B, _EnumParamsMethod.Value);
+            Assert.Equal(EnumParamsEnum.B, _EnumParamsMethod.Value);
         }
 
-        [TestMethod]
+        [Fact]
         public void VoidStaticNonGeneric()
         {
             DoesNothingWasCalled = false;
@@ -229,12 +230,12 @@ namespace SigilTests
 
             var del = e1.CreateDelegate<Action>();
 
-            Assert.IsFalse(DoesNothingWasCalled);
+            Assert.False(DoesNothingWasCalled);
             del();
-            Assert.IsTrue(DoesNothingWasCalled);
+            Assert.True(DoesNothingWasCalled);
         }
 
-        [TestMethod]
+        [Fact]
         public void VoidInstanceNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(int), Type.EmptyTypes, "E1");
@@ -244,10 +245,10 @@ namespace SigilTests
 
             var del = e1.CreateDelegate<Func<int>>();
 
-            Assert.AreEqual(314159, del());
+            Assert.Equal(314159, del());
         }
 
-        [TestMethod]
+        [Fact]
         public void StringInstanceNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(string), Type.EmptyTypes, "E1");
@@ -258,10 +259,10 @@ namespace SigilTests
 
             var del = e1.CreateDelegate<Func<string>>();
 
-            Assert.AreEqual("8675309", del());
+            Assert.Equal("8675309", del());
         }
 
-        [TestMethod]
+        [Fact]
         public void MultiParamNonGeneric()
         {
             var func = typeof(Calls).GetMethod("MultiParamFunc");
@@ -275,7 +276,7 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<string, int, double, int>>();
 
-            Assert.AreEqual(123 + 456 + 7, d1("123", 456, 7.89));
+            Assert.Equal(123 + 456 + 7, d1("123", 456, 7.89));
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,13 +6,14 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class LocalAllocate
     {
-        [TestMethod]
+        [Fact]
         public void Simple()
         {
             var e1 = Emit<Action<byte[]>>.NewDynamicMethod();
@@ -54,7 +54,7 @@ namespace SigilTests
 
             for (var i = 0; i < b.Length; i++)
             {
-                Assert.AreEqual(123, b[i]);
+                Assert.Equal(123, b[i]);
             }
         }
     }

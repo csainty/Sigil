@@ -1,16 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class StoreField
     {
-        [TestMethod]
+        [Fact]
         public void SimpleNonGeneric()
         {
             {
@@ -25,7 +26,7 @@ namespace SigilTests
                 StoreFieldClass.Static = 2;
                 d1(null);
 
-                Assert.AreEqual(12, StoreFieldClass.Static);
+                Assert.Equal(12, StoreFieldClass.Static);
             }
 
             {
@@ -41,7 +42,7 @@ namespace SigilTests
                 var x = new StoreFieldClass();
                 d1(x);
 
-                Assert.AreEqual(12, x.Instance);
+                Assert.Equal(12, x.Instance);
             }
         }
     }

@@ -1,16 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class InitializeObject
     {
-        [TestMethod]
+        [Fact]
         public void SimpleNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(DateTime), new [] { typeof(DateTime) });
@@ -21,7 +22,7 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<DateTime, DateTime>>();
 
-            Assert.AreEqual(new DateTime(), d1(DateTime.Now));
+            Assert.Equal(new DateTime(), d1(DateTime.Now));
         }
     }
 }

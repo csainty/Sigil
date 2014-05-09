@@ -1,14 +1,14 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class LoadFieldAddress
     {
         class TestObj
@@ -17,7 +17,7 @@ namespace SigilTests
             public int Instance;
         }
 
-        [TestMethod]
+        [Fact]
         public void Instance()
         {
             var e1 = Emit<Func<TestObj, int>>.NewDynamicMethod();
@@ -28,10 +28,10 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual(10, d1(new TestObj { Instance = 10 }));
+            Assert.Equal(10, d1(new TestObj { Instance = 10 }));
         }
 
-        [TestMethod]
+        [Fact]
         public void Static()
         {
             var e1 = Emit<Func<int>>.NewDynamicMethod();
@@ -42,7 +42,7 @@ namespace SigilTests
             var d1 = e1.CreateDelegate();
 
             TestObj.Static = 20;
-            Assert.AreEqual(20, d1());
+            Assert.Equal(20, d1());
         }
     }
 }

@@ -1,17 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class InitializeBlock
     {
-        [TestMethod]
+        [Fact]
         public void Simple()
         {
             var e1 = Emit<Action<byte[]>>.NewDynamicMethod();
@@ -30,10 +30,10 @@ namespace SigilTests
             var b = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
             d1(b);
 
-            Assert.IsTrue(b.All(x => x == 101));
+            Assert.True(b.All(x => x == 101));
         }
 
-        [TestMethod]
+        [Fact]
         public void Volatile()
         {
             var e1 = Emit<Action<byte[]>>.NewDynamicMethod();
@@ -52,7 +52,7 @@ namespace SigilTests
             var b = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
             d1(b);
 
-            Assert.IsTrue(b.All(x => x == 101));
+            Assert.True(b.All(x => x == 101));
         }
     }
 }

@@ -1,16 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class Boxing
     {
-        [TestMethod]
+        [Fact]
         public void NullableIntNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(object), new [] { typeof(int?) }, "E1");
@@ -20,11 +21,11 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<int?, object>>();
 
-            Assert.AreEqual((object)((int?)123), d1(123));
-            Assert.AreEqual((object)((int?)null), d1(null));
+            Assert.Equal((object)((int?)123), d1(123));
+            Assert.Equal((object)((int?)null), d1(null));
         }
 
-        [TestMethod]
+        [Fact]
         public void BooleanNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(object), new [] { typeof(bool) }, "E1");
@@ -34,11 +35,11 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<bool, object>>();
 
-            Assert.AreEqual((object)true, d1(true));
-            Assert.AreEqual((object)false, d1(false));
+            Assert.Equal((object)true, d1(true));
+            Assert.Equal((object)false, d1(false));
         }
 
-        [TestMethod]
+        [Fact]
         public void SimpleNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(object), Type.EmptyTypes, "E1");
@@ -48,7 +49,7 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<object>>();
 
-            Assert.AreEqual("123", d1().ToString());
+            Assert.Equal("123", d1().ToString());
 
             var e2 = Emit.NewDynamicMethod(typeof(object), Type.EmptyTypes, "E2");
             e2.LoadConstant(566);
@@ -57,7 +58,7 @@ namespace SigilTests
 
             var d2 = e2.CreateDelegate<Func<object>>();
 
-            Assert.AreEqual("54", d2().ToString());
+            Assert.Equal("54", d2().ToString());
         }
     }
 }

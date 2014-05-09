@@ -1,16 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class ReThrow
     {
-        [TestMethod]
+        [Fact]
         public void SimpleNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(void), Type.EmptyTypes);
@@ -31,11 +32,11 @@ namespace SigilTests
             try
             {
                 d1();
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (Exception e)
             {
-                Assert.AreEqual("Hello World", e.Message);
+                Assert.Equal("Hello World", e.Message);
             }
         }
     }

@@ -1,16 +1,16 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class CopyBlock
     {
-        [TestMethod]
+        [Fact]
         public void Simple()
         {
             var e1 = Emit<Action<byte[], byte[]>>.NewDynamicMethod();
@@ -39,12 +39,12 @@ namespace SigilTests
 
             for (byte i = 0; i < a.Length; i++)
             {
-                Assert.AreEqual(i + 1, a[i]);
-                Assert.AreEqual(i + 1, b[i]);
+                Assert.Equal(i + 1, a[i]);
+                Assert.Equal(i + 1, b[i]);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Volatile()
         {
             var e1 = Emit<Action<byte[], byte[]>>.NewDynamicMethod();
@@ -73,8 +73,8 @@ namespace SigilTests
 
             for (byte i = 0; i < a.Length; i++)
             {
-                Assert.AreEqual(i + 1, a[i]);
-                Assert.AreEqual(i + 1, b[i]);
+                Assert.Equal(i + 1, a[i]);
+                Assert.Equal(i + 1, b[i]);
             }
         }
     }

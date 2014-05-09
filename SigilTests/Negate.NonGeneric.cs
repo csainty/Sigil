@@ -1,16 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class Negate
     {
-        [TestMethod]
+        [Fact]
         public void SimpleNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(int), new [] { typeof(int) }, "E1");
@@ -20,10 +21,10 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<int, int>>();
 
-            Assert.AreEqual(-123, d1(123));
+            Assert.Equal(-123, d1(123));
         }
 
-        [TestMethod]
+        [Fact]
         public void LongNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(long), new [] { typeof(long) }, "E1");
@@ -33,7 +34,7 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<long, long>>();
 
-            Assert.AreEqual(-123L, d1(123));
+            Assert.Equal(-123L, d1(123));
         }
     }
 }

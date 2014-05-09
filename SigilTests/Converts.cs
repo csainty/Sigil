@@ -1,16 +1,16 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class Converts
     {
-        [TestMethod]
+        [Fact]
         public void Simple()
         {
             {
@@ -21,7 +21,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate();
 
-                Assert.AreEqual((byte)111, d1(111));
+                Assert.Equal((byte)111, d1(111));
             }
 
             {
@@ -32,7 +32,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate();
 
-                Assert.AreEqual((sbyte)-11, d1(-11));
+                Assert.Equal((sbyte)-11, d1(-11));
             }
 
             {
@@ -43,7 +43,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate();
 
-                Assert.AreEqual((short)2111, d1(2111));
+                Assert.Equal((short)2111, d1(2111));
             }
 
             {
@@ -54,7 +54,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate();
 
-                Assert.AreEqual(ushort.MaxValue, d1(ushort.MaxValue));
+                Assert.Equal(ushort.MaxValue, d1(ushort.MaxValue));
             }
 
             {
@@ -65,7 +65,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate();
 
-                Assert.AreEqual(123, d1(123));
+                Assert.Equal(123, d1(123));
             }
 
             {
@@ -79,7 +79,7 @@ namespace SigilTests
                 var x = (uint)int.MaxValue;
                 x++;
 
-                Assert.AreEqual(x, d1(x));
+                Assert.Equal(x, d1(x));
             }
 
             {
@@ -90,7 +90,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate();
 
-                Assert.AreEqual(12345678, d1(12345678f));
+                Assert.Equal(12345678, d1(12345678f));
             }
 
             {
@@ -101,7 +101,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate();
 
-                Assert.AreEqual((ulong)12345678, d1(12345678f));
+                Assert.Equal((ulong)12345678, d1(12345678f));
             }
 
             {
@@ -112,7 +112,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate();
 
-                Assert.AreEqual(123f, d1(123));
+                Assert.Equal(123f, d1(123));
             }
 
             {
@@ -123,7 +123,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate();
 
-                Assert.AreEqual(123.0, d1(123));
+                Assert.Equal(123.0, d1(123));
             }
 
             {
@@ -136,7 +136,7 @@ namespace SigilTests
 
                 var intPtr = new IntPtr(123);
 
-                Assert.AreEqual(intPtr, d1(123));
+                Assert.Equal(intPtr, d1(123));
             }
 
             {
@@ -149,11 +149,11 @@ namespace SigilTests
 
                 var uintPtr = new UIntPtr(123);
 
-                Assert.AreEqual(uintPtr, d1(123));
+                Assert.Equal(uintPtr, d1(123));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Overflows()
         {
             {
@@ -164,7 +164,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate();
 
-                Assert.AreEqual((byte)111, d1(111));
+                Assert.Equal((byte)111, d1(111));
             }
 
             {
@@ -175,7 +175,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate();
 
-                Assert.AreEqual((sbyte)-11, d1(-11));
+                Assert.Equal((sbyte)-11, d1(-11));
             }
 
             {
@@ -186,7 +186,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate();
 
-                Assert.AreEqual((short)2111, d1(2111));
+                Assert.Equal((short)2111, d1(2111));
             }
 
             {
@@ -197,7 +197,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate();
 
-                Assert.AreEqual(ushort.MaxValue, d1(ushort.MaxValue));
+                Assert.Equal(ushort.MaxValue, d1(ushort.MaxValue));
             }
 
             {
@@ -208,7 +208,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate();
 
-                Assert.AreEqual(123, d1(123));
+                Assert.Equal(123, d1(123));
             }
 
             {
@@ -222,7 +222,7 @@ namespace SigilTests
                 var x = (uint)int.MaxValue;
                 x++;
 
-                Assert.AreEqual(x, d1(x));
+                Assert.Equal(x, d1(x));
             }
 
             {
@@ -233,7 +233,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate();
 
-                Assert.AreEqual(12345678, d1(12345678f));
+                Assert.Equal(12345678, d1(12345678f));
             }
 
             {
@@ -244,7 +244,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate();
 
-                Assert.AreEqual((ulong)12345678, d1(12345678f));
+                Assert.Equal((ulong)12345678, d1(12345678f));
             }
 
             {
@@ -257,7 +257,7 @@ namespace SigilTests
 
                 var intPtr = new IntPtr(123);
 
-                Assert.AreEqual(intPtr, d1(123));
+                Assert.Equal(intPtr, d1(123));
             }
 
             {
@@ -270,11 +270,11 @@ namespace SigilTests
 
                 var uintPtr = new UIntPtr(123);
 
-                Assert.AreEqual(uintPtr, d1(123));
+                Assert.Equal(uintPtr, d1(123));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void UnsignedOverflows()
         {
             {
@@ -285,7 +285,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate();
 
-                Assert.AreEqual((byte)111, d1(111));
+                Assert.Equal((byte)111, d1(111));
             }
 
             {
@@ -299,7 +299,7 @@ namespace SigilTests
                 try
                 {
                     d1(-11);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (OverflowException) { }
             }
@@ -312,7 +312,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate();
 
-                Assert.AreEqual((short)2111, d1(2111));
+                Assert.Equal((short)2111, d1(2111));
             }
 
             {
@@ -323,7 +323,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate();
 
-                Assert.AreEqual(ushort.MaxValue, d1(ushort.MaxValue));
+                Assert.Equal(ushort.MaxValue, d1(ushort.MaxValue));
             }
 
             {
@@ -334,7 +334,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate();
 
-                Assert.AreEqual(123, d1(123));
+                Assert.Equal(123, d1(123));
             }
 
             {
@@ -348,7 +348,7 @@ namespace SigilTests
                 var x = (uint)int.MaxValue;
                 x++;
 
-                Assert.AreEqual(x, d1(x));
+                Assert.Equal(x, d1(x));
             }
 
             {
@@ -359,7 +359,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate();
 
-                Assert.AreEqual(12345678, d1(12345678f));
+                Assert.Equal(12345678, d1(12345678f));
             }
 
             {
@@ -370,7 +370,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate();
 
-                Assert.AreEqual((ulong)12345678, d1(12345678f));
+                Assert.Equal((ulong)12345678, d1(12345678f));
             }
         }
 
@@ -381,7 +381,7 @@ namespace SigilTests
 #pragma warning restore 0649
         }
 
-        [TestMethod]
+        [Fact]
         public void ByRef()
         {
             {
@@ -394,7 +394,7 @@ namespace SigilTests
                 var del = emit.CreateDelegate();
 
                 var x = del(new _ByRef());
-                Assert.AreNotEqual(0, x);
+                Assert.NotEqual(0, x);
             }
 
             {
@@ -407,7 +407,7 @@ namespace SigilTests
                 var del = emit.CreateDelegate();
 
                 var x = del(new _ByRef());
-                Assert.AreNotEqual(0, x);
+                Assert.NotEqual(0, x);
             }
         }
     }

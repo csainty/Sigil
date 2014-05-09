@@ -1,16 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class Compares
     {
-        [TestMethod]
+        [Fact]
         public void EqualsNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(bool), new [] { typeof(int), typeof(int) });
@@ -21,11 +22,11 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<int, int, bool>>();
 
-            Assert.IsTrue(d1(1, 1));
-            Assert.IsFalse(d1(1, 2));
+            Assert.True(d1(1, 1));
+            Assert.False(d1(1, 2));
         }
 
-        [TestMethod]
+        [Fact]
         public void GreaterThanNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(bool), new [] { typeof(int), typeof(int) });
@@ -36,11 +37,11 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<int, int, bool>>();
 
-            Assert.IsTrue(d1(5, 1));
-            Assert.IsFalse(d1(1, 1));
+            Assert.True(d1(5, 1));
+            Assert.False(d1(1, 1));
         }
 
-        [TestMethod]
+        [Fact]
         public void LessThanNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(bool), new [] { typeof(int), typeof(int) });
@@ -51,11 +52,11 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<int, int, bool>>();
 
-            Assert.IsTrue(d1(6, 10));
-            Assert.IsFalse(d1(1, 1));
+            Assert.True(d1(6, 10));
+            Assert.False(d1(1, 1));
         }
 
-        [TestMethod]
+        [Fact]
         public void UnsignedCompareGreaterThanNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(bool), new [] { typeof(uint), typeof(uint) });
@@ -66,11 +67,11 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<uint, uint, bool>>();
 
-            Assert.IsTrue(d1(uint.MaxValue, (uint)int.MaxValue));
-            Assert.IsFalse(d1(1, 1));
+            Assert.True(d1(uint.MaxValue, (uint)int.MaxValue));
+            Assert.False(d1(1, 1));
         }
 
-        [TestMethod]
+        [Fact]
         public void UnsignedCompareLessThanNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(bool), new [] { typeof(uint), typeof(uint) });
@@ -81,8 +82,8 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<uint, uint, bool>>();
 
-            Assert.IsTrue(d1((uint)int.MaxValue, uint.MaxValue));
-            Assert.IsFalse(d1(1, 1));
+            Assert.True(d1((uint)int.MaxValue, uint.MaxValue));
+            Assert.False(d1(1, 1));
         }
     }
 }

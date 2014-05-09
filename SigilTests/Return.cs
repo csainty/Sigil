@@ -1,18 +1,18 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class Return
     {
-        [TestMethod]
+        [Fact]
         public void NonTerminal()
         {
             var e1 = Emit<Action>.NewDynamicMethod();
@@ -31,7 +31,7 @@ namespace SigilTests
             d1();
         }
 
-        [TestMethod]
+        [Fact]
         public void Empty()
         {
             var il = Emit<Action>.NewDynamicMethod("Empty");
@@ -42,7 +42,7 @@ namespace SigilTests
             del();
         }
 
-        [TestMethod]
+        [Fact]
         public void Constant()
         {
             var il = Emit<Func<int>>.NewDynamicMethod("Constant");
@@ -51,7 +51,7 @@ namespace SigilTests
 
             var del = il.CreateDelegate();
 
-            Assert.AreEqual(123, del());
+            Assert.Equal(123, del());
         }
     }
 }

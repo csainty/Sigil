@@ -1,17 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class Unbox
     {
-        [TestMethod]
+        [Fact]
         public void JustUnbox()
         {
             var e1 = Emit<Func<object, int>>.NewDynamicMethod();
@@ -22,10 +22,10 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual(1234567, d1(1234567));
+            Assert.Equal(1234567, d1(1234567));
         }
 
-        [TestMethod]
+        [Fact]
         public void UnboxAny()
         {
             var e1 = Emit<Func<object, int>>.NewDynamicMethod();
@@ -35,7 +35,7 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual(1234567, d1(1234567));
+            Assert.Equal(1234567, d1(1234567));
         }
     }
 }

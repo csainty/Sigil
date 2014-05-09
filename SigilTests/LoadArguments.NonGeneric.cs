@@ -1,16 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class LoadArguments
     {
-        [TestMethod]
+        [Fact]
         public void SimpleNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(string), new [] { typeof(int) }, "E1");
@@ -21,10 +22,10 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<int, string>>();
 
-            Assert.AreEqual("31415", d1(31415));
+            Assert.Equal("31415", d1(31415));
         }
 
-        [TestMethod]
+        [Fact]
         public void AllNonGeneric()
         {
             var retType = typeof(LotsOfParams).GetMethod("Invoke").ReturnType;
@@ -55,9 +56,9 @@ namespace SigilTests
 
             var ret = (int)d1.DynamicInvoke(args.Cast<object>().ToArray());
 
-            Assert.AreEqual(args.Sum(), ret);
+            Assert.Equal(args.Sum(), ret);
 
-            Assert.AreEqual(260, e1.MaxStackSize);
+            Assert.Equal(260, e1.MaxStackSize);
         }
     }
 }

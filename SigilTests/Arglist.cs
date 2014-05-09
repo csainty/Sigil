@@ -1,18 +1,18 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class Arglist
     {
-        [TestMethod]
+        [Fact]
         public void Simple()
         {
             MethodInfo mtd;
@@ -46,7 +46,7 @@ namespace SigilTests
                 var d2 = e2.CreateDelegate(out instr2);
 
                 var i = d2();
-                Assert.AreNotEqual(0, i);
+                Assert.NotEqual(0, i);
             }
         }
     }

@@ -1,16 +1,16 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class Divide
     {
-        [TestMethod]
+        [Fact]
         public void Simple()
         {
             var e1 = Emit<Func<double, double, double>>.NewDynamicMethod("E1");
@@ -21,10 +21,10 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual(3.14 / 1.59, d1(3.14, 1.59));
+            Assert.Equal(3.14 / 1.59, d1(3.14, 1.59));
         }
 
-        [TestMethod]
+        [Fact]
         public void Unsigned()
         {
             var e1 = Emit<Func<uint, uint, uint>>.NewDynamicMethod("E1");
@@ -35,7 +35,7 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual(uint.MaxValue / ((uint)1234), d1(uint.MaxValue, (uint)1234));
+            Assert.Equal(uint.MaxValue / ((uint)1234), d1(uint.MaxValue, (uint)1234));
         }
     }
 }

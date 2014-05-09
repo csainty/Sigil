@@ -1,17 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class LoadLocal
     {
-        [TestMethod]
+        [Fact]
         public void Simple()
         {
             var e1 = Emit<Func<int>>.NewDynamicMethod("E1");
@@ -25,10 +25,10 @@ namespace SigilTests
 
             var del = e1.CreateDelegate();
 
-            Assert.AreEqual(3, del());
+            Assert.Equal(3, del());
         }
 
-        [TestMethod]
+        [Fact]
         public void All()
         {
             var e1 = Emit<Func<int>>.NewDynamicMethod();
@@ -61,7 +61,7 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual(total, d1());
+            Assert.Equal(total, d1());
         }
     }
 }

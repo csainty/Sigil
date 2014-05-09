@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
@@ -7,17 +7,18 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class Readme
     {
-        [TestMethod]
+        [Fact]
         public void Block1NonGeneric()
         {
             {
                 var emiter = Emit.NewDynamicMethod(typeof(int), Type.EmptyTypes, "MyMethod");
-                Assert.IsNotNull(emiter);
+                Assert.NotNull(emiter);
             }
 
             {
@@ -27,7 +28,7 @@ namespace SigilTests
                 TypeBuilder myBuilder = mod.DefineType("T");
                 var emiter = Emit.BuildMethod(typeof(string), new [] { typeof(int) }, myBuilder, "Static", MethodAttributes.Static | MethodAttributes.Public, CallingConventions.Standard);
 
-                Assert.IsNotNull(emiter);
+                Assert.NotNull(emiter);
             }
 
             {
@@ -40,11 +41,11 @@ namespace SigilTests
                 //   the generic parameters skip the `this` reference.  myBuilder will still be available as the
                 //   first argument to the method
 
-                Assert.IsNotNull(emiter);
+                Assert.NotNull(emiter);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Block2NonGeneric()
         {
             // Create a delegate that sums two integers
@@ -57,10 +58,10 @@ namespace SigilTests
 
             // prints "473"
             //Console.WriteLine(del(314, 159));
-            Assert.AreEqual(473, del(314, 159));
+            Assert.Equal(473, del(314, 159));
         }
 
-        [TestMethod]
+        [Fact]
         public void Block3NonGeneric()
         {
             try
@@ -71,15 +72,15 @@ namespace SigilTests
                 emiter.Add();   // Throws a SigilVerificationException, indicating that Add() isn't defined for [int, string]
                 emiter.Return();
 
-                Assert.Fail("An exception should have been thrown");
+                Assert.True(false, "An exception should have been thrown");
             }
             catch (Sigil.SigilVerificationException e)
             {
-                Assert.AreEqual("Add expected a by ref, double, float, int, long, native int, or pointer; found System.String", e.Message);
+                Assert.Equal("Add expected a by ref, double, float, int, long, native int, or pointer; found System.String", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Block4NonGeneric()
         {
             MethodInfo mayFail = typeof(Readme).GetMethod("MayFail");
@@ -125,19 +126,19 @@ namespace SigilTests
 
             MayFailFirstCall = true;
             AlwaysCallCalled = false;
-            Assert.IsTrue(del("hello"));
-            Assert.IsTrue(AlwaysCallCalled);
+            Assert.True(del("hello"));
+            Assert.True(AlwaysCallCalled);
 
             AlwaysCallCalled = false;
-            Assert.IsFalse(del("world"));
-            Assert.IsTrue(AlwaysCallCalled);
+            Assert.False(del("world"));
+            Assert.True(AlwaysCallCalled);
 
             AlwaysCallCalled = false;
-            Assert.IsFalse(del(null));
-            Assert.IsFalse(AlwaysCallCalled);
+            Assert.False(del(null));
+            Assert.False(AlwaysCallCalled);
         }
 
-        [TestMethod]
+        [Fact]
         public void Block5NonGeneric()
         {
             Action mayFail = () => MayFail();
@@ -168,19 +169,19 @@ namespace SigilTests
 
             MayFailFirstCall = true;
             AlwaysCallCalled = false;
-            Assert.IsTrue(del("hello"));
-            Assert.IsTrue(AlwaysCallCalled);
+            Assert.True(del("hello"));
+            Assert.True(AlwaysCallCalled);
 
             AlwaysCallCalled = false;
-            Assert.IsFalse(del("world"));
-            Assert.IsTrue(AlwaysCallCalled);
+            Assert.False(del("world"));
+            Assert.True(AlwaysCallCalled);
 
             AlwaysCallCalled = false;
-            Assert.IsFalse(del(null));
-            Assert.IsFalse(AlwaysCallCalled);
+            Assert.False(del(null));
+            Assert.False(AlwaysCallCalled);
         }
 
-        [TestMethod]
+        [Fact]
         public void Block6NonGeneric()
         {
             var emiter = Emit.NewDynamicMethod(typeof(int), Type.EmptyTypes, "Unconditional");
@@ -204,7 +205,7 @@ namespace SigilTests
 
             var d = emiter.CreateDelegate<Func<int>>();
 
-            Assert.AreEqual(3, d());
+            Assert.Equal(3, d());
         }
     }
 }

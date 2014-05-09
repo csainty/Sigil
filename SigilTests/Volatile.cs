@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,10 +6,10 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass]
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class Volatile
     {
@@ -19,7 +18,7 @@ namespace SigilTests
             public volatile int A;
         }
 
-        [TestMethod]
+        [Fact]
         public void Simple()
         {
             var e1 = Emit<Func<SimpleClass, int>>.NewDynamicMethod("e1");
@@ -30,8 +29,8 @@ namespace SigilTests
             string instrs;
             var d1 = e1.CreateDelegate(out instrs);
 
-            Assert.AreEqual(1, d1(new SimpleClass { A = 1 }));
-            Assert.IsTrue(instrs.Contains("volatile."));
+            Assert.Equal(1, d1(new SimpleClass { A = 1 }));
+            Assert.True(instrs.Contains("volatile."));
         }
 
         class NoneClass
@@ -39,7 +38,7 @@ namespace SigilTests
             public int A;
         }
 
-        [TestMethod]
+        [Fact]
         public void None()
         {
             var e1 = Emit<Func<NoneClass, int>>.NewDynamicMethod("e1");
@@ -50,11 +49,11 @@ namespace SigilTests
             string instrs;
             var d1 = e1.CreateDelegate(out instrs);
 
-            Assert.AreEqual(1, d1(new NoneClass { A = 1 }));
-            Assert.IsFalse(instrs.Contains("volatile."));
+            Assert.Equal(1, d1(new NoneClass { A = 1 }));
+            Assert.False(instrs.Contains("volatile."));
         }
 
-        [TestMethod]
+        [Fact]
         public void Builder()
         {
             var asm = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("Foo"), AssemblyBuilderAccess.Run);
@@ -77,8 +76,8 @@ namespace SigilTests
             var f = type.GetField("A");
             f.SetValue(null, 123);
 
-            Assert.AreEqual(123, (int)mtd.Invoke(null, new object[0]));
-            Assert.IsTrue(instrs.Contains("volatile."));
+            Assert.Equal(123, (int)mtd.Invoke(null, new object[0]));
+            Assert.True(instrs.Contains("volatile."));
         }
     }
 }

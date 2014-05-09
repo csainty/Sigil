@@ -1,18 +1,18 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class Calls
     {
-        [TestMethod]
+        [Fact]
         public void ValueTypeCallIndirect()
         {
             var hasValue = typeof(int?).GetProperty("HasValue");
@@ -27,11 +27,11 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.IsTrue(d1(1));
-            Assert.IsFalse(d1(null));
+            Assert.True(d1(1));
+            Assert.False(d1(null));
         }
 
-        [TestMethod]
+        [Fact]
         public void ValueTypeCallVirtual()
         {
             var hasValue = typeof(int?).GetProperty("HasValue");
@@ -44,11 +44,11 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.IsTrue(d1(1));
-            Assert.IsFalse(d1(null));
+            Assert.True(d1(1));
+            Assert.False(d1(null));
         }
 
-        [TestMethod]
+        [Fact]
         public void ValueTypeCall()
         {
             var hasValue = typeof(int?).GetProperty("HasValue");
@@ -61,11 +61,11 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.IsTrue(d1(1));
-            Assert.IsFalse(d1(null));
+            Assert.True(d1(1));
+            Assert.False(d1(null));
         }
 
-        [TestMethod]
+        [Fact]
         public void MultipleTailcalls()
         {
             var toString = typeof(object).GetMethod("ToString");
@@ -111,15 +111,15 @@ namespace SigilTests
             string instrs;
             var d1 = e1.CreateDelegate(out instrs);
 
-            Assert.AreEqual("123", d1(0));
-            Assert.AreEqual("System.Object", d1(1));
-            Assert.AreEqual("", d1(2));
-            Assert.AreEqual("System.String", d1(314));
+            Assert.Equal("123", d1(0));
+            Assert.Equal("System.Object", d1(1));
+            Assert.Equal("", d1(2));
+            Assert.Equal("System.String", d1(314));
 
-            Assert.AreEqual("ldarg.0\r\nldc.i4.0\r\nbeq.s l1\r\nldarg.0\r\nldc.i4.1\r\nbeq.s l2\r\nldarg.0\r\nldc.i4.2\r\nbeq.s l3\r\nldstr 'Foo'\r\ntail.call System.String ToString()\r\nret\r\n\r\nl1:\r\nldc.i4.s 123\r\nbox System.Int32\r\ntail.callvirt System.String ToString()\r\nret\r\n\r\nl2:\r\nnewobj Void .ctor()\r\ndup\r\nldvirtftn System.String ToString()\r\ncalli Standard, HasThis System.String \r\nret\r\n\r\nl3:\r\nldstr ''\r\nret\r\n", instrs);
+            Assert.Equal("ldarg.0\r\nldc.i4.0\r\nbeq.s l1\r\nldarg.0\r\nldc.i4.1\r\nbeq.s l2\r\nldarg.0\r\nldc.i4.2\r\nbeq.s l3\r\nldstr 'Foo'\r\ntail.call System.String ToString()\r\nret\r\n\r\nl1:\r\nldc.i4.s 123\r\nbox System.Int32\r\ntail.callvirt System.String ToString()\r\nret\r\n\r\nl2:\r\nnewobj Void .ctor()\r\ndup\r\nldvirtftn System.String ToString()\r\ncalli Standard, HasThis System.String \r\nret\r\n\r\nl3:\r\nldstr ''\r\nret\r\n", instrs);
         }
 
-        [TestMethod]
+        [Fact]
         public void PartialTypeMapping2()
         {
             {
@@ -153,12 +153,12 @@ namespace SigilTests
 
                 var x = dictInst;
 
-                Assert.IsTrue(d1(x, x));
-                Assert.IsFalse(d1(x, new List<int> { 1, 2, 3 }));
+                Assert.True(d1(x, x));
+                Assert.False(d1(x, new List<int> { 1, 2, 3 }));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void PartialTypeMapping1()
         {
             {
@@ -192,8 +192,8 @@ namespace SigilTests
 
                 var x = listInst;
 
-                Assert.IsTrue(d1(x, x));
-                Assert.IsFalse(d1(x, new List<int> { 1, 2, 3 }));
+                Assert.True(d1(x, x));
+                Assert.False(d1(x, new List<int> { 1, 2, 3 }));
             }
         }
 
@@ -209,7 +209,7 @@ namespace SigilTests
             _EnumParamsMethod = foo;
         }
 
-        [TestMethod]
+        [Fact]
         public void EnumParams()
         {
             var e1 = Emit<Action<int>>.NewDynamicMethod();
@@ -221,11 +221,11 @@ namespace SigilTests
 
             _EnumParamsMethod = null;
             d1((int)EnumParamsEnum.A);
-            Assert.AreEqual(EnumParamsEnum.A, _EnumParamsMethod.Value);
+            Assert.Equal(EnumParamsEnum.A, _EnumParamsMethod.Value);
 
             _EnumParamsMethod = null;
             d1((int)EnumParamsEnum.B);
-            Assert.AreEqual(EnumParamsEnum.B, _EnumParamsMethod.Value);
+            Assert.Equal(EnumParamsEnum.B, _EnumParamsMethod.Value);
         }
 
         private static bool DoesNothingWasCalled;
@@ -234,7 +234,7 @@ namespace SigilTests
             DoesNothingWasCalled = true;
         }
 
-        [TestMethod]
+        [Fact]
         public void VoidStatic()
         {
             DoesNothingWasCalled = false;
@@ -247,9 +247,9 @@ namespace SigilTests
 
             var del = e1.CreateDelegate();
 
-            Assert.IsFalse(DoesNothingWasCalled);
+            Assert.False(DoesNothingWasCalled);
             del();
-            Assert.IsTrue(DoesNothingWasCalled);
+            Assert.True(DoesNothingWasCalled);
         }
 
         class VoidInstanceClass
@@ -257,7 +257,7 @@ namespace SigilTests
             public int Go() { return 314159; }
         }
 
-        [TestMethod]
+        [Fact]
         public void VoidInstance()
         {
             var e1 = Emit<Func<int>>.NewDynamicMethod("E1");
@@ -267,7 +267,7 @@ namespace SigilTests
 
             var del = e1.CreateDelegate();
 
-            Assert.AreEqual(314159, del());
+            Assert.Equal(314159, del());
         }
 
         class StringInstanceClass
@@ -275,7 +275,7 @@ namespace SigilTests
             public string Go(int hello) { return hello.ToString(); }
         }
 
-        [TestMethod]
+        [Fact]
         public void StringInstance()
         {
             var e1 = Emit<Func<string>>.NewDynamicMethod("E1");
@@ -286,7 +286,7 @@ namespace SigilTests
 
             var del = e1.CreateDelegate();
 
-            Assert.AreEqual("8675309", del());
+            Assert.Equal("8675309", del());
         }
 
         public static int MultiParamFunc(string a, int b, double c)
@@ -294,7 +294,7 @@ namespace SigilTests
             return int.Parse(a) + b + (int)c;
         }
 
-        [TestMethod]
+        [Fact]
         public void MultiParam()
         {
             var func = typeof(Calls).GetMethod("MultiParamFunc");
@@ -308,10 +308,10 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual(123 + 456 + 7, d1("123", 456, 7.89));
+            Assert.Equal(123 + 456 + 7, d1("123", 456, 7.89));
         }
 
-        [TestMethod]
+        [Fact]
         public void DynamicRecursive()
         {
             var impl = Emit<Func<int,int>>.NewDynamicMethod("factorial");
@@ -331,13 +331,13 @@ namespace SigilTests
 
             string instr;
             var del = impl.CreateDelegate(out instr);
-            Assert.AreEqual(del(1), 1);
-            Assert.AreEqual(del(2), 3);
-            Assert.AreEqual(del(3), 6);
-            Assert.IsFalse(instr.Contains("tail."));
+            Assert.Equal(del(1), 1);
+            Assert.Equal(del(2), 3);
+            Assert.Equal(del(3), 6);
+            Assert.False(instr.Contains("tail."));
         }
 
-        [TestMethod]
+        [Fact]
         public void DynamicRecursiveTail()
         {
             var impl = Emit<Func<int, int, int>>.NewDynamicMethod("factorialImpl");
@@ -359,10 +359,10 @@ namespace SigilTests
 
             string instr;
             var del = impl.CreateDelegate(out instr);
-            Assert.AreEqual(del(1, 0), 1);
-            Assert.AreEqual(del(2, 0), 3);
-            Assert.AreEqual(del(3, 0), 6);
-            Assert.IsTrue(instr.Contains("tail."));
+            Assert.Equal(del(1, 0), 1);
+            Assert.Equal(del(2, 0), 3);
+            Assert.Equal(del(3, 0), 6);
+            Assert.True(instr.Contains("tail."));
         }
     }
 }

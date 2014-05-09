@@ -1,16 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class StoreElement
     {
-        [TestMethod]
+        [Fact]
         public unsafe void AllNonGeneric()
         {
             {
@@ -26,7 +27,7 @@ namespace SigilTests
                 var x = new sbyte[] { 5 };
                 d1(x, 0, 10);
 
-                Assert.AreEqual((sbyte)10, x[0]);
+                Assert.Equal((sbyte)10, x[0]);
             }
 
             {
@@ -42,7 +43,7 @@ namespace SigilTests
                 var x = new byte[] { 5 };
                 d1(x, 0, 10);
 
-                Assert.AreEqual((byte)10, x[0]);
+                Assert.Equal((byte)10, x[0]);
             }
 
             {
@@ -58,7 +59,7 @@ namespace SigilTests
                 var x = new short[] { 5 };
                 d1(x, 0, 10);
 
-                Assert.AreEqual((short)10, x[0]);
+                Assert.Equal((short)10, x[0]);
             }
 
             {
@@ -74,7 +75,7 @@ namespace SigilTests
                 var x = new ushort[] { 5 };
                 d1(x, 0, 10);
 
-                Assert.AreEqual((ushort)10, x[0]);
+                Assert.Equal((ushort)10, x[0]);
             }
 
             {
@@ -90,7 +91,7 @@ namespace SigilTests
                 var x = new int[] { 5 };
                 d1(x, 0, 10);
 
-                Assert.AreEqual((int)10, x[0]);
+                Assert.Equal((int)10, x[0]);
             }
 
             {
@@ -106,7 +107,7 @@ namespace SigilTests
                 var x = new uint[] { 5 };
                 d1(x, 0, 10);
 
-                Assert.AreEqual((uint)10, x[0]);
+                Assert.Equal((uint)10, x[0]);
             }
 
             {
@@ -122,7 +123,7 @@ namespace SigilTests
                 var x = new long[] { 5 };
                 d1(x, 0, 10);
 
-                Assert.AreEqual((long)10, x[0]);
+                Assert.Equal((long)10, x[0]);
             }
 
             {
@@ -138,7 +139,7 @@ namespace SigilTests
                 var x = new ulong[] { 5 };
                 d1(x, 0, 10);
 
-                Assert.AreEqual((ulong)10, x[0]);
+                Assert.Equal((ulong)10, x[0]);
             }
 
             {
@@ -154,7 +155,7 @@ namespace SigilTests
                 var x = new float[] { 5 };
                 d1(x, 0, 10);
 
-                Assert.AreEqual((float)10, x[0]);
+                Assert.Equal((float)10, x[0]);
             }
 
             {
@@ -170,7 +171,7 @@ namespace SigilTests
                 var x = new double[] { 5 };
                 d1(x, 0, 10);
 
-                Assert.AreEqual((double)10, x[0]);
+                Assert.Equal((double)10, x[0]);
             }
 
             {
@@ -186,7 +187,7 @@ namespace SigilTests
                 var x = new object[] { "hello" };
                 d1(x, 0, "world");
 
-                Assert.AreEqual("world", (string)x[0]);
+                Assert.Equal("world", (string)x[0]);
             }
 
             {
@@ -204,7 +205,7 @@ namespace SigilTests
                 var x = new DateTime[] { DateTime.MinValue };
                 d1(x, 0, now);
 
-                Assert.AreEqual(now, x[0]);
+                Assert.Equal(now, x[0]);
             }
 
             {
@@ -224,7 +225,7 @@ namespace SigilTests
 
                 var y = (int*)ptr == x[0];
 
-                Assert.IsTrue(y);
+                Assert.True(y);
             }
         }
     }

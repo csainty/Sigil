@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
@@ -7,12 +7,13 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class LocalAllocate
     {
-        [TestMethod]
+        [Fact]
         public void SimpleNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(void), new [] { typeof(byte[]) });
@@ -53,7 +54,7 @@ namespace SigilTests
 
             for (var i = 0; i < b.Length; i++)
             {
-                Assert.AreEqual(123, b[i]);
+                Assert.Equal(123, b[i]);
             }
         }
     }

@@ -1,16 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class LoadElement
     {
-        [TestMethod]
+        [Fact]
         public void SimpleNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(int), new [] { typeof(int[]), typeof(int) }, "E1");
@@ -21,8 +22,8 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<int[], int, int>>();
 
-            Assert.AreEqual(1, d1(new[] { 3, 1, 2 }, 1));
-            Assert.AreEqual(111, d1(new[] { 111, 2, 3 }, 0));
+            Assert.Equal(1, d1(new[] { 3, 1, 2 }, 1));
+            Assert.Equal(111, d1(new[] { 111, 2, 3 }, 0));
 
             var e2 = Emit.NewDynamicMethod(typeof(string), new [] { typeof(string[]) }, "E2");
             e2.LoadArgument(0);
@@ -32,10 +33,10 @@ namespace SigilTests
 
             var d2 = e2.CreateDelegate<Func<string[], string>>();
 
-            Assert.AreEqual("hello", d2(new[] { "world", "hello" }));
+            Assert.Equal("hello", d2(new[] { "world", "hello" }));
         }
 
-        [TestMethod]
+        [Fact]
         public void ByteNonGeneric()
         {
             {
@@ -47,11 +48,11 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<byte[], int, byte>>();
 
-                Assert.AreEqual(123, d1(new byte[] { 123 }, 0));
+                Assert.Equal(123, d1(new byte[] { 123 }, 0));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void SByteNonGeneric()
         {
             {
@@ -63,11 +64,11 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<sbyte[], int, sbyte>>();
 
-                Assert.AreEqual(-100, d1(new sbyte[] { -100 }, 0));
+                Assert.Equal(-100, d1(new sbyte[] { -100 }, 0));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public unsafe void PointerNonGeneric()
         {
             {
@@ -83,11 +84,11 @@ namespace SigilTests
 
                 var y = (int*)d1(x, 0);
 
-                Assert.IsTrue(x[0] == y);
+                Assert.True(x[0] == y);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ShortNonGeneric()
         {
             {
@@ -99,11 +100,11 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<short[], int, short>>();
 
-                Assert.AreEqual((short)-100, d1(new short[] { -100 }, 0));
+                Assert.Equal((short)-100, d1(new short[] { -100 }, 0));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void UShortNonGeneric()
         {
             {
@@ -115,11 +116,11 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<ushort[], int, ushort>>();
 
-                Assert.AreEqual((ushort)100, d1(new ushort[] { 100 }, 0));
+                Assert.Equal((ushort)100, d1(new ushort[] { 100 }, 0));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void UIntNonGeneric()
         {
             {
@@ -131,11 +132,11 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<uint[], int, uint>>();
 
-                Assert.AreEqual((uint)100, d1(new uint[] { 100 }, 0));
+                Assert.Equal((uint)100, d1(new uint[] { 100 }, 0));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void LongNonGeneric()
         {
             {
@@ -147,11 +148,11 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<long[], int, long>>();
 
-                Assert.AreEqual((long)100, d1(new long[] { 100 }, 0));
+                Assert.Equal((long)100, d1(new long[] { 100 }, 0));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ULongNonGeneric()
         {
             {
@@ -163,11 +164,11 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<ulong[], int, ulong>>();
 
-                Assert.AreEqual((ulong)100, d1(new ulong[] { 100 }, 0));
+                Assert.Equal((ulong)100, d1(new ulong[] { 100 }, 0));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void FloatNonGeneric()
         {
             {
@@ -179,11 +180,11 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<float[], int, float>>();
 
-                Assert.AreEqual((float)100, d1(new float[] { 100 }, 0));
+                Assert.Equal((float)100, d1(new float[] { 100 }, 0));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void DoubleNonGeneric()
         {
             {
@@ -195,11 +196,11 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<double[], int, double>>();
 
-                Assert.AreEqual((double)100, d1(new double[] { 100 }, 0));
+                Assert.Equal((double)100, d1(new double[] { 100 }, 0));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void StructNonGeneric()
         {
             {
@@ -213,7 +214,7 @@ namespace SigilTests
 
                 var now = DateTime.UtcNow;
 
-                Assert.AreEqual(now, d1(new[] { now }, 0));
+                Assert.Equal(now, d1(new[] { now }, 0));
             }
         }
     }

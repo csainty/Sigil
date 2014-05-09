@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
@@ -7,12 +7,13 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class Constructor
     {
-        [TestMethod]
+        [Fact]
         public void ParameterlessNonGeneric()
         {
             var asm = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("Foo"), AssemblyBuilderAccess.Run);
@@ -35,10 +36,10 @@ namespace SigilTests
 
             var inst = type.GetConstructor(Type.EmptyTypes).Invoke(new object[0]);
 
-            Assert.AreEqual(123, (int)fooGet.GetValue(inst));
+            Assert.Equal(123, (int)fooGet.GetValue(inst));
         }
 
-        [TestMethod]
+        [Fact]
         public void TwoParametersNonGeneric()
         {
             var asm = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("Foo"), AssemblyBuilderAccess.Run);
@@ -63,7 +64,7 @@ namespace SigilTests
 
             var inst = type.GetConstructor(new[] { typeof(double), typeof(double) }).Invoke(new object[] { 15.0, 7.0 });
 
-            Assert.AreEqual(15.0 / 7.0, (double)fooGet.GetValue(inst));
+            Assert.Equal(15.0 / 7.0, (double)fooGet.GetValue(inst));
         }
     }
 }

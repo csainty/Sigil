@@ -1,16 +1,16 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class Boxing
     {
-        [TestMethod]
+        [Fact]
         public void NullableInt()
         {
             var e1 = Emit<Func<int?, object>>.NewDynamicMethod("E1");
@@ -20,11 +20,11 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual((object)((int?)123), d1(123));
-            Assert.AreEqual((object)((int?)null), d1(null));
+            Assert.Equal((object)((int?)123), d1(123));
+            Assert.Equal((object)((int?)null), d1(null));
         }
 
-        [TestMethod]
+        [Fact]
         public void Boolean()
         {
             var e1 = Emit<Func<bool, object>>.NewDynamicMethod("E1");
@@ -34,11 +34,11 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual((object)true, d1(true));
-            Assert.AreEqual((object)false, d1(false));
+            Assert.Equal((object)true, d1(true));
+            Assert.Equal((object)false, d1(false));
         }
 
-        [TestMethod]
+        [Fact]
         public void Simple()
         {
             var e1 = Emit<Func<object>>.NewDynamicMethod("E1");
@@ -48,7 +48,7 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual("123", d1().ToString());
+            Assert.Equal("123", d1().ToString());
 
             var e2 = Emit<Func<object>>.NewDynamicMethod("E2");
             e2.LoadConstant(566);
@@ -57,7 +57,7 @@ namespace SigilTests
 
             var d2 = e2.CreateDelegate();
 
-            Assert.AreEqual("54", d2().ToString());
+            Assert.Equal("54", d2().ToString());
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
@@ -7,12 +7,13 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class Methods
     {
-        [TestMethod]
+        [Fact]
         public void StaticNonGeneric()
         {
             var asm = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("Foo"), AssemblyBuilderAccess.Run);
@@ -31,10 +32,10 @@ namespace SigilTests
             var del = type.GetMethod("Static");
 
             var res = (string)del.Invoke(null, new object[] { 123 });
-            Assert.AreEqual("123", res);
+            Assert.Equal("123", res);
         }
 
-        [TestMethod]
+        [Fact]
         public void InstanceNonGeneric()
         {
             var asm = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("Foo"), AssemblyBuilderAccess.Run);
@@ -56,7 +57,7 @@ namespace SigilTests
             var del = type.GetMethod("Instance");
 
             var res = (string)del.Invoke(inst, new object[] { 123 });
-            Assert.AreEqual("124", res);
+            Assert.Equal("124", res);
         }
     }
 }

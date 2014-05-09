@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -7,13 +6,14 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class Branches
     {
-        [TestMethod]
+        [Fact]
         public void ExpectingNullType()
         {
             var strLen = typeof(string).GetProperty("Length");
@@ -35,7 +35,7 @@ namespace SigilTests
             // simply getting here w/o throwing an exception counts as "passing"
         }
 
-        [TestMethod]
+        [Fact]
         public void Scan()
         {
             var terms = new[] { "hello", "world", "fizz", "buzz" };
@@ -71,14 +71,14 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual(-1, d1("whatever"));
-            Assert.AreEqual(0, d1("hello"));
-            Assert.AreEqual(1, d1("world"));
-            Assert.AreEqual(2, d1("fizz"));
-            Assert.AreEqual(3, d1("buzz"));
+            Assert.Equal(-1, d1("whatever"));
+            Assert.Equal(0, d1("hello"));
+            Assert.Equal(1, d1("world"));
+            Assert.Equal(2, d1("fizz"));
+            Assert.Equal(3, d1("buzz"));
         }
 
-        [TestMethod]
+        [Fact]
         public void ConditionalBranchOver()
         {
             var e1 = Emit<Func<int>>.NewDynamicMethod();
@@ -105,10 +105,10 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual(123 + 456, d1());
+            Assert.Equal(123 + 456, d1());
         }
 
-        [TestMethod]
+        [Fact]
         public void ManyConditional()
         {
             var e1 = Emit<Action>.NewDynamicMethod();
@@ -136,7 +136,7 @@ namespace SigilTests
             d1();
         }
 
-        [TestMethod]
+        [Fact]
         public void InMethod()
         {
             var asm = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("Foo"), AssemblyBuilderAccess.Run);
@@ -169,12 +169,12 @@ namespace SigilTests
 
             Func<int, string> d1 = x => (string)d.Invoke(null, new object[] { x });
 
-            Assert.AreEqual("less than or equal", d1(0));
-            Assert.AreEqual("less than or equal", d1(-100));
-            Assert.AreEqual("greater than", d1(50));
+            Assert.Equal("less than or equal", d1(0));
+            Assert.Equal("less than or equal", d1(-100));
+            Assert.Equal("greater than", d1(50));
         }
 
-        [TestMethod]
+        [Fact]
         public void BranchingOverExceptions()
         {
             {
@@ -209,7 +209,7 @@ namespace SigilTests
                     var shouldFail = hasNormalBranch.IsMatch(instrs);
                     if (shouldFail)
                     {
-                        Assert.Fail();
+                        Assert.True(false, "Expected exception was not thrown");
                     }
                 }
             }
@@ -248,13 +248,13 @@ namespace SigilTests
                     var shouldFail = hasNormalBranch.IsMatch(instrs);
                     if (shouldFail)
                     {
-                        Assert.Fail();
+                        Assert.True(false, "Expected exception was not thrown");
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void LeaveDataOnStackBetweenBranches()
         {
             var il = Emit<Func<int>>.NewDynamicMethod("LeaveDataOnStackBetweenBranches");
@@ -275,10 +275,10 @@ namespace SigilTests
             il.MarkLabel(b2); // incoming: 4
             il.Return();
             int i = il.CreateDelegate()();
-            Assert.AreEqual(4, i);
+            Assert.Equal(4, i);
         }
 
-        [TestMethod]
+        [Fact]
         public void LeaveDataOnStackBetweenBranches_OldSchool()
         {
             var dm = new System.Reflection.Emit.DynamicMethod("foo", typeof(int), null);
@@ -299,10 +299,10 @@ namespace SigilTests
             il.MarkLabel(b2); // incoming: 4
             il.Emit(System.Reflection.Emit.OpCodes.Ret);
             int i = ((Func<int>)dm.CreateDelegate(typeof(Func<int>)))();
-            Assert.AreEqual(4, i);
+            Assert.Equal(4, i);
         }
 
-        [TestMethod]
+        [Fact]
         public void ShortForm()
         {
             {
@@ -334,13 +334,13 @@ namespace SigilTests
                     var shouldFail = hasNormalBranch.IsMatch(instrs);
                     if (shouldFail)
                     {
-                        Assert.Fail();
+                        Assert.True(false, "Expected exception was not thrown");
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ShortFormNoOptimizations()
         {
             {
@@ -372,13 +372,13 @@ namespace SigilTests
                     var shouldFail = !hasNormalBranch.IsMatch(instrs);
                     if (shouldFail)
                     {
-                        Assert.Fail();
+                        Assert.True(false, "Expected exception was not thrown");
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void BinaryInput()
         {
             var emit = typeof(Emit<Action>);
@@ -412,7 +412,7 @@ namespace SigilTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void UnaryInput()
         {
             {
@@ -442,7 +442,7 @@ namespace SigilTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void MultiLabel()
         {
             var e1 = Emit<Func<int>>.NewDynamicMethod("E1");
@@ -472,10 +472,10 @@ namespace SigilTests
 
             var del = e1.CreateDelegate();
 
-            Assert.AreEqual(1, del());
+            Assert.Equal(1, del());
         }
 
-        [TestMethod]
+        [Fact]
         public void BrS()
         {
             var e1 = Emit<Func<int>>.NewDynamicMethod("E1");
@@ -495,10 +495,10 @@ namespace SigilTests
 
             var del = e1.CreateDelegate();
 
-            Assert.AreEqual(456, del());
+            Assert.Equal(456, del());
         }
 
-        [TestMethod]
+        [Fact]
         public void Br()
         {
             var e1 = Emit<Func<int>>.NewDynamicMethod("E1");
@@ -520,10 +520,10 @@ namespace SigilTests
 
             var del = e1.CreateDelegate();
 
-            Assert.AreEqual(111, del());
+            Assert.Equal(111, del());
         }
 
-        [TestMethod]
+        [Fact]
         public void BeqS()
         {
             var e1 = Emit<Func<int>>.NewDynamicMethod("E1");
@@ -542,10 +542,10 @@ namespace SigilTests
 
             var del = e1.CreateDelegate();
 
-            Assert.AreEqual(314, del());
+            Assert.Equal(314, del());
         }
 
-        [TestMethod]
+        [Fact]
         public void Beq()
         {
             var e1 = Emit<Func<int>>.NewDynamicMethod("E1");
@@ -569,7 +569,7 @@ namespace SigilTests
 
             var del = e1.CreateDelegate();
 
-            Assert.AreEqual(314, del());
+            Assert.Equal(314, del());
         }
     }
 }

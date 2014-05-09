@@ -1,16 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class LoadConstants
     {
-        [TestMethod]
+        [Fact]
         public void NullNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(string), new [] { typeof(string) }, "E1");
@@ -21,10 +22,10 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<string, string>>();
 
-            Assert.AreEqual(null, d1("Foo"));
+            Assert.Equal(null, d1("Foo"));
         }
 
-        [TestMethod]
+        [Fact]
         public void AllBoolsNonGeneric()
         {
             {
@@ -33,7 +34,7 @@ namespace SigilTests
                 e1.Return();
 
                 var d1 = e1.CreateDelegate<Func<bool>>();
-                Assert.IsTrue(d1());
+                Assert.True(d1());
             }
 
             {
@@ -42,11 +43,11 @@ namespace SigilTests
                 e1.Return();
 
                 var d1 = e1.CreateDelegate<Func<bool>>();
-                Assert.IsFalse(d1());
+                Assert.False(d1());
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void AllIntsNonGeneric()
         {
             for (var i = -1; i <= 256; i++)
@@ -57,11 +58,11 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<int>>();
 
-                Assert.AreEqual(i, d1());
+                Assert.Equal(i, d1());
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void AllUIntsNonGeneric()
         {
             for (uint i = 0; i <= 256; i++)
@@ -72,7 +73,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<uint>>();
 
-                Assert.AreEqual(i, d1());
+                Assert.Equal(i, d1());
             }
 
             {
@@ -82,11 +83,11 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<uint>>();
 
-                Assert.AreEqual(uint.MaxValue, d1());
+                Assert.Equal(uint.MaxValue, d1());
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void LongNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(long), System.Type.EmptyTypes);
@@ -95,10 +96,10 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<long>>();
 
-            Assert.AreEqual(long.MaxValue, d1());
+            Assert.Equal(long.MaxValue, d1());
         }
 
-        [TestMethod]
+        [Fact]
         public void ULongNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(ulong), System.Type.EmptyTypes);
@@ -107,10 +108,10 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<ulong>>();
 
-            Assert.AreEqual(ulong.MaxValue, d1());
+            Assert.Equal(ulong.MaxValue, d1());
         }
 
-        [TestMethod]
+        [Fact]
         public void FloatNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(float), System.Type.EmptyTypes);
@@ -119,10 +120,10 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<float>>();
 
-            Assert.AreEqual(12.34f, d1());
+            Assert.Equal(12.34f, d1());
         }
 
-        [TestMethod]
+        [Fact]
         public void DoubleNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(double), System.Type.EmptyTypes);
@@ -131,10 +132,10 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<double>>();
 
-            Assert.AreEqual(12.34, d1());
+            Assert.Equal(12.34, d1());
         }
 
-        [TestMethod]
+        [Fact]
         public void StringNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(string), System.Type.EmptyTypes);
@@ -143,10 +144,10 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<string>>();
 
-            Assert.AreEqual("hello world", d1());
+            Assert.Equal("hello world", d1());
         }
 
-        [TestMethod]
+        [Fact]
         public void TypeNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(Type), System.Type.EmptyTypes);
@@ -156,10 +157,10 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<Type>>();
 
-            Assert.AreEqual(typeof(string), d1());
+            Assert.Equal(typeof(string), d1());
         }
 
-        [TestMethod]
+        [Fact]
         public void MethodNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(RuntimeMethodHandle), System.Type.EmptyTypes);
@@ -168,10 +169,10 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<RuntimeMethodHandle>>();
 
-            Assert.IsNotNull(d1());
+            Assert.NotNull(d1());
         }
 
-        [TestMethod]
+        [Fact]
         public void FieldNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(RuntimeFieldHandle), System.Type.EmptyTypes);
@@ -180,7 +181,7 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<RuntimeFieldHandle>>();
 
-            Assert.IsNotNull(d1());
+            Assert.NotNull(d1());
         }
     }
 }

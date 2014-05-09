@@ -1,13 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class Jump
     {
         private static int SimpleSet;
@@ -16,7 +16,7 @@ namespace SigilTests
             SimpleSet = x;
         }
 
-        [TestMethod]
+        [Fact]
         public void Simple()
         {
             var simpleSet = typeof(Jump).GetMethod("SimpleSetM");
@@ -32,11 +32,11 @@ namespace SigilTests
             var d1 = e1.CreateDelegate();
 
             d1(1234);
-            Assert.AreEqual(1234 ^ int.MaxValue, SimpleSet);
+            Assert.Equal(1234 ^ int.MaxValue, SimpleSet);
             d1(777);
-            Assert.AreEqual(777 ^ int.MaxValue, SimpleSet);
+            Assert.Equal(777 ^ int.MaxValue, SimpleSet);
             d1(0x12345678);
-            Assert.AreEqual(0x12345678 ^ int.MaxValue, SimpleSet);
+            Assert.Equal(0x12345678 ^ int.MaxValue, SimpleSet);
         }
     }
 }

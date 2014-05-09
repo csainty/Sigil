@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,10 +6,11 @@ using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class TryCatchFinally
     {
         [MethodImpl(MethodImplOptions.NoInlining)]
@@ -20,7 +20,7 @@ namespace SigilTests
                 throw new Exception("Whatever");
         }
 
-        [TestMethod]
+        [Fact]
         public void Simple()
         {
             var e1 = Emit<Func<string>>.NewDynamicMethod("E1");
@@ -40,10 +40,10 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual("Whatever", d1());
+            Assert.Equal("Whatever", d1());
         }
 
-        [TestMethod]
+        [Fact]
         public void Finally()
         {
             var e1 = Emit<Func<string>>.NewDynamicMethod("E1");
@@ -72,29 +72,29 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual("Finally!", d1());
+            Assert.Equal("Finally!", d1());
         }
 
-        [TestMethod]
+        [Fact]
         public void IsCatchAll()
         {
             var e1 = Emit<Action>.NewDynamicMethod("E1");
             var t1 = e1.BeginExceptionBlock();
             var c1 = e1.BeginCatchAllBlock(t1);
 
-            Assert.IsTrue(c1.IsCatchAll);
+            Assert.True(c1.IsCatchAll);
 
             var e2 = Emit<Action>.NewDynamicMethod("E2");
             var t2 = e2.BeginExceptionBlock();
             var c2 = e2.BeginCatchBlock<Exception>(t2);
 
-            Assert.IsTrue(c2.IsCatchAll);
+            Assert.True(c2.IsCatchAll);
 
             var e3 = Emit<Action>.NewDynamicMethod("E3");
             var t3 = e3.BeginExceptionBlock();
             var c3 = e3.BeginCatchBlock<StackOverflowException>(t3);
 
-            Assert.IsFalse(c3.IsCatchAll);
+            Assert.False(c3.IsCatchAll);
         }
     }
 }

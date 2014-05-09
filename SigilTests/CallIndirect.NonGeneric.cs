@@ -1,16 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class CallIndirect
     {
-        [TestMethod]
+        [Fact]
         public void SimpleNonGeneric()
         {
             var foo = typeof(CallIndirect).GetMethod("Foo");
@@ -23,10 +24,10 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<string>>();
 
-            Assert.AreEqual("BarBarBar", d1());
+            Assert.Equal("BarBarBar", d1());
         }
 
-        [TestMethod]
+        [Fact]
         public void VirtualNonGeneric()
         {
             var toString = typeof(object).GetMethod("ToString");
@@ -40,7 +41,7 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<string>>();
 
-            Assert.AreEqual("I'm Virtual!", d1());
+            Assert.Equal("I'm Virtual!", d1());
         }
     }
 }

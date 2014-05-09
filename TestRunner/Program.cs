@@ -1,11 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace TestRunner
 {
@@ -13,7 +13,7 @@ namespace TestRunner
     {
         static int Main(string[] args)
         {
-            var classes = Assembly.Load(new AssemblyName("SigilTests")).GetTypes().Where(t => t.GetCustomAttribute<TestClassAttribute>() != null).ToList();
+            var classes = Assembly.Load(new AssemblyName("SigilTests")).GetTypes().Where(t => t.IsPublic).ToList();
 
             bool success = true;
 
@@ -23,7 +23,7 @@ namespace TestRunner
 
                 var inst = clazz.GetConstructor(Type.EmptyTypes).Invoke(new object[0]);
 
-                foreach (var test in clazz.GetMethods().Where(m => m.GetCustomAttribute<TestMethodAttribute>() != null).OrderBy(o => o.Name))
+                foreach (var test in clazz.GetMethods().Where(m => m.GetCustomAttribute<FactAttribute>() != null).OrderBy(o => o.Name))
                 {
                     var name = clazz.Name + "." + test.Name;
 

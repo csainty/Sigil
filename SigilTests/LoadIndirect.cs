@@ -1,17 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class LoadIndirect
     {
-        [TestMethod]
+        [Fact]
         public void Unaligned()
         {
             {
@@ -21,11 +21,11 @@ namespace SigilTests
                 e1.Return();
 
                 var d1 = e1.CreateDelegate();
-                Assert.AreEqual(111, d1(111));
+                Assert.Equal(111, d1(111));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public unsafe void All()
         {
             {
@@ -35,7 +35,7 @@ namespace SigilTests
                 e1.Return();
 
                 var d1 = e1.CreateDelegate();
-                Assert.AreEqual(111, d1(111));
+                Assert.Equal(111, d1(111));
             }
 
             {
@@ -45,7 +45,7 @@ namespace SigilTests
                 e1.Return();
 
                 var d1 = e1.CreateDelegate();
-                Assert.AreEqual(-111, d1(-111));
+                Assert.Equal(-111, d1(-111));
             }
 
             {
@@ -55,7 +55,7 @@ namespace SigilTests
                 e1.Return();
 
                 var d1 = e1.CreateDelegate();
-                Assert.AreEqual(-111, d1(-111));
+                Assert.Equal(-111, d1(-111));
             }
 
             {
@@ -65,7 +65,7 @@ namespace SigilTests
                 e1.Return();
 
                 var d1 = e1.CreateDelegate();
-                Assert.AreEqual((ushort)short.MaxValue, d1((ushort)short.MaxValue));
+                Assert.Equal((ushort)short.MaxValue, d1((ushort)short.MaxValue));
             }
 
             {
@@ -75,7 +75,7 @@ namespace SigilTests
                 e1.Return();
 
                 var d1 = e1.CreateDelegate();
-                Assert.AreEqual(-111, d1(-111));
+                Assert.Equal(-111, d1(-111));
             }
 
             {
@@ -85,7 +85,7 @@ namespace SigilTests
                 e1.Return();
 
                 var d1 = e1.CreateDelegate();
-                Assert.AreEqual((uint)int.MaxValue, d1((uint)int.MaxValue));
+                Assert.Equal((uint)int.MaxValue, d1((uint)int.MaxValue));
             }
 
             {
@@ -95,7 +95,7 @@ namespace SigilTests
                 e1.Return();
 
                 var d1 = e1.CreateDelegate();
-                Assert.AreEqual(-111, d1(-111));
+                Assert.Equal(-111, d1(-111));
             }
 
             {
@@ -105,7 +105,7 @@ namespace SigilTests
                 e1.Return();
 
                 var d1 = e1.CreateDelegate();
-                Assert.AreEqual((ulong)long.MaxValue, d1((ulong)long.MaxValue));
+                Assert.Equal((ulong)long.MaxValue, d1((ulong)long.MaxValue));
             }
 
             {
@@ -115,7 +115,7 @@ namespace SigilTests
                 e1.Return();
 
                 var d1 = e1.CreateDelegate();
-                Assert.AreEqual(12.34f, d1(12.34f));
+                Assert.Equal(12.34f, d1(12.34f));
             }
 
             {
@@ -125,7 +125,7 @@ namespace SigilTests
                 e1.Return();
 
                 var d1 = e1.CreateDelegate();
-                Assert.AreEqual(12.34, d1(12.34));
+                Assert.Equal(12.34, d1(12.34));
             }
 
             {
@@ -135,7 +135,7 @@ namespace SigilTests
                 e1.Return();
 
                 var d1 = e1.CreateDelegate();
-                Assert.AreEqual("hello", d1("hello"));
+                Assert.Equal("hello", d1("hello"));
             }
 
             {
@@ -151,7 +151,7 @@ namespace SigilTests
 
                 var z = d1((IntPtr)y);
 
-                Assert.AreEqual((IntPtr)3, z);
+                Assert.Equal((IntPtr)3, z);
             }
         }
     }

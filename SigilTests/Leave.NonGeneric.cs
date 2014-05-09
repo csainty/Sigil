@@ -1,16 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class Leave
     {
-        [TestMethod]
+        [Fact]
         public void SimpleNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(int), new [] { typeof(int) });
@@ -32,7 +33,7 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<int, int>>();
 
-            Assert.AreEqual(1, d1(1));
+            Assert.Equal(1, d1(1));
         }
     }
 }

@@ -1,17 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class Multiply
     {
-        [TestMethod]
+        [Fact]
         public void Simple()
         {
             var e1 = Emit<Func<double, double, double>>.NewDynamicMethod("E1");
@@ -22,10 +22,10 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual(3.14 * 1.59, d1(3.14, 1.59));
+            Assert.Equal(3.14 * 1.59, d1(3.14, 1.59));
         }
 
-        [TestMethod]
+        [Fact]
         public void Overflow()
         {
             var e1 = Emit<Func<double, double, double>>.NewDynamicMethod("E1");
@@ -36,10 +36,10 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual(3.14 * 1.59, d1(3.14, 1.59));
+            Assert.Equal(3.14 * 1.59, d1(3.14, 1.59));
         }
 
-        [TestMethod]
+        [Fact]
         public void UnsignedOverflow()
         {
             var e1 = Emit<Func<double, double, double>>.NewDynamicMethod("E1");
@@ -50,7 +50,7 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual(3.14 * 1.59, d1(3.14, 1.59));
+            Assert.Equal(3.14 * 1.59, d1(3.14, 1.59));
         }
     }
 }

@@ -1,17 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class NewArray
     {
-        [TestMethod]
+        [Fact]
         public void Simple()
         {
             var e1 = Emit<Func<int[]>>.NewDynamicMethod();
@@ -23,7 +23,7 @@ namespace SigilTests
 
             var x = d1();
 
-            Assert.AreEqual(128, x.Length);
+            Assert.Equal(128, x.Length);
         }
     }
 }

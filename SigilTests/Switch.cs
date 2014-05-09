@@ -1,17 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class Switch
     {
-        [TestMethod]
+        [Fact]
         public void ReturnChecking()
         {
             {
@@ -55,19 +55,19 @@ namespace SigilTests
                 {
                     e1.CreateDelegate();
 
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
                     var f = e.GetDebugInfo();
-                    Assert.AreEqual("All execution paths must end with Return", e.Message);
+                    Assert.Equal("All execution paths must end with Return", e.Message);
                     var b = "Bad Path\r\n========\r\n__start\r\nl1\r\n\r\nBad Path\r\n========\r\n__start\r\nl2\r\n\r\nBad Path\r\n========\r\n__start\r\nl3\r\n\r\nInstructions\r\n============\r\nldc.i4.0\r\nswitch l1, l2, l3, l4\r\n\r\nl4:\r\nret\r\n\r\nl1:\r\n\r\nl2:\r\n\r\nl3:\r\n";
-                    Assert.AreEqual(b, f);
+                    Assert.Equal(b, f);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Simple()
         {
             var e1 = Emit<Func<int, bool>>.NewDynamicMethod();
@@ -84,8 +84,8 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.IsTrue(d1(0));
-            Assert.IsFalse(d1(1));
+            Assert.True(d1(0));
+            Assert.False(d1(1));
         }
     }
 }

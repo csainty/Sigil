@@ -1,14 +1,14 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class LoadArgumentAddress
     {
         delegate int LotsOfParams(
@@ -23,7 +23,7 @@ namespace SigilTests
             int a9, int b9, int c9, int d9, int e9, int f9, int g9, int h9, int i9, int j9, int k9, int l9, int m9, int n9, int o9, int p9, int q9, int r9, int s9, int t9, int u9, int v9, int w9, int x9, int y9, int z9,
             int a0, int b0, int c0, int d0, int e0, int f0, int g0, int h0, int i0, int j0, int k0, int l0, int m0, int n0, int o0, int p0, int q0, int r0, int s0, int t0, int u0, int v0, int w0, int x0, int y0, int z0);
 
-        [TestMethod]
+        [Fact]
         public void All()
         {
             var e1 = Emit<LotsOfParams>.NewDynamicMethod();
@@ -52,7 +52,7 @@ namespace SigilTests
 
             var ret = (int)d1.DynamicInvoke(args.Cast<object>().ToArray());
 
-            Assert.AreEqual(args.Sum(), ret);
+            Assert.Equal(args.Sum(), ret);
         }
     }
 }

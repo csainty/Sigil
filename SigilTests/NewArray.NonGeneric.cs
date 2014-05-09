@@ -1,16 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class NewArray
     {
-        [TestMethod]
+        [Fact]
         public void SimpleNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(int[]), Type.EmptyTypes);
@@ -22,7 +23,7 @@ namespace SigilTests
 
             var x = d1();
 
-            Assert.AreEqual(128, x.Length);
+            Assert.Equal(128, x.Length);
         }
     }
 }

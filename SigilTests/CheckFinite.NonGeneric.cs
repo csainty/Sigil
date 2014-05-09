@@ -1,16 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class CheckFinite
     {
-        [TestMethod]
+        [Fact]
         public void SimpleNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(void), new [] { typeof(double) }, "E1");
@@ -26,11 +27,11 @@ namespace SigilTests
             try
             {
                 d1(double.PositiveInfinity);
-                Assert.Fail("Should have thrown");
+                Assert.True(false, "Should have thrown");
             }
             catch (ArithmeticException e)
             {
-                Assert.IsNotNull(e);
+                Assert.NotNull(e);
             }
         }
     }

@@ -1,16 +1,16 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class CheckFinite
     {
-        [TestMethod]
+        [Fact]
         public void Simple()
         {
             var e1 = Emit<Action<double>>.NewDynamicMethod("E1");
@@ -26,11 +26,11 @@ namespace SigilTests
             try
             {
                 d1(double.PositiveInfinity);
-                Assert.Fail("Should have thrown");
+                Assert.True(false, "Should have thrown");
             }
             catch (ArithmeticException e)
             {
-                Assert.IsNotNull(e);
+                Assert.NotNull(e);
             }
         }
     }

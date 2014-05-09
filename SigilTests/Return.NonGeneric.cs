@@ -1,16 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class Return
     {
-        [TestMethod]
+        [Fact]
         public void NonTerminalNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(void), Type.EmptyTypes);
@@ -29,7 +30,7 @@ namespace SigilTests
             d1();
         }
 
-        [TestMethod]
+        [Fact]
         public void EmptyNonGeneric()
         {
             var il = Emit.NewDynamicMethod(typeof(void), Type.EmptyTypes,"Empty");
@@ -40,7 +41,7 @@ namespace SigilTests
             del();
         }
 
-        [TestMethod]
+        [Fact]
         public void ConstantNonGeneric()
         {
             var il = Emit.NewDynamicMethod(typeof(int), Type.EmptyTypes,"Constant");
@@ -49,7 +50,7 @@ namespace SigilTests
 
             var del = (Func<int>)il.CreateDelegate(typeof(Func<int>));
 
-            Assert.AreEqual(123, del());
+            Assert.Equal(123, del());
         }
     }
 }

@@ -1,16 +1,16 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class Bitwise
     {
-        [TestMethod]
+        [Fact]
         public void And()
         {
             var e1 = Emit<Func<byte, byte, int>>.NewDynamicMethod("E1");
@@ -23,10 +23,10 @@ namespace SigilTests
 
             byte a = 123, b = 200;
 
-            Assert.AreEqual(a & b, d1(a, b));
+            Assert.Equal(a & b, d1(a, b));
         }
 
-        [TestMethod]
+        [Fact]
         public void Or()
         {
             var e1 = Emit<Func<byte, byte, int>>.NewDynamicMethod("E1");
@@ -39,10 +39,10 @@ namespace SigilTests
 
             byte a = 123, b = 200;
 
-            Assert.AreEqual(a | b, d1(a, b));
+            Assert.Equal(a | b, d1(a, b));
         }
 
-        [TestMethod]
+        [Fact]
         public void Xor()
         {
             var e1 = Emit<Func<byte, byte, int>>.NewDynamicMethod("E1");
@@ -55,10 +55,10 @@ namespace SigilTests
 
             byte a = 123, b = 200;
 
-            Assert.AreEqual(a ^ b, d1(a, b));
+            Assert.Equal(a ^ b, d1(a, b));
         }
 
-        [TestMethod]
+        [Fact]
         public void Not()
         {
             var e1 = Emit<Func<byte, int>>.NewDynamicMethod("E1");
@@ -70,7 +70,7 @@ namespace SigilTests
 
             byte a = 123;
 
-            Assert.AreEqual(~a, d1(a));
+            Assert.Equal(~a, d1(a));
         }
     }
 }

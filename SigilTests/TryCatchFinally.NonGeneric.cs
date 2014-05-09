@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
@@ -7,12 +7,13 @@ using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class TryCatchFinally
     {
-        [TestMethod]
+        [Fact]
         public void SimpleNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(string), Type.EmptyTypes, "E1");
@@ -32,10 +33,10 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<string>>();
 
-            Assert.AreEqual("Whatever", d1());
+            Assert.Equal("Whatever", d1());
         }
 
-        [TestMethod]
+        [Fact]
         public void FinallyNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(string), Type.EmptyTypes, "E1");
@@ -64,29 +65,29 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<string>>();
 
-            Assert.AreEqual("Finally!", d1());
+            Assert.Equal("Finally!", d1());
         }
 
-        [TestMethod]
+        [Fact]
         public void IsCatchAllNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(void), Type.EmptyTypes, "E1");
             var t1 = e1.BeginExceptionBlock();
             var c1 = e1.BeginCatchAllBlock(t1);
 
-            Assert.IsTrue(c1.IsCatchAll);
+            Assert.True(c1.IsCatchAll);
 
             var e2 = Emit.NewDynamicMethod(typeof(void), Type.EmptyTypes, "E2");
             var t2 = e2.BeginExceptionBlock();
             var c2 = e2.BeginCatchBlock<Exception>(t2);
 
-            Assert.IsTrue(c2.IsCatchAll);
+            Assert.True(c2.IsCatchAll);
 
             var e3 = Emit.NewDynamicMethod(typeof(void), Type.EmptyTypes, "E3");
             var t3 = e3.BeginExceptionBlock();
             var c3 = e3.BeginCatchBlock<StackOverflowException>(t3);
 
-            Assert.IsFalse(c3.IsCatchAll);
+            Assert.False(c3.IsCatchAll);
         }
     }
 }

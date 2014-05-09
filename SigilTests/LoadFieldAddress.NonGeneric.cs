@@ -1,16 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class LoadFieldAddress
     {
-        [TestMethod]
+        [Fact]
         public void InstanceNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(int), new [] { typeof(TestObj) });
@@ -21,10 +22,10 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<TestObj, int>>();
 
-            Assert.AreEqual(10, d1(new TestObj { Instance = 10 }));
+            Assert.Equal(10, d1(new TestObj { Instance = 10 }));
         }
 
-        [TestMethod]
+        [Fact]
         public void StaticNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(int), Type.EmptyTypes);
@@ -35,7 +36,7 @@ namespace SigilTests
             var d1 = e1.CreateDelegate<Func<int>>();
 
             TestObj.Static = 20;
-            Assert.AreEqual(20, d1());
+            Assert.Equal(20, d1());
         }
     }
 }

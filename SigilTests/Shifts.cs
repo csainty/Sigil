@@ -1,17 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class Shifts
     {
-        [TestMethod]
+        [Fact]
         public void Left()
         {
             var e1 = Emit<Func<int, int, int>>.NewDynamicMethod("E1");
@@ -22,11 +22,11 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual(1 << 3, d1(1, 3));
-            Assert.AreEqual(5 << 2, d1(5, 2));
+            Assert.Equal(1 << 3, d1(1, 3));
+            Assert.Equal(5 << 2, d1(5, 2));
         }
 
-        [TestMethod]
+        [Fact]
         public void Right()
         {
             var e1 = Emit<Func<int, int, int>>.NewDynamicMethod("E1");
@@ -37,11 +37,11 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual(1234 >> 2, d1(1234, 2));
-            Assert.AreEqual(8675309 >> 5, d1(8675309, 5));
+            Assert.Equal(1234 >> 2, d1(1234, 2));
+            Assert.Equal(8675309 >> 5, d1(8675309, 5));
         }
 
-        [TestMethod]
+        [Fact]
         public void RightUnsigned()
         {
             var e1 = Emit<Func<uint, uint, uint>>.NewDynamicMethod("E1");
@@ -58,8 +58,8 @@ namespace SigilTests
             uint y = 8675309;
             y = y >> 5;
 
-            Assert.AreEqual(x, d1(1234, 2));
-            Assert.AreEqual(y, d1(8675309, 5));
+            Assert.Equal(x, d1(1234, 2));
+            Assert.Equal(y, d1(8675309, 5));
         }
     }
 }

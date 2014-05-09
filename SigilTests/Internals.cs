@@ -1,16 +1,16 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     // These tests aren't about the interface, but about proving some internal details are robust.
     // Anything used in these tests isn't guaranteed to work between versions, and shouldn't be relied upon.
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class Internals
     {
         public static double _OrderSelect(Tuple<int, double> i)
@@ -18,7 +18,7 @@ namespace SigilTests
             return i.Item2;
         }
 
-        [TestMethod]
+        [Fact]
         public void OrderBy()
         {
             var sigilTypes = typeof(Emit<>).Assembly.GetTypes();
@@ -57,15 +57,15 @@ namespace SigilTests
             var sigilList = sigilOrdered.ToList();
             var linqList = linqOrdered.ToList();
 
-            Assert.AreEqual(linqList.Count, sigilList.Count);
+            Assert.Equal(linqList.Count, sigilList.Count);
 
             for (var i = 0; i < linqList.Count; i++)
             {
-                Assert.AreEqual(linqList[i], sigilList[i]);
+                Assert.Equal(linqList[i], sigilList[i]);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void OrderByDescending()
         {
             var sigilTypes = typeof(Emit<>).Assembly.GetTypes();
@@ -104,11 +104,11 @@ namespace SigilTests
             var sigilList = sigilOrdered.ToList();
             var linqList = linqOrdered.ToList();
 
-            Assert.AreEqual(linqList.Count, sigilList.Count);
+            Assert.Equal(linqList.Count, sigilList.Count);
 
             for (var i = 0; i < linqList.Count; i++)
             {
-                Assert.AreEqual(linqList[i], sigilList[i]);
+                Assert.Equal(linqList[i], sigilList[i]);
             }
         }
     }

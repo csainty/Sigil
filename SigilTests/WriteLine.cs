@@ -4,15 +4,15 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Sigil;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class WriteLine
     {
-        [TestMethod]
+        [Fact]
         public void WriteLineFormat()
         {
             {
@@ -57,11 +57,11 @@ namespace SigilTests
                 var del = e.CreateDelegate();
                 var val = del();
 
-                Assert.AreEqual("a: hello world; b: 16; c: \r\n", val);
+                Assert.Equal("a: hello world; b: 16; c: \r\n", val);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void WriteLineSimple()
         {
             var el = Emit<Func<string>>.NewDynamicMethod();
@@ -94,7 +94,7 @@ namespace SigilTests
             var del = el.CreateDelegate();
             var val = del();
 
-            Assert.AreEqual(guid + Environment.NewLine, val);
+            Assert.Equal(guid + Environment.NewLine, val);
         }
     }
 }

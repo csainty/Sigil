@@ -1,16 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class StoreLocal
     {
-        [TestMethod]
+        [Fact]
         public void IntNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(int), Type.EmptyTypes, "E1");
@@ -25,7 +26,7 @@ namespace SigilTests
 
             var del = e1.CreateDelegate<Func<int>>();
 
-            Assert.AreEqual(46, del());
+            Assert.Equal(46, del());
         }
     }
 }

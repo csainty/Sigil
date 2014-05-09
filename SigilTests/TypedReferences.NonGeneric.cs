@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
@@ -6,12 +6,13 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class TypedReferences
     {
-        [TestMethod]
+        [Fact]
         public void MakeRefNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(int), new [] { typeof(int?) });
@@ -28,11 +29,11 @@ namespace SigilTests
             var a = d1(123);
             var b = d1(null);
 
-            Assert.AreEqual(123, a);
-            Assert.AreEqual(314159, b);
+            Assert.Equal(123, a);
+            Assert.Equal(314159, b);
         }
 
-        [TestMethod]
+        [Fact]
         public void RefValueNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(int), Type.EmptyTypes);
@@ -51,10 +52,10 @@ namespace SigilTests
 
             var x = d1();
 
-            Assert.AreEqual(123, x);
+            Assert.Equal(123, x);
         }
 
-        [TestMethod]
+        [Fact]
         public void RefTypeNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(Type), Type.EmptyTypes);
@@ -73,7 +74,7 @@ namespace SigilTests
 
             var x = d1();
 
-            Assert.AreEqual(typeof(int?), x);
+            Assert.Equal(typeof(int?), x);
         }
     }
 }

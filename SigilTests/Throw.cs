@@ -1,17 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class Throw
     {
-        [TestMethod]
+        [Fact]
         public void Simple()
         {
             var e1 = Emit<Action>.NewDynamicMethod();
@@ -24,11 +24,11 @@ namespace SigilTests
             try
             {
                 d1();
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (Exception e)
             {
-                Assert.AreEqual("Hello!", e.Message);
+                Assert.Equal("Hello!", e.Message);
             }
         }
     }

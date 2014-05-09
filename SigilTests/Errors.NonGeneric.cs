@@ -1,16 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class Errors
     {
-        [TestMethod]
+        [Fact]
         public void NotDelegateNonGeneric()
         {
             try
@@ -18,15 +19,15 @@ namespace SigilTests
                 var emit = Emit.NewDynamicMethod(typeof(void), Type.EmptyTypes);
                 var del = emit.CreateDelegate(typeof(string));
 
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (ArgumentException e)
             {
-                Assert.AreEqual("delegateType must be a delegate, found System.String", e.Message);
+                Assert.Equal("delegateType must be a delegate, found System.String", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void WrongReturnTypeNonGeneric()
         {
             try
@@ -38,15 +39,15 @@ namespace SigilTests
 
                 var del = emit.CreateDelegate(typeof(Func<int>));
 
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (ArgumentException e)
             {
-                Assert.AreEqual("Expected delegateType to return System.String, found System.Int32", e.Message);
+                Assert.Equal("Expected delegateType to return System.String, found System.Int32", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void WrongParameterTypesNonGeneric()
         {
             {
@@ -58,11 +59,11 @@ namespace SigilTests
 
                     var del = emit.CreateDelegate(typeof(Action<int, int>));
 
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("Expected delegateType's parameter at index 1 to be a System.String, found System.Int32", e.Message);
+                    Assert.Equal("Expected delegateType's parameter at index 1 to be a System.String, found System.Int32", e.Message);
                 }
             }
 
@@ -75,11 +76,11 @@ namespace SigilTests
 
                     var del = emit.CreateDelegate(typeof(Action<int, int>));
 
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("Expected delegateType to take 1 parameters, found 2", e.Message);
+                    Assert.Equal("Expected delegateType to take 1 parameters, found 2", e.Message);
                 }
             }
         }

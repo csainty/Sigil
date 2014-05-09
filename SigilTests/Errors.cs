@@ -1,37 +1,37 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class Errors
     {
-        [TestMethod]
+        [Fact]
         public void DisassemblingClosure()
         {
             var ret = 4;
             Func<int> d = () => ret;
 
             var ops = Disassembler<Func<int>>.Disassemble(d);
-            Assert.IsFalse(ops.CanEmit);
+            Assert.False(ops.CanEmit);
 
             try
             {
                 var e = ops.EmitAll();
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (InvalidOperationException e)
             {
-                Assert.AreEqual("Cannot emit this DisassembledOperations object, check CanEmit before calling any Emit methods", e.Message);
+                Assert.Equal("Cannot emit this DisassembledOperations object, check CanEmit before calling any Emit methods", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void BadNonTerminalReturn()
         {
             var e1 = Emit<Action>.NewDynamicMethod();
@@ -51,16 +51,16 @@ namespace SigilTests
             {
                 e1.CreateDelegate();
 
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("All execution paths must end with Return", e.Message);
-                Assert.AreEqual("Bad Path\r\n========\r\n__start\r\nl1\r\n\r\nInstructions\r\n============\r\nbr.s l1\r\n\r\nl2:\r\nret\r\n\r\nl1:\r\nldc.i4.1\r\nbrtrue.s l2\r\n", e.GetDebugInfo());
+                Assert.Equal("All execution paths must end with Return", e.Message);
+                Assert.Equal("Bad Path\r\n========\r\n__start\r\nl1\r\n\r\nInstructions\r\n============\r\nbr.s l1\r\n\r\nl2:\r\nret\r\n\r\nl1:\r\nldc.i4.1\r\nbrtrue.s l2\r\n", e.GetDebugInfo());
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void BadBranchManyConditional()
         {
             var e1 = Emit<Action>.NewDynamicMethod();
@@ -85,17 +85,17 @@ namespace SigilTests
             try
             {
                 e1.Pop();
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (SigilVerificationException e)
             {
                 var f = e.GetDebugInfo();
-                Assert.AreEqual("Pop expects a value on the stack, but it was empty", e.Message);
-                Assert.AreEqual("Stack\r\n=====\r\n--empty--\r\n\r\nInstructions\r\n============\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label0\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label1\r\n\r\n_label0:\r\n\r\n_label1:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label2\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label3\r\n\r\n_label2:\r\n\r\n_label3:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label4\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label5\r\n\r\n_label4:\r\n\r\n_label5:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label6\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label7\r\n\r\n_label6:\r\n\r\n_label7:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label8\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label9\r\n\r\n_label8:\r\n\r\n_label9:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label10\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label11\r\n\r\n_label10:\r\n\r\n_label11:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label12\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label13\r\n\r\n_label12:\r\n\r\n_label13:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label14\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label15\r\n\r\n_label14:\r\n\r\n_label15:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label16\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label17\r\n\r\n_label16:\r\n\r\n_label17:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label18\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label19\r\n\r\n_label18:\r\n\r\n_label19:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label20\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label21\r\n\r\n_label20:\r\n\r\n_label21:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label22\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label23\r\n\r\n_label22:\r\n\r\n_label23:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label24\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label25\r\n\r\n_label24:\r\n\r\n_label25:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label26\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label27\r\n\r\n_label26:\r\n\r\n_label27:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label28\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label29\r\n\r\n_label28:\r\n\r\n_label29:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label30\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label31\r\n\r\n_label30:\r\n\r\n_label31:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label32\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label33\r\n\r\n_label32:\r\n\r\n_label33:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label34\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label35\r\n\r\n_label34:\r\n\r\n_label35:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label36\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label37\r\n\r\n_label36:\r\n\r\n_label37:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label38\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label39\r\n\r\n_label38:\r\n\r\n_label39:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label40\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label41\r\n\r\n_label40:\r\n\r\n_label41:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label42\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label43\r\n\r\n_label42:\r\n\r\n_label43:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label44\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label45\r\n\r\n_label44:\r\n\r\n_label45:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label46\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label47\r\n\r\n_label46:\r\n\r\n_label47:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label48\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label49\r\n\r\n_label48:\r\n\r\n_label49:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label50\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label51\r\n\r\n_label50:\r\n\r\n_label51:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label52\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label53\r\n\r\n_label52:\r\n\r\n_label53:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label54\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label55\r\n\r\n_label54:\r\n\r\n_label55:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label56\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label57\r\n\r\n_label56:\r\n\r\n_label57:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label58\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label59\r\n\r\n_label58:\r\n\r\n_label59:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label60\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label61\r\n\r\n_label60:\r\n\r\n_label61:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label62\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label63\r\n\r\n_label62:\r\n\r\n_label63:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label64\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label65\r\n\r\n_label64:\r\n\r\n_label65:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label66\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label67\r\n\r\n_label66:\r\n\r\n_label67:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label68\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label69\r\n\r\n_label68:\r\n\r\n_label69:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label70\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label71\r\n\r\n_label70:\r\n\r\n_label71:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label72\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label73\r\n\r\n_label72:\r\n\r\n_label73:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label74\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label75\r\n\r\n_label74:\r\n\r\n_label75:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label76\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label77\r\n\r\n_label76:\r\n\r\n_label77:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label78\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label79\r\n\r\n_label78:\r\n\r\n_label79:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label80\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label81\r\n\r\n_label80:\r\n\r\n_label81:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label82\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label83\r\n\r\n_label82:\r\n\r\n_label83:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label84\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label85\r\n\r\n_label84:\r\n\r\n_label85:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label86\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label87\r\n\r\n_label86:\r\n\r\n_label87:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label88\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label89\r\n\r\n_label88:\r\n\r\n_label89:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label90\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label91\r\n\r\n_label90:\r\n\r\n_label91:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label92\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label93\r\n\r\n_label92:\r\n\r\n_label93:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label94\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label95\r\n\r\n_label94:\r\n\r\n_label95:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label96\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label97\r\n\r\n_label96:\r\n\r\n_label97:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label98\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label99\r\n\r\n_label98:\r\n\r\n_label99:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label100\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label101\r\n\r\n_label100:\r\n\r\n_label101:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label102\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label103\r\n\r\n_label102:\r\n\r\n_label103:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label104\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label105\r\n\r\n_label104:\r\n\r\n_label105:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label106\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label107\r\n\r\n_label106:\r\n\r\n_label107:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label108\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label109\r\n\r\n_label108:\r\n\r\n_label109:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label110\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label111\r\n\r\n_label110:\r\n\r\n_label111:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label112\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label113\r\n\r\n_label112:\r\n\r\n_label113:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label114\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label115\r\n\r\n_label114:\r\n\r\n_label115:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label116\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label117\r\n\r\n_label116:\r\n\r\n_label117:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label118\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label119\r\n\r\n_label118:\r\n\r\n_label119:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label120\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label121\r\n\r\n_label120:\r\n\r\n_label121:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label122\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label123\r\n\r\n_label122:\r\n\r\n_label123:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label124\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label125\r\n\r\n_label124:\r\n\r\n_label125:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label126\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label127\r\n\r\n_label126:\r\n\r\n_label127:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label128\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label129\r\n\r\n_label128:\r\n\r\n_label129:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label130\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label131\r\n\r\n_label130:\r\n\r\n_label131:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label132\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label133\r\n\r\n_label132:\r\n\r\n_label133:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label134\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label135\r\n\r\n_label134:\r\n\r\n_label135:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label136\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label137\r\n\r\n_label136:\r\n\r\n_label137:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label138\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label139\r\n\r\n_label138:\r\n\r\n_label139:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label140\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label141\r\n\r\n_label140:\r\n\r\n_label141:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label142\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label143\r\n\r\n_label142:\r\n\r\n_label143:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label144\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label145\r\n\r\n_label144:\r\n\r\n_label145:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label146\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label147\r\n\r\n_label146:\r\n\r\n_label147:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label148\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label149\r\n\r\n_label148:\r\n\r\n_label149:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label150\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label151\r\n\r\n_label150:\r\n\r\n_label151:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label152\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label153\r\n\r\n_label152:\r\n\r\n_label153:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label154\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label155\r\n\r\n_label154:\r\n\r\n_label155:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label156\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label157\r\n\r\n_label156:\r\n\r\n_label157:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label158\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label159\r\n\r\n_label158:\r\n\r\n_label159:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label160\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label161\r\n\r\n_label160:\r\n\r\n_label161:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label162\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label163\r\n\r\n_label162:\r\n\r\n_label163:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label164\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label165\r\n\r\n_label164:\r\n\r\n_label165:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label166\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label167\r\n\r\n_label166:\r\n\r\n_label167:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label168\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label169\r\n\r\n_label168:\r\n\r\n_label169:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label170\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label171\r\n\r\n_label170:\r\n\r\n_label171:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label172\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label173\r\n\r\n_label172:\r\n\r\n_label173:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label174\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label175\r\n\r\n_label174:\r\n\r\n_label175:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label176\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label177\r\n\r\n_label176:\r\n\r\n_label177:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label178\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label179\r\n\r\n_label178:\r\n\r\n_label179:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label180\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label181\r\n\r\n_label180:\r\n\r\n_label181:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label182\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label183\r\n\r\n_label182:\r\n\r\n_label183:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label184\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label185\r\n\r\n_label184:\r\n\r\n_label185:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label186\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label187\r\n\r\n_label186:\r\n\r\n_label187:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label188\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label189\r\n\r\n_label188:\r\n\r\n_label189:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label190\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label191\r\n\r\n_label190:\r\n\r\n_label191:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label192\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label193\r\n\r\n_label192:\r\n\r\n_label193:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label194\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label195\r\n\r\n_label194:\r\n\r\n_label195:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label196\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label197\r\n\r\n_label196:\r\n\r\n_label197:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label198\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label199\r\n\r\n_label198:\r\n\r\n_label199:\r\n", f);
+                Assert.Equal("Pop expects a value on the stack, but it was empty", e.Message);
+                Assert.Equal("Stack\r\n=====\r\n--empty--\r\n\r\nInstructions\r\n============\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label0\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label1\r\n\r\n_label0:\r\n\r\n_label1:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label2\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label3\r\n\r\n_label2:\r\n\r\n_label3:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label4\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label5\r\n\r\n_label4:\r\n\r\n_label5:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label6\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label7\r\n\r\n_label6:\r\n\r\n_label7:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label8\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label9\r\n\r\n_label8:\r\n\r\n_label9:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label10\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label11\r\n\r\n_label10:\r\n\r\n_label11:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label12\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label13\r\n\r\n_label12:\r\n\r\n_label13:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label14\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label15\r\n\r\n_label14:\r\n\r\n_label15:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label16\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label17\r\n\r\n_label16:\r\n\r\n_label17:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label18\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label19\r\n\r\n_label18:\r\n\r\n_label19:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label20\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label21\r\n\r\n_label20:\r\n\r\n_label21:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label22\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label23\r\n\r\n_label22:\r\n\r\n_label23:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label24\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label25\r\n\r\n_label24:\r\n\r\n_label25:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label26\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label27\r\n\r\n_label26:\r\n\r\n_label27:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label28\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label29\r\n\r\n_label28:\r\n\r\n_label29:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label30\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label31\r\n\r\n_label30:\r\n\r\n_label31:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label32\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label33\r\n\r\n_label32:\r\n\r\n_label33:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label34\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label35\r\n\r\n_label34:\r\n\r\n_label35:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label36\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label37\r\n\r\n_label36:\r\n\r\n_label37:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label38\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label39\r\n\r\n_label38:\r\n\r\n_label39:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label40\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label41\r\n\r\n_label40:\r\n\r\n_label41:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label42\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label43\r\n\r\n_label42:\r\n\r\n_label43:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label44\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label45\r\n\r\n_label44:\r\n\r\n_label45:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label46\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label47\r\n\r\n_label46:\r\n\r\n_label47:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label48\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label49\r\n\r\n_label48:\r\n\r\n_label49:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label50\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label51\r\n\r\n_label50:\r\n\r\n_label51:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label52\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label53\r\n\r\n_label52:\r\n\r\n_label53:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label54\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label55\r\n\r\n_label54:\r\n\r\n_label55:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label56\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label57\r\n\r\n_label56:\r\n\r\n_label57:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label58\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label59\r\n\r\n_label58:\r\n\r\n_label59:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label60\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label61\r\n\r\n_label60:\r\n\r\n_label61:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label62\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label63\r\n\r\n_label62:\r\n\r\n_label63:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label64\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label65\r\n\r\n_label64:\r\n\r\n_label65:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label66\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label67\r\n\r\n_label66:\r\n\r\n_label67:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label68\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label69\r\n\r\n_label68:\r\n\r\n_label69:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label70\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label71\r\n\r\n_label70:\r\n\r\n_label71:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label72\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label73\r\n\r\n_label72:\r\n\r\n_label73:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label74\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label75\r\n\r\n_label74:\r\n\r\n_label75:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label76\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label77\r\n\r\n_label76:\r\n\r\n_label77:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label78\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label79\r\n\r\n_label78:\r\n\r\n_label79:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label80\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label81\r\n\r\n_label80:\r\n\r\n_label81:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label82\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label83\r\n\r\n_label82:\r\n\r\n_label83:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label84\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label85\r\n\r\n_label84:\r\n\r\n_label85:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label86\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label87\r\n\r\n_label86:\r\n\r\n_label87:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label88\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label89\r\n\r\n_label88:\r\n\r\n_label89:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label90\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label91\r\n\r\n_label90:\r\n\r\n_label91:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label92\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label93\r\n\r\n_label92:\r\n\r\n_label93:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label94\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label95\r\n\r\n_label94:\r\n\r\n_label95:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label96\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label97\r\n\r\n_label96:\r\n\r\n_label97:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label98\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label99\r\n\r\n_label98:\r\n\r\n_label99:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label100\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label101\r\n\r\n_label100:\r\n\r\n_label101:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label102\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label103\r\n\r\n_label102:\r\n\r\n_label103:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label104\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label105\r\n\r\n_label104:\r\n\r\n_label105:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label106\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label107\r\n\r\n_label106:\r\n\r\n_label107:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label108\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label109\r\n\r\n_label108:\r\n\r\n_label109:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label110\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label111\r\n\r\n_label110:\r\n\r\n_label111:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label112\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label113\r\n\r\n_label112:\r\n\r\n_label113:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label114\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label115\r\n\r\n_label114:\r\n\r\n_label115:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label116\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label117\r\n\r\n_label116:\r\n\r\n_label117:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label118\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label119\r\n\r\n_label118:\r\n\r\n_label119:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label120\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label121\r\n\r\n_label120:\r\n\r\n_label121:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label122\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label123\r\n\r\n_label122:\r\n\r\n_label123:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label124\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label125\r\n\r\n_label124:\r\n\r\n_label125:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label126\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label127\r\n\r\n_label126:\r\n\r\n_label127:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label128\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label129\r\n\r\n_label128:\r\n\r\n_label129:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label130\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label131\r\n\r\n_label130:\r\n\r\n_label131:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label132\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label133\r\n\r\n_label132:\r\n\r\n_label133:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label134\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label135\r\n\r\n_label134:\r\n\r\n_label135:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label136\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label137\r\n\r\n_label136:\r\n\r\n_label137:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label138\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label139\r\n\r\n_label138:\r\n\r\n_label139:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label140\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label141\r\n\r\n_label140:\r\n\r\n_label141:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label142\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label143\r\n\r\n_label142:\r\n\r\n_label143:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label144\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label145\r\n\r\n_label144:\r\n\r\n_label145:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label146\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label147\r\n\r\n_label146:\r\n\r\n_label147:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label148\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label149\r\n\r\n_label148:\r\n\r\n_label149:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label150\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label151\r\n\r\n_label150:\r\n\r\n_label151:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label152\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label153\r\n\r\n_label152:\r\n\r\n_label153:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label154\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label155\r\n\r\n_label154:\r\n\r\n_label155:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label156\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label157\r\n\r\n_label156:\r\n\r\n_label157:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label158\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label159\r\n\r\n_label158:\r\n\r\n_label159:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label160\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label161\r\n\r\n_label160:\r\n\r\n_label161:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label162\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label163\r\n\r\n_label162:\r\n\r\n_label163:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label164\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label165\r\n\r\n_label164:\r\n\r\n_label165:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label166\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label167\r\n\r\n_label166:\r\n\r\n_label167:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label168\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label169\r\n\r\n_label168:\r\n\r\n_label169:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label170\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label171\r\n\r\n_label170:\r\n\r\n_label171:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label172\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label173\r\n\r\n_label172:\r\n\r\n_label173:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label174\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label175\r\n\r\n_label174:\r\n\r\n_label175:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label176\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label177\r\n\r\n_label176:\r\n\r\n_label177:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label178\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label179\r\n\r\n_label178:\r\n\r\n_label179:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label180\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label181\r\n\r\n_label180:\r\n\r\n_label181:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label182\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label183\r\n\r\n_label182:\r\n\r\n_label183:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label184\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label185\r\n\r\n_label184:\r\n\r\n_label185:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label186\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label187\r\n\r\n_label186:\r\n\r\n_label187:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label188\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label189\r\n\r\n_label188:\r\n\r\n_label189:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label190\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label191\r\n\r\n_label190:\r\n\r\n_label191:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label192\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label193\r\n\r\n_label192:\r\n\r\n_label193:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label194\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label195\r\n\r\n_label194:\r\n\r\n_label195:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label196\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label197\r\n\r\n_label196:\r\n\r\n_label197:\r\nldc.i4.0\r\nldc.i4.1\r\nbgt _label198\r\nldc.i4.2\r\nldc.i4.3\r\nblt _label199\r\n\r\n_label198:\r\n\r\n_label199:\r\n", f);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void BadOptimizationOptions()
         {
             var e1 = Emit<Action>.NewDynamicMethod();
@@ -104,15 +104,15 @@ namespace SigilTests
             try
             {
                 e1.CreateDelegate((OptimizationOptions)123);
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (ArgumentException e)
             {
-                Assert.AreEqual("optimizationOptions contained unknown flags, found 123", e.Message);
+                Assert.Equal("optimizationOptions contained unknown flags, found 123", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void BadManyBranch()
         {
             var e1 = Emit<Func<string, string>>.NewDynamicMethod();
@@ -143,15 +143,15 @@ namespace SigilTests
             {
                 e1.Return();
 
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("Return expects a value on the stack, but it was empty", e.Message);
+                Assert.Equal("Return expects a value on the stack, but it was empty", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void BadDoubleBranch()
         {
             var e1 = Emit<Func<string, string>>.NewDynamicMethod();
@@ -173,17 +173,17 @@ namespace SigilTests
             {
                 e1.Branch(l2);
 
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("Branch expects a value on the stack, but it was empty", e.Message);
+                Assert.Equal("Branch expects a value on the stack, but it was empty", e.Message);
                 var debug = e.GetDebugInfo();
-                Assert.AreEqual("Stack\r\n=====\r\n--empty--\r\n\r\nInstructions\r\n============\r\nldarg.0\r\nbr l1\r\n\r\nl2:\r\npop\r\ncallvirt System.String ToString()  // relevant instruction\r\nbr l3\r\n\r\nl1:\r\nbr l2\r\n", debug);
+                Assert.Equal("Stack\r\n=====\r\n--empty--\r\n\r\nInstructions\r\n============\r\nldarg.0\r\nbr l1\r\n\r\nl2:\r\npop\r\ncallvirt System.String ToString()  // relevant instruction\r\nbr l3\r\n\r\nl1:\r\nbr l2\r\n", debug);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void BadStackVals()
         {
             {
@@ -194,12 +194,12 @@ namespace SigilTests
                 try
                 {
                     e1.Add();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
                     var debug = e.GetDebugInfo();
-                    Assert.AreEqual("Stack\r\n=====\r\nSystem.String  // bad value\r\nint\r\n\r\nInstructions\r\n============\r\nldc.i4.1\r\nldstr 'foo'\r\n", debug);
+                    Assert.Equal("Stack\r\n=====\r\nSystem.String  // bad value\r\nint\r\n\r\nInstructions\r\n============\r\nldc.i4.1\r\nldstr 'foo'\r\n", debug);
                 }
             }
 
@@ -211,12 +211,12 @@ namespace SigilTests
                 try
                 {
                     e1.Add();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
                     var debug = e.GetDebugInfo();
-                    Assert.AreEqual("Stack\r\n=====\r\nint\r\nSystem.String  // bad value\r\n\r\nInstructions\r\n============\r\nldstr 'foo'\r\nldc.i4.1\r\n", debug);
+                    Assert.Equal("Stack\r\n=====\r\nint\r\nSystem.String  // bad value\r\n\r\nInstructions\r\n============\r\nldstr 'foo'\r\nldc.i4.1\r\n", debug);
                 }
             }
 
@@ -230,12 +230,12 @@ namespace SigilTests
                 try
                 {
                     e1.Call(substring);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
                     var debug = e.GetDebugInfo();
-                    Assert.AreEqual("Stack\r\n=====\r\ndouble  // bad value\r\nint\r\nSystem.String\r\n\r\nInstructions\r\n============\r\nldstr 'foo'\r\nldc.i4.1\r\nldc.r8 2\r\n", debug);
+                    Assert.Equal("Stack\r\n=====\r\ndouble  // bad value\r\nint\r\nSystem.String\r\n\r\nInstructions\r\n============\r\nldstr 'foo'\r\nldc.i4.1\r\nldc.r8 2\r\n", debug);
                 }
             }
 
@@ -249,12 +249,12 @@ namespace SigilTests
                 try
                 {
                     e1.Call(substring);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
                     var debug = e.GetDebugInfo();
-                    Assert.AreEqual("Stack\r\n=====\r\nint\r\nfloat  // bad value\r\nSystem.String\r\n\r\nInstructions\r\n============\r\nldstr 'foo'\r\nldc.r4 1\r\nldc.i4.2\r\n", debug);
+                    Assert.Equal("Stack\r\n=====\r\nint\r\nfloat  // bad value\r\nSystem.String\r\n\r\nInstructions\r\n============\r\nldstr 'foo'\r\nldc.r4 1\r\nldc.i4.2\r\n", debug);
                 }
             }
 
@@ -268,17 +268,17 @@ namespace SigilTests
                 try
                 {
                     e1.Call(substring);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
                     var debug = e.GetDebugInfo();
-                    Assert.AreEqual("Stack\r\n=====\r\nint\r\nint\r\nSystem.Object  // bad value\r\n\r\nInstructions\r\n============\r\nnewobj Void .ctor()\r\nldc.i4.1\r\nldc.i4.2\r\n", debug);
+                    Assert.Equal("Stack\r\n=====\r\nint\r\nint\r\nSystem.Object  // bad value\r\n\r\nInstructions\r\n============\r\nnewobj Void .ctor()\r\nldc.i4.1\r\nldc.i4.2\r\n", debug);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void LabelDiffStack()
         {
             {
@@ -292,18 +292,18 @@ namespace SigilTests
                 try
                 {
                     e1.MarkLabel(l);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
                     var f = e.GetDebugInfo();
-                    Assert.AreEqual("MarkLabel expects 0 values on the stack", e.Message);
-                    Assert.AreEqual("\r\nInstructions\r\n============\r\nldc.i4.1\r\nbrfalse _label0\r\nldc.i4.4\r\n", f);
+                    Assert.Equal("MarkLabel expects 0 values on the stack", e.Message);
+                    Assert.Equal("\r\nInstructions\r\n============\r\nldc.i4.1\r\nbrfalse _label0\r\nldc.i4.4\r\n", f);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void BranchDiffStack()
         {
             var e1 = Emit<Action>.NewDynamicMethod();
@@ -317,17 +317,17 @@ namespace SigilTests
             try
             {
                 e1.Branch(l);
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (SigilVerificationException e)
             {
                 var f = e.GetDebugInfo();
-                Assert.AreEqual("Branch expected an int; found System.String", e.Message);
-                Assert.AreEqual("\r\nInstructions\r\n============\r\nldc.i4.1\r\n\r\n_label0:\r\npop\r\nldstr '123'\r\nbr _label0\r\n", f);
+                Assert.Equal("Branch expected an int; found System.String", e.Message);
+                Assert.Equal("\r\nInstructions\r\n============\r\nldc.i4.1\r\n\r\n_label0:\r\npop\r\nldstr '123'\r\nbr _label0\r\n", f);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Unreachable()
         {
             var e1 = Emit<Action>.NewDynamicMethod();
@@ -338,15 +338,15 @@ namespace SigilTests
             try
             {
                 e1.Pop();
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("Unreachable code detected", e.Message);
+                Assert.Equal("Unreachable code detected", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void WriteLine()
         {
             {
@@ -355,11 +355,11 @@ namespace SigilTests
                 try
                 {
                     e1.WriteLine(null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("line", e.ParamName);
+                    Assert.Equal("line", e.ParamName);
                 }
             }
 
@@ -369,11 +369,11 @@ namespace SigilTests
                 try
                 {
                     e1.WriteLine("foo", null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("locals", e.ParamName);
+                    Assert.Equal("locals", e.ParamName);
                 }
             }
 
@@ -385,16 +385,16 @@ namespace SigilTests
                 try
                 {
                     e1.WriteLine("foo", a);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("System.Int32 _local0 is not owned by this Emit, and thus cannot be used", e.Message);
+                    Assert.Equal("System.Int32 _local0 is not owned by this Emit, and thus cannot be used", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void DoubleLabelDeclaration()
         {
             var e1 = Emit<Action>.NewDynamicMethod();
@@ -403,15 +403,15 @@ namespace SigilTests
             try
             {
                 e1.DefineLabel("a");
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (InvalidOperationException e)
             {
-                Assert.AreEqual("Label with name 'a' already exists", e.Message);
+                Assert.Equal("Label with name 'a' already exists", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void DoubleLocalDeclaration()
         {
             var e1 = Emit<Action>.NewDynamicMethod();
@@ -420,11 +420,11 @@ namespace SigilTests
             try
             {
                 e1.DeclareLocal<string>("a");
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (InvalidOperationException e)
             {
-                Assert.AreEqual("Local with name 'a' already exists", e.Message);
+                Assert.Equal("Local with name 'a' already exists", e.Message);
             }
 
             a.Dispose();
@@ -432,7 +432,7 @@ namespace SigilTests
             e1.DeclareLocal<string>("a");
         }
 
-        [TestMethod]
+        [Fact]
         public void GenericThisCall()
         {
             {
@@ -445,16 +445,16 @@ namespace SigilTests
                     e1.LoadConstant(1);
                     e1.CallVirtual(invoke);
 
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("CallVirtual expected a System.Action`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]; found System.Action`1[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]", e.Message);
+                    Assert.Equal("CallVirtual expected a System.Action`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]; found System.Action`1[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Compare()
         {
             {
@@ -465,11 +465,11 @@ namespace SigilTests
                 try
                 {
                     e1.CompareLessThan();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("CompareLessThan expected a float; found int", e.Message);
+                    Assert.Equal("CompareLessThan expected a float; found int", e.Message);
                 }
             }
 
@@ -481,16 +481,16 @@ namespace SigilTests
                 try
                 {
                     e1.CompareLessThan();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("CompareLessThan expected a double, float, int, long, or native int; found System.Object", e.Message);
+                    Assert.Equal("CompareLessThan expected a double, float, int, long, or native int; found System.Object", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void AdditionalValidation()
         {
             {
@@ -501,11 +501,11 @@ namespace SigilTests
                 try
                 {
                     var d1 = e1.CreateDelegate();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("Unended ExceptionBlock Sigil.ExceptionBlock", e.Message);
+                    Assert.Equal("Unended ExceptionBlock Sigil.ExceptionBlock", e.Message);
                 }
             }
 
@@ -517,16 +517,16 @@ namespace SigilTests
                 try
                 {
                     var d1 = e1.CreateDelegate();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("All execution paths must end with Return", e.Message);
+                    Assert.Equal("All execution paths must end with Return", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void UnboxAny()
         {
             {
@@ -535,11 +535,11 @@ namespace SigilTests
                 try
                 {
                     e1.UnboxAny(null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("valueType", e.ParamName);
+                    Assert.Equal("valueType", e.ParamName);
                 }
             }
 
@@ -549,11 +549,11 @@ namespace SigilTests
                 try
                 {
                     e1.UnboxAny(typeof(void));
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("Void cannot be boxed, and thus cannot be unboxed", e.Message);
+                    Assert.Equal("Void cannot be boxed, and thus cannot be unboxed", e.Message);
                 }
             }
 
@@ -563,11 +563,11 @@ namespace SigilTests
                 try
                 {
                     e1.UnboxAny<int>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("UnboxAny expects a value on the stack, but it was empty", e.Message);
+                    Assert.Equal("UnboxAny expects a value on the stack, but it was empty", e.Message);
                 }
             }
 
@@ -578,16 +578,16 @@ namespace SigilTests
                 try
                 {
                     e1.UnboxAny<int>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("UnboxAny expected a System.Object; found System.String", e.Message);
+                    Assert.Equal("UnboxAny expected a System.Object; found System.String", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Unbox()
         {
             {
@@ -596,11 +596,11 @@ namespace SigilTests
                 try
                 {
                     e1.Unbox(null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("valueType", e.ParamName);
+                    Assert.Equal("valueType", e.ParamName);
                 }
             }
 
@@ -610,11 +610,11 @@ namespace SigilTests
                 try
                 {
                     e1.Unbox(typeof(string));
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("Unbox expects a ValueType, found System.String", e.Message);
+                    Assert.Equal("Unbox expects a ValueType, found System.String", e.Message);
                 }
             }
 
@@ -624,11 +624,11 @@ namespace SigilTests
                 try
                 {
                     e1.Unbox(typeof(void));
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("Void cannot be boxed, and thus cannot be unboxed", e.Message);
+                    Assert.Equal("Void cannot be boxed, and thus cannot be unboxed", e.Message);
                 }
             }
 
@@ -638,11 +638,11 @@ namespace SigilTests
                 try
                 {
                     e1.Unbox<int>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("Unbox expects a value on the stack, but it was empty", e.Message);
+                    Assert.Equal("Unbox expects a value on the stack, but it was empty", e.Message);
                 }
             }
 
@@ -653,16 +653,16 @@ namespace SigilTests
                 try
                 {
                     e1.Unbox<int>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("Unbox expected a System.Object; found System.String", e.Message);
+                    Assert.Equal("Unbox expected a System.Object; found System.String", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void EndFinallyBlock()
         {
             {
@@ -671,11 +671,11 @@ namespace SigilTests
                 try
                 {
                     e1.EndFinallyBlock(null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("forFinally", e.ParamName);
+                    Assert.Equal("forFinally", e.ParamName);
                 }
             }
 
@@ -688,11 +688,11 @@ namespace SigilTests
                 try
                 {
                     e1.EndFinallyBlock(f);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("Sigil.FinallyBlock is not owned by this Emit, and thus cannot be used", e.Message);
+                    Assert.Equal("Sigil.FinallyBlock is not owned by this Emit, and thus cannot be used", e.Message);
                 }
             }
 
@@ -705,11 +705,11 @@ namespace SigilTests
                 try
                 {
                     e1.EndFinallyBlock(f);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (InvalidOperationException e)
                 {
-                    Assert.AreEqual("EndFinallyBlock expects an unclosed finally block, but Sigil.FinallyBlock is already closed", e.Message);
+                    Assert.Equal("EndFinallyBlock expects an unclosed finally block, but Sigil.FinallyBlock is already closed", e.Message);
                 }
             }
 
@@ -722,16 +722,16 @@ namespace SigilTests
                 try
                 {
                     e1.EndFinallyBlock(f);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("EndFinallyBlock expected the stack of be empty", e.Message);
+                    Assert.Equal("EndFinallyBlock expected the stack of be empty", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void EndCatchBlock()
         {
             {
@@ -740,11 +740,11 @@ namespace SigilTests
                 try
                 {
                     e1.EndCatchBlock(null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("forCatch", e.ParamName);
+                    Assert.Equal("forCatch", e.ParamName);
                 }
             }
 
@@ -758,11 +758,11 @@ namespace SigilTests
                 try
                 {
                     e1.EndCatchBlock(c);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("Sigil.CatchBlock is not owned by this Emit, and thus cannot be used", e.Message);
+                    Assert.Equal("Sigil.CatchBlock is not owned by this Emit, and thus cannot be used", e.Message);
                 }
             }
 
@@ -774,11 +774,11 @@ namespace SigilTests
                 try
                 {
                     e1.EndCatchBlock(c);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("EndCatchBlock expected the stack of be empty", e.Message);
+                    Assert.Equal("EndCatchBlock expected the stack of be empty", e.Message);
                 }
             }
 
@@ -792,16 +792,16 @@ namespace SigilTests
                 try
                 {
                     e1.EndCatchBlock(c);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (InvalidOperationException e)
                 {
-                    Assert.AreEqual("CatchBlock has already been ended", e.Message);
+                    Assert.Equal("CatchBlock has already been ended", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void EndExceptionBlock()
         {
             {
@@ -810,11 +810,11 @@ namespace SigilTests
                 try
                 {
                     e1.EndExceptionBlock(null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("forTry", e.ParamName);
+                    Assert.Equal("forTry", e.ParamName);
                 }
             }
 
@@ -826,11 +826,11 @@ namespace SigilTests
                 try
                 {
                     e1.EndExceptionBlock(t);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("Sigil.ExceptionBlock is not owned by this Emit, and thus cannot be used", e.Message);
+                    Assert.Equal("Sigil.ExceptionBlock is not owned by this Emit, and thus cannot be used", e.Message);
                 }
             }
 
@@ -845,11 +845,11 @@ namespace SigilTests
                 try
                 {
                     e1.EndExceptionBlock(t);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (InvalidOperationException e)
                 {
-                    Assert.AreEqual("ExceptionBlock has already been ended", e.Message);
+                    Assert.Equal("ExceptionBlock has already been ended", e.Message);
                 }
             }
 
@@ -861,11 +861,11 @@ namespace SigilTests
                 try
                 {
                     e1.EndExceptionBlock(t);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (InvalidOperationException e)
                 {
-                    Assert.AreEqual("Cannot end ExceptionBlock, CatchBlock Sigil.CatchBlock has not been ended", e.Message);
+                    Assert.Equal("Cannot end ExceptionBlock, CatchBlock Sigil.CatchBlock has not been ended", e.Message);
                 }
             }
 
@@ -877,11 +877,11 @@ namespace SigilTests
                 try
                 {
                     e1.EndExceptionBlock(t);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (InvalidOperationException e)
                 {
-                    Assert.AreEqual("Cannot end ExceptionBlock, FinallyBlock Sigil.FinallyBlock has not been ended", e.Message);
+                    Assert.Equal("Cannot end ExceptionBlock, FinallyBlock Sigil.FinallyBlock has not been ended", e.Message);
                 }
             }
 
@@ -892,11 +892,11 @@ namespace SigilTests
                 try
                 {
                     e1.EndExceptionBlock(t);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (InvalidOperationException e)
                 {
-                    Assert.AreEqual("Cannot end ExceptionBlock without defining at least one of a catch or finally block", e.Message);
+                    Assert.Equal("Cannot end ExceptionBlock without defining at least one of a catch or finally block", e.Message);
                 }
             }
 
@@ -908,16 +908,16 @@ namespace SigilTests
                 try
                 {
                     e1.EndExceptionBlock(t1);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (InvalidOperationException e)
                 {
-                    Assert.AreEqual("Cannot end outer ExceptionBlock Sigil.ExceptionBlock while inner EmitExceptionBlock Sigil.ExceptionBlock is open", e.Message);
+                    Assert.Equal("Cannot end outer ExceptionBlock Sigil.ExceptionBlock while inner EmitExceptionBlock Sigil.ExceptionBlock is open", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Throw()
         {
             {
@@ -926,11 +926,11 @@ namespace SigilTests
                 try
                 {
                     e1.Throw();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("Throw expects a value on the stack, but it was empty", e.Message);
+                    Assert.Equal("Throw expects a value on the stack, but it was empty", e.Message);
                 }
             }
 
@@ -941,16 +941,16 @@ namespace SigilTests
                 try
                 {
                     e1.Throw();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("Throw expected a System.Exception; found System.Object", e.Message);
+                    Assert.Equal("Throw expected a System.Exception; found System.Object", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Switch()
         {
             {
@@ -958,11 +958,11 @@ namespace SigilTests
                 try
                 {
                     e1.Switch((Label[])null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("labels", e.ParamName);
+                    Assert.Equal("labels", e.ParamName);
                 }
             }
 
@@ -972,11 +972,11 @@ namespace SigilTests
                 try
                 {
                     e1.Switch(new Label[0]);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("labels must have at least one element", e.Message);
+                    Assert.Equal("labels must have at least one element", e.Message);
                 }
             }
 
@@ -987,11 +987,11 @@ namespace SigilTests
                 try
                 {
                     e1.Switch(l);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("_label0 is not owned by this Emit, and thus cannot be used", e.Message);
+                    Assert.Equal("_label0 is not owned by this Emit, and thus cannot be used", e.Message);
                 }
             }
 
@@ -1001,11 +1001,11 @@ namespace SigilTests
                 try
                 {
                     e1.Switch(l);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("Switch expects a value on the stack, but it was empty", e.Message);
+                    Assert.Equal("Switch expects a value on the stack, but it was empty", e.Message);
                 }
             }
 
@@ -1018,16 +1018,16 @@ namespace SigilTests
                 try
                 {
                     e1.Switch(l);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("Switch expected an int, or native int; found System.Object", e.Message);
+                    Assert.Equal("Switch expected an int, or native int; found System.Object", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void StoreObject()
         {
             {
@@ -1036,11 +1036,11 @@ namespace SigilTests
                 try
                 {
                     e1.StoreObject(null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("valueType", e.ParamName);
+                    Assert.Equal("valueType", e.ParamName);
                 }
             }
 
@@ -1050,11 +1050,11 @@ namespace SigilTests
                 try
                 {
                     e1.StoreObject(typeof(string));
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("valueType must be a ValueType", e.Message);
+                    Assert.Equal("valueType must be a ValueType", e.Message);
                 }
             }
 
@@ -1064,11 +1064,11 @@ namespace SigilTests
                 try
                 {
                     e1.StoreObject(typeof(int), unaligned: 3);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("unaligned must be null, 1, 2, or 4", e.Message);
+                    Assert.Equal("unaligned must be null, 1, 2, or 4", e.Message);
                 }
             }
 
@@ -1078,11 +1078,11 @@ namespace SigilTests
                 try
                 {
                     e1.StoreObject(typeof(int));
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("StoreObject expects 2 values on the stack", e.Message);
+                    Assert.Equal("StoreObject expects 2 values on the stack", e.Message);
                 }
             }
 
@@ -1094,11 +1094,11 @@ namespace SigilTests
                 try
                 {
                     e1.StoreObject(typeof(int));
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("StoreObject expected an int; found System.Object", e.Message);
+                    Assert.Equal("StoreObject expected an int; found System.Object", e.Message);
                 }
             }
 
@@ -1110,16 +1110,16 @@ namespace SigilTests
                 try
                 {
                     e1.StoreObject(typeof(int));
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("StoreObject expected a native int, System.Int32&, or System.Int32*; found System.Object", e.Message);
+                    Assert.Equal("StoreObject expected a native int, System.Int32&, or System.Int32*; found System.Object", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void StoreLocal()
         {
             {
@@ -1128,11 +1128,11 @@ namespace SigilTests
                 try
                 {
                     e1.StoreLocal((Sigil.Local)null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("local", e.ParamName);
+                    Assert.Equal("local", e.ParamName);
                 }
             }
 
@@ -1144,11 +1144,11 @@ namespace SigilTests
                 try
                 {
                     e1.StoreLocal(l);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("System.Int32 _local0 is not owned by this Emit, and thus cannot be used", e.Message);
+                    Assert.Equal("System.Int32 _local0 is not owned by this Emit, and thus cannot be used", e.Message);
                 }
             }
 
@@ -1159,11 +1159,11 @@ namespace SigilTests
                 try
                 {
                     e1.StoreLocal(l);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("StoreLocal expects a value on the stack, but it was empty", e.Message);
+                    Assert.Equal("StoreLocal expects a value on the stack, but it was empty", e.Message);
                 }
             }
 
@@ -1175,16 +1175,16 @@ namespace SigilTests
                 try
                 {
                     e1.StoreLocal(l);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("StoreLocal expected an int; found System.Object", e.Message);
+                    Assert.Equal("StoreLocal expected an int; found System.Object", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void StoreIndirect()
         {
             {
@@ -1193,11 +1193,11 @@ namespace SigilTests
                 try
                 {
                     e1.StoreIndirect(null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("type", e.ParamName);
+                    Assert.Equal("type", e.ParamName);
                 }
             }
 
@@ -1207,11 +1207,11 @@ namespace SigilTests
                 try
                 {
                     e1.StoreIndirect(typeof(int), unaligned: 3);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("unaligned must be null, 1, 2, or 4", e.Message);
+                    Assert.Equal("unaligned must be null, 1, 2, or 4", e.Message);
                 }
             }
 
@@ -1221,11 +1221,11 @@ namespace SigilTests
                 try
                 {
                     e1.StoreIndirect(typeof(int));
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("StoreIndirect expects 2 values on the stack", e.Message);
+                    Assert.Equal("StoreIndirect expects 2 values on the stack", e.Message);
                 }
             }
 
@@ -1237,11 +1237,11 @@ namespace SigilTests
                 try
                 {
                     e1.StoreIndirect(typeof(int));
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("StoreIndirect expected an int; found System.Object", e.Message);
+                    Assert.Equal("StoreIndirect expected an int; found System.Object", e.Message);
                 }
             }
 
@@ -1253,11 +1253,11 @@ namespace SigilTests
                 try
                 {
                     e1.StoreIndirect(typeof(int));
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("StoreIndirect expected a native int, System.Int32&, System.Int32*, System.UInt32&, or System.UInt32*; found System.Object", e.Message);
+                    Assert.Equal("StoreIndirect expected a native int, System.Int32&, System.Int32*, System.UInt32&, or System.UInt32*; found System.Object", e.Message);
                 }
             }
 
@@ -1270,11 +1270,11 @@ namespace SigilTests
                 try
                 {
                     e1.StoreIndirect(typeof(DateTime));
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (InvalidOperationException e)
                 {
-                    Assert.AreEqual("StoreIndirect cannot be used with System.DateTime, StoreObject may be more appropriate", e.Message);
+                    Assert.Equal("StoreIndirect cannot be used with System.DateTime, StoreObject may be more appropriate", e.Message);
                 }
             }
         }
@@ -1290,7 +1290,7 @@ namespace SigilTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void StoreField()
         {
             {
@@ -1299,11 +1299,11 @@ namespace SigilTests
                 try
                 {
                     e1.StoreField(null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("field", e.ParamName);
+                    Assert.Equal("field", e.ParamName);
                 }
             }
 
@@ -1314,11 +1314,11 @@ namespace SigilTests
                 try
                 {
                     e1.StoreField(f, unaligned: 3);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("unaligned must be null, 1, 2, or 4", e.Message);
+                    Assert.Equal("unaligned must be null, 1, 2, or 4", e.Message);
                 }
             }
 
@@ -1329,11 +1329,11 @@ namespace SigilTests
                 try
                 {
                     e1.StoreField(f, unaligned: 4);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("unaligned cannot be used with static fields", e.Message);
+                    Assert.Equal("unaligned cannot be used with static fields", e.Message);
                 }
             }
 
@@ -1344,11 +1344,11 @@ namespace SigilTests
                 try
                 {
                     e1.StoreField(f);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("StoreField expects 2 values on the stack", e.Message);
+                    Assert.Equal("StoreField expects 2 values on the stack", e.Message);
                 }
             }
 
@@ -1361,11 +1361,11 @@ namespace SigilTests
                 try
                 {
                     e1.StoreField(f);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("StoreField expected an int; found System.Object", e.Message);
+                    Assert.Equal("StoreField expected an int; found System.Object", e.Message);
                 }
             }
 
@@ -1378,11 +1378,11 @@ namespace SigilTests
                 try
                 {
                     e1.StoreField(f);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("StoreField expected a SigilTests.Errors+StoreFieldClass; found System.Object", e.Message);
+                    Assert.Equal("StoreField expected a SigilTests.Errors+StoreFieldClass; found System.Object", e.Message);
                 }
             }
 
@@ -1393,11 +1393,11 @@ namespace SigilTests
                 try
                 {
                     e1.StoreField(f);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("StoreField expects a value on the stack, but it was empty", e.Message);
+                    Assert.Equal("StoreField expects a value on the stack, but it was empty", e.Message);
                 }
             }
 
@@ -1409,16 +1409,16 @@ namespace SigilTests
                 try
                 {
                     e1.StoreField(f);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("StoreField expected an int; found System.Object", e.Message);
+                    Assert.Equal("StoreField expected an int; found System.Object", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void StoreElement()
         {
             {
@@ -1427,11 +1427,11 @@ namespace SigilTests
                 try
                 {
                     e1.StoreElement<int>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("StoreElement expects 3 values on the stack", e.Message);
+                    Assert.Equal("StoreElement expects 3 values on the stack", e.Message);
                 }
             }
 
@@ -1444,11 +1444,11 @@ namespace SigilTests
                 try
                 {
                     e1.StoreElement<int>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("StoreElement expected an int; found System.Object", e.Message);
+                    Assert.Equal("StoreElement expected an int; found System.Object", e.Message);
                 }
             }
 
@@ -1461,11 +1461,11 @@ namespace SigilTests
                 try
                 {
                     e1.StoreElement<int>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("StoreElement expected an int, or native int; found System.Object", e.Message);
+                    Assert.Equal("StoreElement expected an int, or native int; found System.Object", e.Message);
                 }
             }
 
@@ -1478,16 +1478,16 @@ namespace SigilTests
                 try
                 {
                     e1.StoreElement<int>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("StoreElement expected a System.Int32[]; found System.Object", e.Message);
+                    Assert.Equal("StoreElement expected a System.Int32[]; found System.Object", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void StoreArgument()
         {
             {
@@ -1496,11 +1496,11 @@ namespace SigilTests
                 try
                 {
                     e1.StoreArgument(0);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (InvalidOperationException e)
                 {
-                    Assert.AreEqual("Delegate of type System.Action takes no parameters", e.Message);
+                    Assert.Equal("Delegate of type System.Action takes no parameters", e.Message);
                 }
             }
 
@@ -1510,11 +1510,11 @@ namespace SigilTests
                 try
                 {
                     e1.StoreArgument(4);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("index must be between 0 and 0, inclusive", e.Message);
+                    Assert.Equal("index must be between 0 and 0, inclusive", e.Message);
                 }
             }
 
@@ -1524,11 +1524,11 @@ namespace SigilTests
                 try
                 {
                     e1.StoreArgument(0);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("StoreArgument expects a value on the stack, but it was empty", e.Message);
+                    Assert.Equal("StoreArgument expects a value on the stack, but it was empty", e.Message);
                 }
             }
 
@@ -1539,16 +1539,16 @@ namespace SigilTests
                 try
                 {
                     e1.StoreArgument(0);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("StoreArgument expected an int; found System.Object", e.Message);
+                    Assert.Equal("StoreArgument expected an int; found System.Object", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void SizeOf()
         {
             {
@@ -1557,11 +1557,11 @@ namespace SigilTests
                 try
                 {
                     e1.SizeOf(null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("valueType", e.ParamName);
+                    Assert.Equal("valueType", e.ParamName);
                 }
             }
 
@@ -1571,16 +1571,16 @@ namespace SigilTests
                 try
                 {
                     e1.SizeOf(typeof(string));
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("valueType must be a ValueType", e.Message);
+                    Assert.Equal("valueType must be a ValueType", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Return()
         {
             {
@@ -1590,11 +1590,11 @@ namespace SigilTests
                 try
                 {
                     e1.Return();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("Return expected the stack of be empty", e.Message);
+                    Assert.Equal("Return expected the stack of be empty", e.Message);
                 }
             }
 
@@ -1604,11 +1604,11 @@ namespace SigilTests
                 try
                 {
                     e1.Return();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("Return expects a value on the stack, but it was empty", e.Message);
+                    Assert.Equal("Return expects a value on the stack, but it was empty", e.Message);
                 }
             }
 
@@ -1619,11 +1619,11 @@ namespace SigilTests
                 try
                 {
                     e1.Return();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("Return expected an int; found System.Object", e.Message);
+                    Assert.Equal("Return expected an int; found System.Object", e.Message);
                 }
             }
 
@@ -1635,16 +1635,16 @@ namespace SigilTests
                 try
                 {
                     e1.Return();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("Return expected the stack of be empty", e.Message);
+                    Assert.Equal("Return expected the stack of be empty", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ReThrow()
         {
             {
@@ -1653,16 +1653,16 @@ namespace SigilTests
                 try
                 {
                     e1.ReThrow();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (InvalidOperationException e)
                 {
-                    Assert.AreEqual("ReThrow is only legal in a catch block", e.Message);
+                    Assert.Equal("ReThrow is only legal in a catch block", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Pop()
         {
             {
@@ -1671,11 +1671,11 @@ namespace SigilTests
                 try
                 {
                     e1.Pop();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("Pop expects a value on the stack, but it was empty", e.Message);
+                    Assert.Equal("Pop expects a value on the stack, but it was empty", e.Message);
                 }
             }
         }
@@ -1688,7 +1688,7 @@ namespace SigilTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void NewObject()
         {
             {
@@ -1697,11 +1697,11 @@ namespace SigilTests
                 try
                 {
                     e1.NewObject(null, null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("type", e.ParamName);
+                    Assert.Equal("type", e.ParamName);
                 }
             }
 
@@ -1711,11 +1711,11 @@ namespace SigilTests
                 try
                 {
                     e1.NewObject(typeof(object), null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("parameterTypes", e.ParamName);
+                    Assert.Equal("parameterTypes", e.ParamName);
                 }
             }
 
@@ -1725,11 +1725,11 @@ namespace SigilTests
                 try
                 {
                     e1.NewObject(typeof(object), typeof(int), typeof(string));
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (InvalidOperationException e)
                 {
-                    Assert.AreEqual("Type System.Object must have a constructor that matches parameters [System.Int32, System.String]", e.Message);
+                    Assert.Equal("Type System.Object must have a constructor that matches parameters [System.Int32, System.String]", e.Message);
                 }
             }
 
@@ -1739,11 +1739,11 @@ namespace SigilTests
                 try
                 {
                     e1.NewObject((ConstructorInfo)null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("constructor", e.ParamName);
+                    Assert.Equal("constructor", e.ParamName);
                 }
             }
 
@@ -1753,11 +1753,11 @@ namespace SigilTests
                 try
                 {
                     e1.NewObject<string, char[]>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("NewObject expects a value on the stack, but it was empty", e.Message);
+                    Assert.Equal("NewObject expects a value on the stack, but it was empty", e.Message);
                 }
             }
 
@@ -1768,16 +1768,16 @@ namespace SigilTests
                 try
                 {
                     e1.NewObject<string, char[]>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("NewObject expected a System.Char[]; found System.Object", e.Message);
+                    Assert.Equal("NewObject expected a System.Char[]; found System.Object", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void NewArray()
         {
             {
@@ -1786,11 +1786,11 @@ namespace SigilTests
                 try
                 {
                     e1.NewArray(null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("elementType", e.ParamName);
+                    Assert.Equal("elementType", e.ParamName);
                 }
             }
 
@@ -1800,11 +1800,11 @@ namespace SigilTests
                 try
                 {
                     e1.NewArray<int>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("NewArray expects a value on the stack, but it was empty", e.Message);
+                    Assert.Equal("NewArray expects a value on the stack, but it was empty", e.Message);
                 }
             }
 
@@ -1815,16 +1815,16 @@ namespace SigilTests
                 try
                 {
                     e1.NewArray<int>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("NewArray expected an int, or native int; found System.Object", e.Message);
+                    Assert.Equal("NewArray expected an int, or native int; found System.Object", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Locals()
         {
             {
@@ -1833,16 +1833,16 @@ namespace SigilTests
                 try
                 {
                     e1.DeclareLocal(null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("type", e.ParamName);
+                    Assert.Equal("type", e.ParamName);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void LocalAllocate()
         {
             {
@@ -1852,11 +1852,11 @@ namespace SigilTests
                 try
                 {
                     e1.LocalAllocate();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (InvalidOperationException e)
                 {
-                    Assert.AreEqual("LocalAllocate cannot be used in a catch block", e.Message);
+                    Assert.Equal("LocalAllocate cannot be used in a catch block", e.Message);
                 }
             }
 
@@ -1870,11 +1870,11 @@ namespace SigilTests
                 try
                 {
                     e1.LocalAllocate();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (InvalidOperationException e)
                 {
-                    Assert.AreEqual("LocalAllocate cannot be used in a finally block", e.Message);
+                    Assert.Equal("LocalAllocate cannot be used in a finally block", e.Message);
                 }
             }
 
@@ -1884,11 +1884,11 @@ namespace SigilTests
                 try
                 {
                     e1.LocalAllocate();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("LocalAllocate expected the stack to have 1 value", e.Message);
+                    Assert.Equal("LocalAllocate expected the stack to have 1 value", e.Message);
                 }
             }
 
@@ -1899,11 +1899,11 @@ namespace SigilTests
                 try
                 {
                     e1.LocalAllocate();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("LocalAllocate expected an int, or native int; found System.Object", e.Message);
+                    Assert.Equal("LocalAllocate expected an int, or native int; found System.Object", e.Message);
                 }
             }
 
@@ -1915,16 +1915,16 @@ namespace SigilTests
                 try
                 {
                     e1.LocalAllocate();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("LocalAllocate expected the stack to have 1 value", e.Message);
+                    Assert.Equal("LocalAllocate expected the stack to have 1 value", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void LoadVirtualFunctionPointer()
         {
             {
@@ -1933,11 +1933,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadVirtualFunctionPointer(null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("method", e.ParamName);
+                    Assert.Equal("method", e.ParamName);
                 }
             }
 
@@ -1948,11 +1948,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadVirtualFunctionPointer(f);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("Only non-static methods can be passed to LoadVirtualFunctionPointer, found System.String Intern(System.String)", e.Message);
+                    Assert.Equal("Only non-static methods can be passed to LoadVirtualFunctionPointer, found System.String Intern(System.String)", e.Message);
                 }
             }
 
@@ -1963,11 +1963,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadVirtualFunctionPointer(f);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("LoadVirtualFunctionPointer expects a value on the stack, but it was empty", e.Message);
+                    Assert.Equal("LoadVirtualFunctionPointer expects a value on the stack, but it was empty", e.Message);
                 }
             }
 
@@ -1980,16 +1980,16 @@ namespace SigilTests
                 try
                 {
                     e1.LoadVirtualFunctionPointer(f);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("LoadVirtualFunctionPointer expected a System.Collections.Generic.List`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]; found int", e.Message);
+                    Assert.Equal("LoadVirtualFunctionPointer expected a System.Collections.Generic.List`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]; found int", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void LoadObject()
         {
             {
@@ -1998,11 +1998,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadObject(null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("valueType", e.ParamName);
+                    Assert.Equal("valueType", e.ParamName);
                 }
             }
 
@@ -2012,11 +2012,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadObject(typeof(string));
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("valueType must be a ValueType", e.Message);
+                    Assert.Equal("valueType must be a ValueType", e.Message);
                 }
             }
 
@@ -2026,11 +2026,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadObject<DateTime>(unaligned: 3);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("unaligned must be null, 1, 2, or 4", e.Message);
+                    Assert.Equal("unaligned must be null, 1, 2, or 4", e.Message);
                 }
             }
 
@@ -2040,11 +2040,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadObject<DateTime>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("LoadObject expects a value on the stack, but it was empty", e.Message);
+                    Assert.Equal("LoadObject expects a value on the stack, but it was empty", e.Message);
                 }
             }
 
@@ -2055,16 +2055,16 @@ namespace SigilTests
                 try
                 {
                     e1.LoadObject<DateTime>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("LoadObject expected a native int, System.DateTime&, or System.DateTime*; found System.Object", e.Message);
+                    Assert.Equal("LoadObject expected a native int, System.DateTime&, or System.DateTime*; found System.Object", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void LoadLocalAddress()
         {
             {
@@ -2073,11 +2073,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadLocalAddress((Sigil.Local)null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("local", e.ParamName);
+                    Assert.Equal("local", e.ParamName);
                 }
             }
 
@@ -2089,16 +2089,16 @@ namespace SigilTests
                 try
                 {
                     e1.LoadLocalAddress(l);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("System.Int32 _local0 is not owned by this Emit, and thus cannot be used", e.Message);
+                    Assert.Equal("System.Int32 _local0 is not owned by this Emit, and thus cannot be used", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void LoadLocal()
         {
             {
@@ -2107,11 +2107,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadLocal((Sigil.Local)null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("local", e.ParamName);
+                    Assert.Equal("local", e.ParamName);
                 }
             }
 
@@ -2123,16 +2123,16 @@ namespace SigilTests
                 try
                 {
                     e1.LoadLocal(l);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("System.Int32 _local0 is not owned by this Emit, and thus cannot be used", e.Message);
+                    Assert.Equal("System.Int32 _local0 is not owned by this Emit, and thus cannot be used", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void LoadLength()
         {
             {
@@ -2141,11 +2141,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadLength<int>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("LoadLength expects a value on the stack, but it was empty", e.Message);
+                    Assert.Equal("LoadLength expects a value on the stack, but it was empty", e.Message);
                 }
             }
 
@@ -2156,16 +2156,16 @@ namespace SigilTests
                 try
                 {
                     e1.LoadLength<int>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("LoadLength expected a System.Int32[]; found System.Object", e.Message);
+                    Assert.Equal("LoadLength expected a System.Int32[]; found System.Object", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void LoadIndirect()
         {
             {
@@ -2174,11 +2174,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadIndirect(null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("type", e.ParamName);
+                    Assert.Equal("type", e.ParamName);
                 }
             }
 
@@ -2188,11 +2188,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadIndirect<int>(unaligned: 3);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("unaligned must be null, 1, 2, or 4", e.Message);
+                    Assert.Equal("unaligned must be null, 1, 2, or 4", e.Message);
                 }
             }
 
@@ -2202,11 +2202,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadIndirect<int>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("LoadIndirect expects a value on the stack, but it was empty", e.Message);
+                    Assert.Equal("LoadIndirect expects a value on the stack, but it was empty", e.Message);
                 }
             }
 
@@ -2217,11 +2217,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadIndirect<int>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("LoadIndirect expected a native int, System.Int32&, or System.Int32*; found System.Object", e.Message);
+                    Assert.Equal("LoadIndirect expected a native int, System.Int32&, or System.Int32*; found System.Object", e.Message);
                 }
             }
 
@@ -2232,16 +2232,16 @@ namespace SigilTests
                 try
                 {
                     e1.LoadIndirect<DateTime>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (InvalidOperationException e)
                 {
-                    Assert.AreEqual("LoadIndirect cannot be used with System.DateTime, LoadObject may be more appropriate", e.Message);
+                    Assert.Equal("LoadIndirect cannot be used with System.DateTime, LoadObject may be more appropriate", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void LoadFunctionPointer()
         {
             {
@@ -2250,16 +2250,16 @@ namespace SigilTests
                 try
                 {
                     e1.LoadFunctionPointer(null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("method", e.ParamName);
+                    Assert.Equal("method", e.ParamName);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void LoadFieldAddress()
         {
             {
@@ -2268,11 +2268,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadFieldAddress(null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("field", e.ParamName);
+                    Assert.Equal("field", e.ParamName);
                 }
             }
 
@@ -2283,11 +2283,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadFieldAddress(f);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("LoadFieldAddress expects a value on the stack, but it was empty", e.Message);
+                    Assert.Equal("LoadFieldAddress expects a value on the stack, but it was empty", e.Message);
                 }
             }
 
@@ -2300,11 +2300,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadFieldAddress(f);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("LoadFieldAddress expected a SigilTests.Errors+LoadFieldClass; found System.Object", e.Message);
+                    Assert.Equal("LoadFieldAddress expected a SigilTests.Errors+LoadFieldClass; found System.Object", e.Message);
                 }
             }
         }
@@ -2319,7 +2319,7 @@ namespace SigilTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void LoadField()
         {
             {
@@ -2328,11 +2328,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadField(null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("field", e.ParamName);
+                    Assert.Equal("field", e.ParamName);
                 }
             }
 
@@ -2343,11 +2343,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadField(f, unaligned: 1);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("unaligned cannot be used with static fields", e.Message);
+                    Assert.Equal("unaligned cannot be used with static fields", e.Message);
                 }
             }
 
@@ -2358,11 +2358,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadField(f, unaligned: 3);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("unaligned must be null, 1, 2, or 4", e.Message);
+                    Assert.Equal("unaligned must be null, 1, 2, or 4", e.Message);
                 }
             }
 
@@ -2373,11 +2373,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadField(f);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("LoadField expects a value on the stack, but it was empty", e.Message);
+                    Assert.Equal("LoadField expects a value on the stack, but it was empty", e.Message);
                 }
             }
 
@@ -2390,16 +2390,16 @@ namespace SigilTests
                 try
                 {
                     e1.LoadField(f);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("LoadField expected a SigilTests.Errors+LoadFieldClass; found System.Object", e.Message);
+                    Assert.Equal("LoadField expected a SigilTests.Errors+LoadFieldClass; found System.Object", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void LoadElementAddress()
         {
             {
@@ -2408,11 +2408,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadElementAddress<int>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("LoadElementAddress expects 2 values on the stack", e.Message);
+                    Assert.Equal("LoadElementAddress expects 2 values on the stack", e.Message);
                 }
             }
 
@@ -2424,11 +2424,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadElementAddress<int>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("LoadElementAddress expected an int, or native int; found System.Object", e.Message);
+                    Assert.Equal("LoadElementAddress expected an int, or native int; found System.Object", e.Message);
                 }
             }
 
@@ -2440,11 +2440,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadElementAddress<int>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("LoadElementAddress expected a System.Int32[]; found int", e.Message);
+                    Assert.Equal("LoadElementAddress expected a System.Int32[]; found int", e.Message);
                 }
             }
 
@@ -2456,16 +2456,16 @@ namespace SigilTests
                 try
                 {
                     e1.LoadElementAddress<int>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("LoadElementAddress expected a System.Int32[]; found System.Int32[,]", e.Message);
+                    Assert.Equal("LoadElementAddress expected a System.Int32[]; found System.Int32[,]", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void LoadElement()
         {
             {
@@ -2474,11 +2474,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadElement<int>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("LoadElement expects 2 values on the stack", e.Message);
+                    Assert.Equal("LoadElement expects 2 values on the stack", e.Message);
                 }
             }
 
@@ -2490,11 +2490,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadElement<int>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("LoadElement expected an int, or native int; found System.Object", e.Message);
+                    Assert.Equal("LoadElement expected an int, or native int; found System.Object", e.Message);
                 }
             }
 
@@ -2506,11 +2506,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadElement<int>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("LoadElement expected a System.Int32[]; found System.Object", e.Message);
+                    Assert.Equal("LoadElement expected a System.Int32[]; found System.Object", e.Message);
                 }
             }
 
@@ -2522,16 +2522,16 @@ namespace SigilTests
                 try
                 {
                     e1.LoadElement<int>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("LoadElement expected a System.Int32[]; found System.Int32[,]", e.Message);
+                    Assert.Equal("LoadElement expected a System.Int32[]; found System.Int32[,]", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void LoadConstant()
         {
             {
@@ -2540,11 +2540,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadConstant((Type)null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("type", e.ParamName);
+                    Assert.Equal("type", e.ParamName);
                 }
             }
 
@@ -2554,11 +2554,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadConstant((MethodInfo)null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("method", e.ParamName);
+                    Assert.Equal("method", e.ParamName);
                 }
             }
 
@@ -2568,16 +2568,16 @@ namespace SigilTests
                 try
                 {
                     e1.LoadConstant((FieldInfo)null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("field", e.ParamName);
+                    Assert.Equal("field", e.ParamName);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void LoadArgumentAddress()
         {
             {
@@ -2586,11 +2586,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadArgumentAddress(0);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("Delegate of type System.Action takes no parameters", e.Message);
+                    Assert.Equal("Delegate of type System.Action takes no parameters", e.Message);
                 }
             }
 
@@ -2600,16 +2600,16 @@ namespace SigilTests
                 try
                 {
                     e1.LoadArgumentAddress(4);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("index must be between 0 and 0, inclusive", e.Message);
+                    Assert.Equal("index must be between 0 and 0, inclusive", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void LoadArgument()
         {
             {
@@ -2617,11 +2617,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadArgument(0);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("Delegate of type System.Action takes no parameters", e.Message);
+                    Assert.Equal("Delegate of type System.Action takes no parameters", e.Message);
                 }
             }
 
@@ -2630,16 +2630,16 @@ namespace SigilTests
                 try
                 {
                     e1.LoadArgument(4);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("index must be between 0 and 0, inclusive", e.Message);
+                    Assert.Equal("index must be between 0 and 0, inclusive", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Leave()
         {
             {
@@ -2648,11 +2648,11 @@ namespace SigilTests
                 try
                 {
                     e1.Leave((Sigil.Label)null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("label", e.ParamName);
+                    Assert.Equal("label", e.ParamName);
                 }
             }
 
@@ -2664,11 +2664,11 @@ namespace SigilTests
                 try
                 {
                     e1.Leave(l);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("_label0 is not owned by this Emit, and thus cannot be used", e.Message);
+                    Assert.Equal("_label0 is not owned by this Emit, and thus cannot be used", e.Message);
                 }
             }
 
@@ -2679,16 +2679,16 @@ namespace SigilTests
                 try
                 {
                     e1.Leave(l);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (InvalidOperationException e)
                 {
-                    Assert.AreEqual("Leave can only be used within an exception or catch block", e.Message);
+                    Assert.Equal("Leave can only be used within an exception or catch block", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Labels()
         {
             {
@@ -2702,16 +2702,16 @@ namespace SigilTests
                 try
                 {
                     var d1 = e1.CreateDelegate();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("Usage of unmarked label _label0", e.Message);
+                    Assert.Equal("Usage of unmarked label _label0", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void MarkLabel()
         {
             {
@@ -2720,11 +2720,11 @@ namespace SigilTests
                 try
                 {
                     e1.MarkLabel((Sigil.Label)null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("label", e.ParamName);
+                    Assert.Equal("label", e.ParamName);
                 }
             }
 
@@ -2736,11 +2736,11 @@ namespace SigilTests
                 try
                 {
                     e1.MarkLabel(l);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("_label0 is not owned by this Emit, and thus cannot be used", e.Message);
+                    Assert.Equal("_label0 is not owned by this Emit, and thus cannot be used", e.Message);
                 }
             }
 
@@ -2752,16 +2752,16 @@ namespace SigilTests
                 try
                 {
                     e1.MarkLabel(l);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (InvalidOperationException e)
                 {
-                    Assert.AreEqual("label [_label0] has already been marked, and cannot be marked a second time", e.Message);
+                    Assert.Equal("label [_label0] has already been marked, and cannot be marked a second time", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Jump()
         {
             {
@@ -2770,11 +2770,11 @@ namespace SigilTests
                 try
                 {
                     e1.Jump(null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("method", e.ParamName);
+                    Assert.Equal("method", e.ParamName);
                 }
             }
 
@@ -2784,11 +2784,11 @@ namespace SigilTests
                 try
                 {
                     e1.Jump(toString);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("Jump expected a calling convention of Standard, found Standard, HasThis", e.Message);
+                    Assert.Equal("Jump expected a calling convention of Standard, found Standard, HasThis", e.Message);
                 }
             }
 
@@ -2798,11 +2798,11 @@ namespace SigilTests
                 try
                 {
                     e1.Jump(intern);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("Jump expected a method with 0 parameters, found 1", e.Message);
+                    Assert.Equal("Jump expected a method with 0 parameters, found 1", e.Message);
                 }
             }
 
@@ -2815,11 +2815,11 @@ namespace SigilTests
                 try
                 {
                     e1.Jump(intern);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("Jump expected the stack of be empty", e.Message);
+                    Assert.Equal("Jump expected the stack of be empty", e.Message);
                 }
             }
 
@@ -2830,11 +2830,11 @@ namespace SigilTests
                 try
                 {
                     e1.Jump(intern);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("Jump expected the #0 parameter to be assignable from System.Int32, but found System.String", e.Message);
+                    Assert.Equal("Jump expected the #0 parameter to be assignable from System.Int32, but found System.String", e.Message);
                 }
             }
 
@@ -2847,11 +2847,11 @@ namespace SigilTests
                 try
                 {
                     e1.Jump(intern);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (InvalidOperationException e)
                 {
-                    Assert.AreEqual("Jump cannot transfer control from an exception block", e.Message);
+                    Assert.Equal("Jump cannot transfer control from an exception block", e.Message);
                 }
             }
 
@@ -2865,11 +2865,11 @@ namespace SigilTests
                 try
                 {
                     e1.Jump(intern);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (InvalidOperationException e)
                 {
-                    Assert.AreEqual("Jump cannot transfer control from a catch block", e.Message);
+                    Assert.Equal("Jump cannot transfer control from a catch block", e.Message);
                 }
             }
 
@@ -2886,16 +2886,16 @@ namespace SigilTests
                 try
                 {
                     e1.Jump(intern);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (InvalidOperationException e)
                 {
-                    Assert.AreEqual("Jump cannot transfer control from a finally block", e.Message);
+                    Assert.Equal("Jump cannot transfer control from a finally block", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void IsInstance()
         {
             {
@@ -2904,11 +2904,11 @@ namespace SigilTests
                 try
                 {
                     e1.IsInstance(null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("type", e.ParamName);
+                    Assert.Equal("type", e.ParamName);
                 }
             }
 
@@ -2918,16 +2918,16 @@ namespace SigilTests
                 try
                 {
                     e1.IsInstance<string>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("IsInstance expects a value on the stack, but it was empty", e.Message);
+                    Assert.Equal("IsInstance expects a value on the stack, but it was empty", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void InitializeObject()
         {
             {
@@ -2939,7 +2939,7 @@ namespace SigilTests
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("valueType", e.ParamName);
+                    Assert.Equal("valueType", e.ParamName);
                 }
             }
 
@@ -2952,7 +2952,7 @@ namespace SigilTests
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("InitializeObject expects a value on the stack, but it was empty", e.Message);
+                    Assert.Equal("InitializeObject expects a value on the stack, but it was empty", e.Message);
                 }
             }
 
@@ -2966,12 +2966,12 @@ namespace SigilTests
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("InitializeObject expected a native int, System.DateTime&, or System.DateTime*; found System.Object", e.Message);
+                    Assert.Equal("InitializeObject expected a native int, System.DateTime&, or System.DateTime*; found System.Object", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void InitializeBlock()
         {
             {
@@ -2980,11 +2980,11 @@ namespace SigilTests
                 try
                 {
                     e1.InitializeBlock(unaligned: 3);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("unaligned must be null, 1, 2, or 4", e.Message);
+                    Assert.Equal("unaligned must be null, 1, 2, or 4", e.Message);
                 }
             }
 
@@ -2994,11 +2994,11 @@ namespace SigilTests
                 try
                 {
                     e1.InitializeBlock();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("InitializeBlock expects 3 values on the stack", e.Message);
+                    Assert.Equal("InitializeBlock expects 3 values on the stack", e.Message);
                 }
             }
 
@@ -3011,11 +3011,11 @@ namespace SigilTests
                 try
                 {
                     e1.InitializeBlock();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("InitializeBlock expected an int; found System.Object", e.Message);
+                    Assert.Equal("InitializeBlock expected an int; found System.Object", e.Message);
                 }
             }
 
@@ -3028,11 +3028,11 @@ namespace SigilTests
                 try
                 {
                     e1.InitializeBlock();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("InitializeBlock expected an int, or native int; found System.Object", e.Message);
+                    Assert.Equal("InitializeBlock expected an int, or native int; found System.Object", e.Message);
                 }
             }
 
@@ -3046,16 +3046,16 @@ namespace SigilTests
                 try
                 {
                     e1.InitializeBlock();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("InitializeBlock expected a native int, System.Byte&, or System.Byte*; found System.Object", e.Message);
+                    Assert.Equal("InitializeBlock expected a native int, System.Byte&, or System.Byte*; found System.Object", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Duplicate()
         {
             {
@@ -3064,16 +3064,16 @@ namespace SigilTests
                 try
                 {
                     e1.Duplicate();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("Duplicate expects a value on the stack, but it was empty", e.Message);
+                    Assert.Equal("Duplicate expects a value on the stack, but it was empty", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CopyObject()
         {
             {
@@ -3082,11 +3082,11 @@ namespace SigilTests
                 try
                 {
                     e1.CopyObject(null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("valueType", e.ParamName);
+                    Assert.Equal("valueType", e.ParamName);
                 }
             }
 
@@ -3096,11 +3096,11 @@ namespace SigilTests
                 try
                 {
                     e1.CopyObject(typeof(string));
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("CopyObject expects a ValueType; found System.String", e.Message);
+                    Assert.Equal("CopyObject expects a ValueType; found System.String", e.Message);
                 }
             }
 
@@ -3110,11 +3110,11 @@ namespace SigilTests
                 try
                 {
                     e1.CopyObject<int>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("CopyObject expects 2 values on the stack", e.Message);
+                    Assert.Equal("CopyObject expects 2 values on the stack", e.Message);
                 }
             }
 
@@ -3126,11 +3126,11 @@ namespace SigilTests
                 try
                 {
                     e1.CopyObject<int>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("CopyObject expected a native int, System.Int32&, or System.Int32*; found System.Object", e.Message);
+                    Assert.Equal("CopyObject expected a native int, System.Int32&, or System.Int32*; found System.Object", e.Message);
                 }
             }
 
@@ -3143,16 +3143,16 @@ namespace SigilTests
                 try
                 {
                     e1.CopyObject<int>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("CopyObject expected a native int, System.Int32&, or System.Int32*; found System.Object", e.Message);
+                    Assert.Equal("CopyObject expected a native int, System.Int32&, or System.Int32*; found System.Object", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CopyBlock()
         {
             {
@@ -3160,11 +3160,11 @@ namespace SigilTests
                 try
                 {
                     e1.CopyBlock(unaligned: 3);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("unaligned must be null, 1, 2, or 4\r\nParameter name: unaligned", e.Message);
+                    Assert.Equal("unaligned must be null, 1, 2, or 4\r\nParameter name: unaligned", e.Message);
                 }
             }
 
@@ -3173,11 +3173,11 @@ namespace SigilTests
                 try
                 {
                     e1.CopyBlock();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("CopyBlock expects 3 values on the stack", e.Message);
+                    Assert.Equal("CopyBlock expects 3 values on the stack", e.Message);
                 }
             }
 
@@ -3189,11 +3189,11 @@ namespace SigilTests
                 try
                 {
                     e1.CopyBlock();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("CopyBlock expected an int; found System.Object", e.Message);
+                    Assert.Equal("CopyBlock expected an int; found System.Object", e.Message);
                 }
             }
 
@@ -3205,11 +3205,11 @@ namespace SigilTests
                 try
                 {
                     e1.CopyBlock();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("CopyBlock expected a native int, System.Byte&, or System.Byte*; found System.Object", e.Message);
+                    Assert.Equal("CopyBlock expected a native int, System.Byte&, or System.Byte*; found System.Object", e.Message);
                 }
             }
 
@@ -3222,16 +3222,16 @@ namespace SigilTests
                 try
                 {
                     e1.CopyBlock();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("CopyBlock expected a native int, System.Byte&, or System.Byte*; found System.Object", e.Message);
+                    Assert.Equal("CopyBlock expected a native int, System.Byte&, or System.Byte*; found System.Object", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ConvertIllegal()
         {
             {
@@ -3239,11 +3239,11 @@ namespace SigilTests
                 try
                 {
                     e1.ConvertOverflow<float>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (InvalidOperationException e)
                 {
-                    Assert.AreEqual("There is no operation for converting to a float with overflow checking", e.Message);
+                    Assert.Equal("There is no operation for converting to a float with overflow checking", e.Message);
                 }
             }
 
@@ -3252,11 +3252,11 @@ namespace SigilTests
                 try
                 {
                     e1.ConvertOverflow<double>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (InvalidOperationException e)
                 {
-                    Assert.AreEqual("There is no operation for converting to a double with overflow checking", e.Message);
+                    Assert.Equal("There is no operation for converting to a double with overflow checking", e.Message);
                 }
             }
 
@@ -3265,11 +3265,11 @@ namespace SigilTests
                 try
                 {
                     e1.UnsignedConvertOverflow<float>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (InvalidOperationException e)
                 {
-                    Assert.AreEqual("There is no operation for converting to a float with overflow checking", e.Message);
+                    Assert.Equal("There is no operation for converting to a float with overflow checking", e.Message);
                 }
             }
 
@@ -3278,11 +3278,11 @@ namespace SigilTests
                 try
                 {
                     e1.UnsignedConvertOverflow<double>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (InvalidOperationException e)
                 {
-                    Assert.AreEqual("There is no operation for converting to a double with overflow checking", e.Message);
+                    Assert.Equal("There is no operation for converting to a double with overflow checking", e.Message);
                 }
             }
 
@@ -3293,11 +3293,11 @@ namespace SigilTests
                 try
                 {
                     e1.Convert<UIntPtr>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("Convert expected a by ref, double, float, int, long, native int, or pointer; found System.Object", e.Message);
+                    Assert.Equal("Convert expected a by ref, double, float, int, long, native int, or pointer; found System.Object", e.Message);
                 }
             }
 
@@ -3308,11 +3308,11 @@ namespace SigilTests
                 try
                 {
                     e1.ConvertOverflow<int>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("ConvertOverflow expected a by ref, double, float, int, long, native int, or pointer; found System.Object", e.Message);
+                    Assert.Equal("ConvertOverflow expected a by ref, double, float, int, long, native int, or pointer; found System.Object", e.Message);
                 }
             }
 
@@ -3323,16 +3323,16 @@ namespace SigilTests
                 try
                 {
                     e1.UnsignedConvertOverflow<int>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("UnsignedConvertOverflow expected a by ref, double, float, int, long, native int, or pointer; found System.Object", e.Message);
+                    Assert.Equal("UnsignedConvertOverflow expected a by ref, double, float, int, long, native int, or pointer; found System.Object", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ConvertEmptyStack()
         {
             {
@@ -3340,11 +3340,11 @@ namespace SigilTests
                 try
                 {
                     e1.Convert<int>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("Convert expects a value on the stack, but it was empty", e.Message);
+                    Assert.Equal("Convert expects a value on the stack, but it was empty", e.Message);
                 }
             }
 
@@ -3353,11 +3353,11 @@ namespace SigilTests
                 try
                 {
                     e1.ConvertOverflow<int>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("ConvertOverflow expects a value on the stack, but it was empty", e.Message);
+                    Assert.Equal("ConvertOverflow expects a value on the stack, but it was empty", e.Message);
                 }
             }
 
@@ -3366,16 +3366,16 @@ namespace SigilTests
                 try
                 {
                     e1.UnsignedConvertOverflow<int>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("UnsignedConvertOverflow expects a value on the stack, but it was empty", e.Message);
+                    Assert.Equal("UnsignedConvertOverflow expects a value on the stack, but it was empty", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ConvertNonPrimitives()
         {
             {
@@ -3383,11 +3383,11 @@ namespace SigilTests
                 try
                 {
                     e1.Convert(typeof(object));
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("Convert expects a non-character primitive type", e.Message);
+                    Assert.Equal("Convert expects a non-character primitive type", e.Message);
                 }
             }
 
@@ -3396,11 +3396,11 @@ namespace SigilTests
                 try
                 {
                     e1.ConvertOverflow<object>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("ConvertOverflow expects a non-character primitive type", e.Message);
+                    Assert.Equal("ConvertOverflow expects a non-character primitive type", e.Message);
                 }
             }
 
@@ -3409,16 +3409,16 @@ namespace SigilTests
                 try
                 {
                     e1.UnsignedConvertOverflow<object>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentException e)
                 {
-                    Assert.AreEqual("UnsignedConvertOverflow expects a non-character primitive type", e.Message);
+                    Assert.Equal("UnsignedConvertOverflow expects a non-character primitive type", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ConvertNulls()
         {
             {
@@ -3426,11 +3426,11 @@ namespace SigilTests
                 try
                 {
                     e1.Convert(null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("primitiveType", e.ParamName);
+                    Assert.Equal("primitiveType", e.ParamName);
                 }
             }
 
@@ -3439,11 +3439,11 @@ namespace SigilTests
                 try
                 {
                     e1.ConvertOverflow(null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("primitiveType", e.ParamName);
+                    Assert.Equal("primitiveType", e.ParamName);
                 }
             }
 
@@ -3452,16 +3452,16 @@ namespace SigilTests
                 try
                 {
                     e1.UnsignedConvertOverflow(null);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (ArgumentNullException e)
                 {
-                    Assert.AreEqual("primitiveType", e.ParamName);
+                    Assert.Equal("primitiveType", e.ParamName);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ChecksStacks()
         {
             {
@@ -3470,11 +3470,11 @@ namespace SigilTests
                 try
                 {
                     e1.CompareEqual();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("CompareEqual expects 2 values on the stack", e.Message);
+                    Assert.Equal("CompareEqual expects 2 values on the stack", e.Message);
                 }
             }
 
@@ -3484,11 +3484,11 @@ namespace SigilTests
                 try
                 {
                     e1.CompareGreaterThan();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("CompareGreaterThan expects 2 values on the stack", e.Message);
+                    Assert.Equal("CompareGreaterThan expects 2 values on the stack", e.Message);
                 }
             }
 
@@ -3498,11 +3498,11 @@ namespace SigilTests
                 try
                 {
                     e1.CompareLessThan();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("CompareLessThan expects 2 values on the stack", e.Message);
+                    Assert.Equal("CompareLessThan expects 2 values on the stack", e.Message);
                 }
             }
 
@@ -3512,11 +3512,11 @@ namespace SigilTests
                 try
                 {
                     e1.UnsignedCompareGreaterThan();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("UnsignedCompareGreaterThan expects 2 values on the stack", e.Message);
+                    Assert.Equal("UnsignedCompareGreaterThan expects 2 values on the stack", e.Message);
                 }
             }
 
@@ -3526,16 +3526,16 @@ namespace SigilTests
                 try
                 {
                     e1.UnsignedCompareLessThan();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("UnsignedCompareLessThan expects 2 values on the stack", e.Message);
+                    Assert.Equal("UnsignedCompareLessThan expects 2 values on the stack", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CheckFiniteStack()
         {
             var e1 = Emit<Action>.NewDynamicMethod();
@@ -3546,7 +3546,7 @@ namespace SigilTests
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("CheckFinite expects a value on the stack, but it was empty", e.Message);
+                Assert.Equal("CheckFinite expects a value on the stack, but it was empty", e.Message);
             }
 
             var e2 = Emit<Action>.NewDynamicMethod();
@@ -3558,11 +3558,11 @@ namespace SigilTests
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("CheckFinite expected a double, or float; found System.Object", e.Message);
+                Assert.Equal("CheckFinite expected a double, or float; found System.Object", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CastClassNull()
         {
             var e1 = Emit<Action>.NewDynamicMethod();
@@ -3570,15 +3570,15 @@ namespace SigilTests
             try
             {
                 e1.CastClass(null);
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (ArgumentNullException e)
             {
-                Assert.AreEqual("referenceType", e.ParamName);
+                Assert.Equal("referenceType", e.ParamName);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CastClassValueType()
         {
             var e1 = Emit<Action>.NewDynamicMethod();
@@ -3586,15 +3586,15 @@ namespace SigilTests
             try
             {
                 e1.CastClass(typeof(int));
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (ArgumentException e)
             {
-                Assert.AreEqual("Can only cast to ReferenceTypes, found System.Int32", e.Message);
+                Assert.Equal("Can only cast to ReferenceTypes, found System.Int32", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CastClassEmptyStack()
         {
             var e1 = Emit<Action>.NewDynamicMethod();
@@ -3602,15 +3602,15 @@ namespace SigilTests
             try
             {
                 e1.CastClass<string>();
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("CastClass expects a value on the stack, but it was empty", e.Message);
+                Assert.Equal("CastClass expects a value on the stack, but it was empty", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CallIndirectNull()
         {
             var e1 = Emit<Action>.NewDynamicMethod();
@@ -3618,25 +3618,25 @@ namespace SigilTests
             try
             {
                 e1.CallIndirect(CallingConventions.Any, null);
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (ArgumentNullException e)
             {
-                Assert.AreEqual("returnType", e.ParamName);
+                Assert.Equal("returnType", e.ParamName);
             }
 
             try
             {
                 e1.CallIndirect(CallingConventions.Any, typeof(void), null);
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (ArgumentNullException e)
             {
-                Assert.AreEqual("parameterTypes", e.ParamName);
+                Assert.Equal("parameterTypes", e.ParamName);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CallIndirectBadConvention()
         {
             var e1 = Emit<Action>.NewDynamicMethod();
@@ -3644,15 +3644,15 @@ namespace SigilTests
             try
             {
                 e1.CallIndirect((CallingConventions)254);
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (ArgumentException e)
             {
-                Assert.AreEqual("callConventions", e.ParamName);
+                Assert.Equal("callConventions", e.ParamName);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CallIndirectEmptyStack()
         {
             var e1 = Emit<Action>.NewDynamicMethod();
@@ -3660,15 +3660,15 @@ namespace SigilTests
             try
             {
                 e1.CallIndirect(CallingConventions.Any);
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("CallIndirect expects a value on the stack, but it was empty", e.Message);
+                Assert.Equal("CallIndirect expects a value on the stack, but it was empty", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CallIndirectNoPtr()
         {
             var e1 = Emit<Action>.NewDynamicMethod();
@@ -3677,15 +3677,15 @@ namespace SigilTests
             try
             {
                 e1.CallIndirect(CallingConventions.Any);
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("CallIndirect expected a native int; found System.Object", e.Message);
+                Assert.Equal("CallIndirect expected a native int; found System.Object", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CallIndirectKnownBad()
         {
             var toString = typeof(object).GetMethod("ToString");
@@ -3698,11 +3698,11 @@ namespace SigilTests
                 try
                 {
                     e1.CallIndirect(CallingConventions.VarArgs, typeof(string), Type.EmptyTypes, Type.EmptyTypes);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("CallIndirect expects method calling conventions to match, found Standard, HasThis on the stack", e.Message);
+                    Assert.Equal("CallIndirect expects method calling conventions to match, found Standard, HasThis on the stack", e.Message);
                 }
             }
 
@@ -3714,11 +3714,11 @@ namespace SigilTests
                 try
                 {
                     e1.CallIndirect(addInt.CallingConvention);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("CallIndirect expects a 'this' value assignable to System.Collections.Generic.List`1[System.Int32], found System.Object", e.Message);
+                    Assert.Equal("CallIndirect expects a 'this' value assignable to System.Collections.Generic.List`1[System.Int32], found System.Object", e.Message);
                 }
             }
 
@@ -3730,11 +3730,11 @@ namespace SigilTests
                 try
                 {
                     e1.CallIndirect(toString.CallingConvention, typeof(object));
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("CallIndirect expects method return types to match, found System.String on the stack", e.Message);
+                    Assert.Equal("CallIndirect expects method return types to match, found System.String on the stack", e.Message);
                 }
             }
 
@@ -3747,16 +3747,16 @@ namespace SigilTests
                 try
                 {
                     e1.CallIndirect(addInt.CallingConvention, typeof(void), typeof(int));
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("CallIndirect expected an int; found double", e.Message);
+                    Assert.Equal("CallIndirect expected an int; found double", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CallBadParam()
         {
             var e1 = Emit<Action>.NewDynamicMethod();
@@ -3768,11 +3768,11 @@ namespace SigilTests
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("Call expected a SigilTests.Errors; found System.Object", e.Message);
+                Assert.Equal("Call expected a SigilTests.Errors; found System.Object", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CallVirtualBadParam()
         {
             var e1 = Emit<Action>.NewDynamicMethod();
@@ -3784,11 +3784,11 @@ namespace SigilTests
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("CallVirtual expected a SigilTests.Errors; found System.Object", e.Message);
+                Assert.Equal("CallVirtual expected a SigilTests.Errors; found System.Object", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void NullCallMethod()
         {
             var e1 = Emit<Action>.NewDynamicMethod("E1");
@@ -3796,15 +3796,15 @@ namespace SigilTests
             try
             {
                 e1.Call(null);
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (ArgumentNullException e)
             {
-                Assert.AreEqual("method", e.ParamName);
+                Assert.Equal("method", e.ParamName);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CallEmptyStack()
         {
             var e1 = Emit<Action>.NewDynamicMethod("E1");
@@ -3812,15 +3812,15 @@ namespace SigilTests
             try
             {
                 e1.Call(typeof(object).GetMethod("ToString"));
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("Call expects a value on the stack, but it was empty", e.Message);
+                Assert.Equal("Call expects a value on the stack, but it was empty", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void NullCallVirtualMethod()
         {
             var e1 = Emit<Action>.NewDynamicMethod("E1");
@@ -3828,15 +3828,15 @@ namespace SigilTests
             try
             {
                 e1.CallVirtual(null);
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (ArgumentNullException e)
             {
-                Assert.AreEqual("method", e.ParamName);
+                Assert.Equal("method", e.ParamName);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CallVirtualEmptyStack()
         {
             var e1 = Emit<Action>.NewDynamicMethod("E1");
@@ -3844,15 +3844,15 @@ namespace SigilTests
             try
             {
                 e1.CallVirtual(typeof(object).GetMethod("ToString"));
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("CallVirtual expects a value on the stack, but it was empty", e.Message);
+                Assert.Equal("CallVirtual expects a value on the stack, but it was empty", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CallVirtualStatic()
         {
             var e1 = Emit<Action>.NewDynamicMethod("E1");
@@ -3860,15 +3860,15 @@ namespace SigilTests
             try
             {
                 e1.CallVirtual(typeof(string).GetMethod("Intern"));
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (ArgumentException e)
             {
-                Assert.AreEqual("Only non-static methods can be called using CallVirtual, found System.String Intern(System.String)", e.Message);
+                Assert.Equal("Only non-static methods can be called using CallVirtual, found System.String Intern(System.String)", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void NullBranchLabels()
         {
             var emit = typeof(Emit<Action>);
@@ -3896,17 +3896,17 @@ namespace SigilTests
                 try
                 {
                     branch.Invoke(e1, new object[] { null });
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (TargetInvocationException e)
                 {
                     var f = (ArgumentNullException)e.InnerException;
-                    Assert.AreEqual("label", f.ParamName);
+                    Assert.Equal("label", f.ParamName);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void UnownedBranchLabels()
         {
             var emit = typeof(Emit<Action>);
@@ -3936,17 +3936,17 @@ namespace SigilTests
                 try
                 {
                     branch.Invoke(e1, new object[] { l });
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (TargetInvocationException e)
                 {
                     var f = (ArgumentException)e.InnerException;
-                    Assert.AreEqual("wrong_emit is not owned by this Emit, and thus cannot be used", f.Message);
+                    Assert.Equal("wrong_emit is not owned by this Emit, and thus cannot be used", f.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void BranchEmptyStack()
         {
             var emit = typeof(Emit<Action>);
@@ -3972,12 +3972,12 @@ namespace SigilTests
                 try
                 {
                     branch.Invoke(e1, new object[] { l });
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (TargetInvocationException e)
                 {
                     var f = (SigilVerificationException)e.InnerException;
-                    Assert.IsTrue(f.Message.EndsWith(" expects 2 values on the stack"));
+                    Assert.True(f.Message.EndsWith(" expects 2 values on the stack"));
                 }
             }
 
@@ -3988,11 +3988,11 @@ namespace SigilTests
                 try
                 {
                     e2.BranchIfFalse(l);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("BranchIfFalse expects a value on the stack, but it was empty", e.Message);
+                    Assert.Equal("BranchIfFalse expects a value on the stack, but it was empty", e.Message);
                 }
             }
 
@@ -4003,16 +4003,16 @@ namespace SigilTests
                 try
                 {
                     e3.BranchIfTrue(l);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (SigilVerificationException e)
                 {
-                    Assert.AreEqual("BranchIfTrue expects a value on the stack, but it was empty", e.Message);
+                    Assert.Equal("BranchIfTrue expects a value on the stack, but it was empty", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CatchInCatch()
         {
             var e1 = Emit<Action>.NewDynamicMethod("e1");
@@ -4022,15 +4022,15 @@ namespace SigilTests
             try
             {
                 var c2 = e1.BeginCatchBlock<Exception>(t);
-                Assert.Fail("Shouldn't be legal to have two catches open at the same time");
+                Assert.True(false, "Shouldn't be legal to have two catches open at the same time");
             }
             catch (InvalidOperationException s)
             {
-                Assert.IsTrue(s.Message.StartsWith("Cannot start a new catch block, "));
+                Assert.True(s.Message.StartsWith("Cannot start a new catch block, "));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void NullTryCatch()
         {
             var e1 = Emit<Action>.NewDynamicMethod("e1");
@@ -4038,15 +4038,15 @@ namespace SigilTests
             try
             {
                 e1.BeginCatchAllBlock(null);
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (ArgumentNullException e)
             {
-                Assert.AreEqual("forTry", e.ParamName);
+                Assert.Equal("forTry", e.ParamName);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CatchNonException()
         {
             var e1 = Emit<Action>.NewDynamicMethod("e1");
@@ -4055,15 +4055,15 @@ namespace SigilTests
             try
             {
                 e1.BeginCatchBlock<string>(t);
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (ArgumentException e)
             {
-                Assert.AreEqual("exceptionType", e.ParamName);
+                Assert.Equal("exceptionType", e.ParamName);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void NonEmptyExceptBlock()
         {
             var e1 = Emit<Action>.NewDynamicMethod("e1");
@@ -4073,15 +4073,15 @@ namespace SigilTests
             try
             {
                 var c = e1.BeginCatchAllBlock(t);
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("BeginCatchBlock expected the stack of be empty", e.Message);
+                Assert.Equal("BeginCatchBlock expected the stack of be empty", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CatchAlreadyClosedTry()
         {
             var e1 = Emit<Action>.NewDynamicMethod("e1");
@@ -4094,15 +4094,15 @@ namespace SigilTests
             try
             {
                 var c2 = e1.BeginCatchAllBlock(t);
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.IsTrue(e.Message.StartsWith("BeginCatchBlock expects an unclosed exception block, "));
+                Assert.True(e.Message.StartsWith("BeginCatchBlock expects an unclosed exception block, "));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CatchExceptionNull()
         {
             var e1 = Emit<Action>.NewDynamicMethod("e1");
@@ -4111,15 +4111,15 @@ namespace SigilTests
             try
             {
                 var c1 = e1.BeginCatchBlock(t, null);
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (ArgumentNullException e)
             {
-                Assert.AreEqual("exceptionType", e.ParamName);
+                Assert.Equal("exceptionType", e.ParamName);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void CatchOtherTry()
         {
             var e1 = Emit<Action>.NewDynamicMethod("e1");
@@ -4129,15 +4129,15 @@ namespace SigilTests
             try
             {
                 var c1 = e1.BeginCatchAllBlock(t1);
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (InvalidOperationException e)
             {
-                Assert.IsTrue(e.Message.StartsWith("Cannot start CatchBlock on "));
+                Assert.True(e.Message.StartsWith("Cannot start CatchBlock on "));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void MixedOwners()
         {
             var e1 = Emit<Action>.NewDynamicMethod("e1");
@@ -4149,15 +4149,15 @@ namespace SigilTests
             try
             {
                 e1.BeginCatchAllBlock(t2);
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (ArgumentException e)
             {
-                Assert.IsTrue(e.Message.EndsWith(" is not owned by this Emit, and thus cannot be used"));
+                Assert.True(e.Message.EndsWith(" is not owned by this Emit, and thus cannot be used"));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void NonEmptyTry()
         {
             var e1 = Emit<Action>.NewDynamicMethod("e1");
@@ -4166,15 +4166,15 @@ namespace SigilTests
             try
             {
                 e1.BeginExceptionBlock();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException s)
             {
-                Assert.AreEqual("BeginExceptionBlock expected the stack of be empty", s.Message);
+                Assert.Equal("BeginExceptionBlock expected the stack of be empty", s.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ShiftEmptyStack()
         {
             var e1 = Emit<Action>.NewDynamicMethod("E1");
@@ -4182,15 +4182,15 @@ namespace SigilTests
             try
             {
                 e1.ShiftLeft();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("ShiftLeft expects 2 values on the stack", e.Message);
+                Assert.Equal("ShiftLeft expects 2 values on the stack", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ShiftBadValues()
         {
             var e1 = Emit<Action>.NewDynamicMethod("E1");
@@ -4200,11 +4200,11 @@ namespace SigilTests
             try
             {
                 e1.ShiftLeft();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("ShiftLeft expected an int, long, or native int; found System.String", e.Message);
+                Assert.Equal("ShiftLeft expected an int, long, or native int; found System.String", e.Message);
             }
 
             var e2 = Emit<Action>.NewDynamicMethod("E2");
@@ -4214,15 +4214,15 @@ namespace SigilTests
             try
             {
                 e2.ShiftLeft();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("ShiftLeft expected an int, or native int; found System.String", e.Message);
+                Assert.Equal("ShiftLeft expected an int, or native int; found System.String", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Add()
         {
             var e1 = Emit<Action>.NewDynamicMethod("E1");
@@ -4232,11 +4232,11 @@ namespace SigilTests
             try
             {
                 e1.Add();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("Add expected an int, or native int; found System.String", e.Message);
+                Assert.Equal("Add expected an int, or native int; found System.String", e.Message);
             }
 
             var e2 = Emit<Action>.NewDynamicMethod("E2");
@@ -4246,11 +4246,11 @@ namespace SigilTests
             try
             {
                 e2.Add();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("Add expected a by ref, double, float, int, long, native int, or pointer; found System.String", e.Message);
+                Assert.Equal("Add expected a by ref, double, float, int, long, native int, or pointer; found System.String", e.Message);
             }
 
             var e3 = Emit<Action>.NewDynamicMethod("E3");
@@ -4260,11 +4260,11 @@ namespace SigilTests
             try
             {
                 e3.Add();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("Add expected a by ref, double, float, int, long, native int, or pointer; found System.String", e.Message);
+                Assert.Equal("Add expected a by ref, double, float, int, long, native int, or pointer; found System.String", e.Message);
             }
 
             var e4 = Emit<Action>.NewDynamicMethod("E4");
@@ -4275,11 +4275,11 @@ namespace SigilTests
             try
             {
                 e4.Add();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("Add expected a by ref, double, float, int, long, native int, or pointer; found System.String", e.Message);
+                Assert.Equal("Add expected a by ref, double, float, int, long, native int, or pointer; found System.String", e.Message);
             }
 
             var e5 = Emit<Action>.NewDynamicMethod("E5");
@@ -4289,11 +4289,11 @@ namespace SigilTests
             try
             {
                 e5.Add();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("Add expected a by ref, double, float, int, long, native int, or pointer; found System.String", e.Message);
+                Assert.Equal("Add expected a by ref, double, float, int, long, native int, or pointer; found System.String", e.Message);
             }
 
             var e6 = Emit<Action>.NewDynamicMethod("E6");
@@ -4303,11 +4303,11 @@ namespace SigilTests
             try
             {
                 e6.Add();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("Add expected a by ref, double, float, int, long, native int, or pointer; found System.String", e.Message);
+                Assert.Equal("Add expected a by ref, double, float, int, long, native int, or pointer; found System.String", e.Message);
             }
 
             var e7 = Emit<Action<int>>.NewDynamicMethod("E7");
@@ -4317,11 +4317,11 @@ namespace SigilTests
             try
             {
                 e7.Add();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("Add expected a by ref, double, float, int, long, native int, or pointer; found System.String", e.Message);
+                Assert.Equal("Add expected a by ref, double, float, int, long, native int, or pointer; found System.String", e.Message);
             }
 
             var e8 = Emit<Action<int>>.NewDynamicMethod("E8");
@@ -4329,15 +4329,15 @@ namespace SigilTests
             try
             {
                 e8.Add();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("Add expects 2 values on the stack", e.Message);
+                Assert.Equal("Add expects 2 values on the stack", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Multiply()
         {
             var e3 = Emit<Action<int>>.NewDynamicMethod("E3");
@@ -4345,15 +4345,15 @@ namespace SigilTests
             try
             {
                 e3.Multiply();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("Multiply expects 2 values on the stack", e.Message);
+                Assert.Equal("Multiply expects 2 values on the stack", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void AddOverflow()
         {
             var e1 = Emit<Action>.NewDynamicMethod("E1");
@@ -4361,15 +4361,15 @@ namespace SigilTests
             try
             {
                 e1.AddOverflow();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("AddOverflow expects 2 values on the stack", e.Message);
+                Assert.Equal("AddOverflow expects 2 values on the stack", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void UnsignedAddOverflow()
         {
             var e1 = Emit<Action>.NewDynamicMethod("E1");
@@ -4377,15 +4377,15 @@ namespace SigilTests
             try
             {
                 e1.UnsignedAddOverflow();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("UnsignedAddOverflow expects 2 values on the stack", e.Message);
+                Assert.Equal("UnsignedAddOverflow expects 2 values on the stack", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void MultiplyOverflow()
         {
             var e1 = Emit<Action>.NewDynamicMethod("E1");
@@ -4393,15 +4393,15 @@ namespace SigilTests
             try
             {
                 e1.MultiplyOverflow();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("MultiplyOverflow expects 2 values on the stack", e.Message);
+                Assert.Equal("MultiplyOverflow expects 2 values on the stack", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void UnsignedMultiplyOverflow()
         {
             var e1 = Emit<Action>.NewDynamicMethod("E1");
@@ -4409,15 +4409,15 @@ namespace SigilTests
             try
             {
                 e1.UnsignedMultiplyOverflow();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("UnsignedMultiplyOverflow expects 2 values on the stack", e.Message);
+                Assert.Equal("UnsignedMultiplyOverflow expects 2 values on the stack", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Divide()
         {
             var e1 = Emit<Action>.NewDynamicMethod("E1");
@@ -4425,15 +4425,15 @@ namespace SigilTests
             try
             {
                 e1.Divide();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("Divide expects 2 values on the stack", e.Message);
+                Assert.Equal("Divide expects 2 values on the stack", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void UnsignedDivide()
         {
             var e1 = Emit<Action>.NewDynamicMethod("E1");
@@ -4441,15 +4441,15 @@ namespace SigilTests
             try
             {
                 e1.UnsignedDivide();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("UnsignedDivide expects 2 values on the stack", e.Message);
+                Assert.Equal("UnsignedDivide expects 2 values on the stack", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Remainder()
         {
             var e1 = Emit<Action>.NewDynamicMethod("E1");
@@ -4457,15 +4457,15 @@ namespace SigilTests
             try
             {
                 e1.Remainder();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("Remainder expects 2 values on the stack", e.Message);
+                Assert.Equal("Remainder expects 2 values on the stack", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void UnsignedRemainder()
         {
             var e1 = Emit<Action>.NewDynamicMethod("E1");
@@ -4473,15 +4473,15 @@ namespace SigilTests
             try
             {
                 e1.UnsignedRemainder();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("UnsignedRemainder expects 2 values on the stack", e.Message);
+                Assert.Equal("UnsignedRemainder expects 2 values on the stack", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Subtract()
         {
             var e1 = Emit<Action>.NewDynamicMethod("E1");
@@ -4489,15 +4489,15 @@ namespace SigilTests
             try
             {
                 e1.Subtract();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("Subtract expects 2 values on the stack", e.Message);
+                Assert.Equal("Subtract expects 2 values on the stack", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void SubtractOverflow()
         {
             var e1 = Emit<Action>.NewDynamicMethod("E1");
@@ -4505,15 +4505,15 @@ namespace SigilTests
             try
             {
                 e1.SubtractOverflow();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("SubtractOverflow expects 2 values on the stack", e.Message);
+                Assert.Equal("SubtractOverflow expects 2 values on the stack", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void UnsignedSubtractOverflow()
         {
             var e1 = Emit<Action>.NewDynamicMethod("E1");
@@ -4521,15 +4521,15 @@ namespace SigilTests
             try
             {
                 e1.UnsignedSubtractOverflow();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("UnsignedSubtractOverflow expects 2 values on the stack", e.Message);
+                Assert.Equal("UnsignedSubtractOverflow expects 2 values on the stack", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Negate()
         {
             var e1 = Emit<Action>.NewDynamicMethod("E1");
@@ -4537,11 +4537,11 @@ namespace SigilTests
             try
             {
                 e1.Negate();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("Negate expects a value on the stack, but it was empty", e.Message);
+                Assert.Equal("Negate expects a value on the stack, but it was empty", e.Message);
             }
 
             var e2 = Emit<Action>.NewDynamicMethod("E2");
@@ -4550,15 +4550,15 @@ namespace SigilTests
             try
             {
                 e2.Negate();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("Negate expected a double, float, int, long, or native int; found System.String", e.Message);
+                Assert.Equal("Negate expected a double, float, int, long, or native int; found System.String", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void BranchOutOfTry()
         {
             var e1 = Emit<Action>.NewDynamicMethod("E1");
@@ -4577,15 +4577,15 @@ namespace SigilTests
             try
             {
                 var d1 = e1.CreateDelegate();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("Cannot branch from inside Sigil.ExceptionBlock to outside, exit the ExceptionBlock first", e.Message);
+                Assert.Equal("Cannot branch from inside Sigil.ExceptionBlock to outside, exit the ExceptionBlock first", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void BranchOutOfCatch()
         {
             var e1 = Emit<Action>.NewDynamicMethod("E1");
@@ -4604,15 +4604,15 @@ namespace SigilTests
             try
             {
                 var d1 = e1.CreateDelegate();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("Cannot branch from inside Sigil.CatchBlock to outside, exit the ExceptionBlock first", e.Message);
+                Assert.Equal("Cannot branch from inside Sigil.CatchBlock to outside, exit the ExceptionBlock first", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void BranchOutOfFinally()
         {
             var e1 = Emit<Action>.NewDynamicMethod("E1");
@@ -4632,15 +4632,15 @@ namespace SigilTests
             try
             {
                 var d1 = e1.CreateDelegate();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("Cannot branch from inside Sigil.FinallyBlock to outside, exit the ExceptionBlock first", e.Message);
+                Assert.Equal("Cannot branch from inside Sigil.FinallyBlock to outside, exit the ExceptionBlock first", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void BranchIntoFinally()
         {
             var e1 = Emit<Action>.NewDynamicMethod("E1");
@@ -4661,15 +4661,15 @@ namespace SigilTests
             try
             {
                 var d1 = e1.CreateDelegate();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("Cannot branch into a FinallyBlock", e.Message);
+                Assert.Equal("Cannot branch into a FinallyBlock", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void BeginFinallyBlock()
         {
             var e1 = Emit<Action>.NewDynamicMethod("E1");
@@ -4677,11 +4677,11 @@ namespace SigilTests
             try
             {
                 e1.BeginFinallyBlock(null);
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (ArgumentNullException e)
             {
-                Assert.AreEqual("forTry", e.ParamName);
+                Assert.Equal("forTry", e.ParamName);
             }
 
             var e2 = Emit<Action>.NewDynamicMethod("E2");
@@ -4691,11 +4691,11 @@ namespace SigilTests
             try
             {
                 e3.BeginFinallyBlock(t2);
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (ArgumentException e)
             {
-                Assert.AreEqual("Sigil.ExceptionBlock is not owned by this Emit, and thus cannot be used", e.Message);
+                Assert.Equal("Sigil.ExceptionBlock is not owned by this Emit, and thus cannot be used", e.Message);
             }
 
             var e4 = Emit<Action>.NewDynamicMethod("E4");
@@ -4708,11 +4708,11 @@ namespace SigilTests
             try
             {
                 e4.BeginFinallyBlock(t4);
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (InvalidOperationException e)
             {
-                Assert.AreEqual("BeginFinallyBlock expects an unclosed exception block, but Sigil.ExceptionBlock is already closed", e.Message);
+                Assert.Equal("BeginFinallyBlock expects an unclosed exception block, but Sigil.ExceptionBlock is already closed", e.Message);
             }
 
             var e5 = Emit<Action>.NewDynamicMethod("E5");
@@ -4722,11 +4722,11 @@ namespace SigilTests
             try
             {
                 var f5 = e5.BeginFinallyBlock(t5);
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (InvalidOperationException e)
             {
-                Assert.AreEqual("Cannot begin FinallyBlock on Sigil.ExceptionBlock while inner ExceptionBlock Sigil.ExceptionBlock is still open", e.Message);
+                Assert.Equal("Cannot begin FinallyBlock on Sigil.ExceptionBlock while inner ExceptionBlock Sigil.ExceptionBlock is still open", e.Message);
             }
 
             var e6 = Emit<Action>.NewDynamicMethod("E6");
@@ -4736,11 +4736,11 @@ namespace SigilTests
             try
             {
                 e6.BeginFinallyBlock(t6);
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("BeginFinallyBlock expected the stack of be empty", e.Message);
+                Assert.Equal("BeginFinallyBlock expected the stack of be empty", e.Message);
             }
 
             var e7 = Emit<Action>.NewDynamicMethod("E7");
@@ -4751,15 +4751,15 @@ namespace SigilTests
             try
             {
                 e7.BeginFinallyBlock(t7);
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (InvalidOperationException e)
             {
-                Assert.AreEqual("There can only be one finally block per ExceptionBlock, and one is already defined for Sigil.ExceptionBlock", e.Message);
+                Assert.Equal("There can only be one finally block per ExceptionBlock, and one is already defined for Sigil.ExceptionBlock", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Box()
         {
             var e1 = Emit<Action>.NewDynamicMethod("E1");
@@ -4770,7 +4770,7 @@ namespace SigilTests
             }
             catch (ArgumentNullException e)
             {
-                Assert.AreEqual("valueType", e.ParamName);
+                Assert.Equal("valueType", e.ParamName);
             }
 
             var e2 = Emit<Action>.NewDynamicMethod("E2");
@@ -4781,7 +4781,7 @@ namespace SigilTests
             }
             catch (ArgumentException e)
             {
-                Assert.AreEqual("valueType", e.ParamName);
+                Assert.Equal("valueType", e.ParamName);
             }
 
             var e3 = Emit<Action>.NewDynamicMethod("E3");
@@ -4792,7 +4792,7 @@ namespace SigilTests
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("Box expects a value on the stack, but it was empty", e.Message);
+                Assert.Equal("Box expects a value on the stack, but it was empty", e.Message);
             }
 
             var e4 = Emit<Action>.NewDynamicMethod("E4");
@@ -4804,7 +4804,7 @@ namespace SigilTests
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("Box expected a System.Byte; found System.String", e.Message);
+                Assert.Equal("Box expected a System.Byte; found System.String", e.Message);
             }
 
             var e5 = Emit<Action>.NewDynamicMethod("E5");
@@ -4816,11 +4816,11 @@ namespace SigilTests
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("Box expected a System.Guid; found int", e.Message);
+                Assert.Equal("Box expected a System.Guid; found int", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void BadBranch()
         {
             var e1 = Emit<Action>.NewDynamicMethod("E1");
@@ -4840,15 +4840,15 @@ namespace SigilTests
             try
             {
                 e1.Return();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("Return expected the stack of be empty", e.Message);
+                Assert.Equal("Return expected the stack of be empty", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void StackCheck()
         {
             var e1 = Emit<Action>.NewDynamicMethod("E1");
@@ -4858,27 +4858,27 @@ namespace SigilTests
             try
             {
                 e1.Add();
-                Assert.Fail("Shouldn't be possible");
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("Add expected a by ref, double, float, int, long, native int, or pointer; found System.String", e.Message);
+                Assert.Equal("Add expected a by ref, double, float, int, long, native int, or pointer; found System.String", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void MaxStackNonVerifying()
         {
             var e1 = Emit<Action>.NewDynamicMethod("E1", doVerify: false);
 
             try
             {
-                Assert.AreEqual(0, e1.MaxStackSize);
-                Assert.Fail("Shouldn't be possible");
+                Assert.Equal(0, e1.MaxStackSize);
+                Assert.True(false, "Shouldn't be possible");
             }
             catch (InvalidOperationException e)
             {
-                Assert.AreEqual("MaxStackSize is not available on non-verifying Emits", e.Message);
+                Assert.Equal("MaxStackSize is not available on non-verifying Emits", e.Message);
             }
         }
     }

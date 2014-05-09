@@ -1,16 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class CopyBlock
     {
-        [TestMethod]
+        [Fact]
         public void SimpleNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(void), new [] { typeof(byte[]), typeof(byte[]) });
@@ -39,12 +40,12 @@ namespace SigilTests
 
             for (byte i = 0; i < a.Length; i++)
             {
-                Assert.AreEqual(i + 1, a[i]);
-                Assert.AreEqual(i + 1, b[i]);
+                Assert.Equal(i + 1, a[i]);
+                Assert.Equal(i + 1, b[i]);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void VolatileNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(void), new [] { typeof(byte[]), typeof(byte[]) });
@@ -73,8 +74,8 @@ namespace SigilTests
 
             for (byte i = 0; i < a.Length; i++)
             {
-                Assert.AreEqual(i + 1, a[i]);
-                Assert.AreEqual(i + 1, b[i]);
+                Assert.Equal(i + 1, a[i]);
+                Assert.Equal(i + 1, b[i]);
             }
         }
     }

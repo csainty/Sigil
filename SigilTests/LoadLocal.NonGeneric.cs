@@ -1,16 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class LoadLocal
     {
-        [TestMethod]
+        [Fact]
         public void SimpleNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(int), Type.EmptyTypes, "E1");
@@ -24,10 +25,10 @@ namespace SigilTests
 
             var del = e1.CreateDelegate<Func<int>>();
 
-            Assert.AreEqual(3, del());
+            Assert.Equal(3, del());
         }
 
-        [TestMethod]
+        [Fact]
         public void AllNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(int), Type.EmptyTypes);
@@ -60,7 +61,7 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<int>>();
 
-            Assert.AreEqual(total, d1());
+            Assert.Equal(total, d1());
         }
     }
 }

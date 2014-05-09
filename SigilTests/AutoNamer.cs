@@ -1,17 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class AutoNamer
     {
-        [TestMethod]
+        [Fact]
         public void Simple()
         {
             var e1 = Emit<Action>.NewDynamicMethod();
@@ -29,16 +29,16 @@ namespace SigilTests
             d1();
         }
 
-        [TestMethod]
+        [Fact]
         public void NoCollisions()
         {
             var e1 = Emit<Action>.NewDynamicMethod();
             var l1 = e1.DefineLabel("_label0");
             var l2 = e1.DefineLabel();
 
-            Assert.AreEqual(2, e1.Labels.Count);
-            Assert.IsTrue(e1.Labels.Names.SingleOrDefault(x => x == "_label0") != null);
-            Assert.IsTrue(e1.Labels.Names.SingleOrDefault(x => x == "_label1") != null);
+            Assert.Equal(2, e1.Labels.Count);
+            Assert.True(e1.Labels.Names.SingleOrDefault(x => x == "_label0") != null);
+            Assert.True(e1.Labels.Names.SingleOrDefault(x => x == "_label1") != null);
         }
     }
 }

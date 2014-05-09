@@ -1,17 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class StoreLocal
     {
-        [TestMethod]
+        [Fact]
         public void Int()
         {
             var e1 = Emit<Func<int>>.NewDynamicMethod("E1");
@@ -26,7 +26,7 @@ namespace SigilTests
 
             var del = e1.CreateDelegate();
 
-            Assert.AreEqual(46, del());
+            Assert.Equal(46, del());
         }
     }
 }

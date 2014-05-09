@@ -1,17 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class Remainder
     {
-        [TestMethod]
+        [Fact]
         public void Simple()
         {
             var e1 = Emit<Func<int, int, int>>.NewDynamicMethod("E1");
@@ -22,10 +22,10 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual(8675309 % 314, d1(8675309, 314));
+            Assert.Equal(8675309 % 314, d1(8675309, 314));
         }
 
-        [TestMethod]
+        [Fact]
         public void Unsigned()
         {
             var e1 = Emit<Func<uint, uint, uint>>.NewDynamicMethod("E1");
@@ -36,7 +36,7 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual(uint.MaxValue % ((uint)1234), d1(uint.MaxValue, (uint)1234));
+            Assert.Equal(uint.MaxValue % ((uint)1234), d1(uint.MaxValue, (uint)1234));
         }
     }
 }

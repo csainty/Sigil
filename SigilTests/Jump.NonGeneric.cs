@@ -1,16 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class Jump
     {
-        [TestMethod]
+        [Fact]
         public void SimpleNonGeneric()
         {
             var simpleSet = typeof(Jump).GetMethod("SimpleSetM");
@@ -26,11 +27,11 @@ namespace SigilTests
             var d1 = e1.CreateDelegate<Action<int>>();
 
             d1(1234);
-            Assert.AreEqual(1234 ^ int.MaxValue, SimpleSet);
+            Assert.Equal(1234 ^ int.MaxValue, SimpleSet);
             d1(777);
-            Assert.AreEqual(777 ^ int.MaxValue, SimpleSet);
+            Assert.Equal(777 ^ int.MaxValue, SimpleSet);
             d1(0x12345678);
-            Assert.AreEqual(0x12345678 ^ int.MaxValue, SimpleSet);
+            Assert.Equal(0x12345678 ^ int.MaxValue, SimpleSet);
         }
     }
 }

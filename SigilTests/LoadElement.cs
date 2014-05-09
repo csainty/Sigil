@@ -1,17 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class LoadElement
     {
-        [TestMethod]
+        [Fact]
         public void Simple()
         {
             var e1 = Emit<Func<int[], int, int>>.NewDynamicMethod("E1");
@@ -22,8 +22,8 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual(1, d1(new[] { 3, 1, 2 }, 1));
-            Assert.AreEqual(111, d1(new[] { 111, 2, 3 }, 0));
+            Assert.Equal(1, d1(new[] { 3, 1, 2 }, 1));
+            Assert.Equal(111, d1(new[] { 111, 2, 3 }, 0));
 
             var e2 = Emit<Func<string[], string>>.NewDynamicMethod("E2");
             e2.LoadArgument(0);
@@ -33,10 +33,10 @@ namespace SigilTests
 
             var d2 = e2.CreateDelegate();
 
-            Assert.AreEqual("hello", d2(new[] { "world", "hello" }));
+            Assert.Equal("hello", d2(new[] { "world", "hello" }));
         }
 
-        [TestMethod]
+        [Fact]
         public void Byte()
         {
             {
@@ -48,11 +48,11 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate();
 
-                Assert.AreEqual(123, d1(new byte[] { 123 }, 0));
+                Assert.Equal(123, d1(new byte[] { 123 }, 0));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void SByte()
         {
             {
@@ -64,11 +64,11 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate();
 
-                Assert.AreEqual(-100, d1(new sbyte[] { -100 }, 0));
+                Assert.Equal(-100, d1(new sbyte[] { -100 }, 0));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public unsafe void Pointer()
         {
             {
@@ -86,11 +86,11 @@ namespace SigilTests
 
                 var y = (int*)d1(x, 0);
 
-                Assert.IsTrue(x[0] == y);
+                Assert.True(x[0] == y);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Short()
         {
             {
@@ -102,11 +102,11 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate();
 
-                Assert.AreEqual((short)-100, d1(new short[] { -100 }, 0));
+                Assert.Equal((short)-100, d1(new short[] { -100 }, 0));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void UShort()
         {
             {
@@ -118,11 +118,11 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate();
 
-                Assert.AreEqual((ushort)100, d1(new ushort[] { 100 }, 0));
+                Assert.Equal((ushort)100, d1(new ushort[] { 100 }, 0));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void UInt()
         {
             {
@@ -134,11 +134,11 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate();
 
-                Assert.AreEqual((uint)100, d1(new uint[] { 100 }, 0));
+                Assert.Equal((uint)100, d1(new uint[] { 100 }, 0));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Long()
         {
             {
@@ -150,11 +150,11 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate();
 
-                Assert.AreEqual((long)100, d1(new long[] { 100 }, 0));
+                Assert.Equal((long)100, d1(new long[] { 100 }, 0));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ULong()
         {
             {
@@ -166,11 +166,11 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate();
 
-                Assert.AreEqual((ulong)100, d1(new ulong[] { 100 }, 0));
+                Assert.Equal((ulong)100, d1(new ulong[] { 100 }, 0));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Float()
         {
             {
@@ -182,11 +182,11 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate();
 
-                Assert.AreEqual((float)100, d1(new float[] { 100 }, 0));
+                Assert.Equal((float)100, d1(new float[] { 100 }, 0));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Double()
         {
             {
@@ -198,11 +198,11 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate();
 
-                Assert.AreEqual((double)100, d1(new double[] { 100 }, 0));
+                Assert.Equal((double)100, d1(new double[] { 100 }, 0));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Struct()
         {
             {
@@ -216,7 +216,7 @@ namespace SigilTests
 
                 var now = DateTime.UtcNow;
 
-                Assert.AreEqual(now, d1(new[] { now }, 0));
+                Assert.Equal(now, d1(new[] { now }, 0));
             }
         }
     }

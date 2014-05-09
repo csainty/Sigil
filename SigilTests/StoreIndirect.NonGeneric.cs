@@ -1,16 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class StoreIndirect
     {
-        [TestMethod]
+        [Fact]
         public unsafe void AllNonGeneric()
         {
             {
@@ -24,7 +25,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<sbyte>>();
 
-                Assert.AreEqual((sbyte)1, d1());
+                Assert.Equal((sbyte)1, d1());
             }
 
             {
@@ -38,7 +39,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<byte>>();
 
-                Assert.AreEqual((byte)1, d1());
+                Assert.Equal((byte)1, d1());
             }
 
             {
@@ -52,7 +53,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<short>>();
 
-                Assert.AreEqual((short)1, d1());
+                Assert.Equal((short)1, d1());
             }
 
             {
@@ -66,7 +67,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<ushort>>();
 
-                Assert.AreEqual((ushort)1, d1());
+                Assert.Equal((ushort)1, d1());
             }
 
             {
@@ -80,7 +81,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<int>>();
 
-                Assert.AreEqual((int)1, d1());
+                Assert.Equal((int)1, d1());
             }
 
             {
@@ -94,7 +95,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<uint>>();
 
-                Assert.AreEqual((uint)1, d1());
+                Assert.Equal((uint)1, d1());
             }
 
             {
@@ -108,7 +109,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<long>>();
 
-                Assert.AreEqual((long)1, d1());
+                Assert.Equal((long)1, d1());
             }
 
             {
@@ -122,7 +123,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<ulong>>();
 
-                Assert.AreEqual((ulong)1, d1());
+                Assert.Equal((ulong)1, d1());
             }
 
             {
@@ -136,7 +137,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<float>>();
 
-                Assert.AreEqual((float)1, d1());
+                Assert.Equal((float)1, d1());
             }
 
             {
@@ -150,7 +151,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<double>>();
 
-                Assert.AreEqual(3.1415926, d1());
+                Assert.Equal(3.1415926, d1());
             }
 
             {
@@ -164,7 +165,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<object>>();
 
-                Assert.AreEqual("hello world", d1());
+                Assert.Equal("hello world", d1());
             }
 
             {
@@ -181,7 +182,7 @@ namespace SigilTests
 
                 var x = (int*)d1();
 
-                Assert.IsTrue(x == (int*)123);
+                Assert.True(x == (int*)123);
             }
         }
     }

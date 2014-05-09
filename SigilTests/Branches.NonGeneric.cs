@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
@@ -8,12 +8,13 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class Branches
     {
-        [TestMethod]
+        [Fact]
         public void ScanNonGeneric()
         {
             var terms = new[] { "hello", "world", "fizz", "buzz" };
@@ -49,14 +50,14 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<string, int>>();
 
-            Assert.AreEqual(-1, d1("whatever"));
-            Assert.AreEqual(0, d1("hello"));
-            Assert.AreEqual(1, d1("world"));
-            Assert.AreEqual(2, d1("fizz"));
-            Assert.AreEqual(3, d1("buzz"));
+            Assert.Equal(-1, d1("whatever"));
+            Assert.Equal(0, d1("hello"));
+            Assert.Equal(1, d1("world"));
+            Assert.Equal(2, d1("fizz"));
+            Assert.Equal(3, d1("buzz"));
         }
 
-        [TestMethod]
+        [Fact]
         public void ConditionalBranchOverNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(int), Type.EmptyTypes);
@@ -83,10 +84,10 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<int>>();
 
-            Assert.AreEqual(123 + 456, d1());
+            Assert.Equal(123 + 456, d1());
         }
 
-        [TestMethod]
+        [Fact]
         public void ManyConditionalNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(void), Type.EmptyTypes);
@@ -114,7 +115,7 @@ namespace SigilTests
             d1();
         }
 
-        [TestMethod]
+        [Fact]
         public void InMethodNonGeneric()
         {
             var asm = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("Foo"), AssemblyBuilderAccess.Run);
@@ -147,12 +148,12 @@ namespace SigilTests
 
             Func<int, string> d1 = x => (string)d.Invoke(null, new object[] { x });
 
-            Assert.AreEqual("less than or equal", d1(0));
-            Assert.AreEqual("less than or equal", d1(-100));
-            Assert.AreEqual("greater than", d1(50));
+            Assert.Equal("less than or equal", d1(0));
+            Assert.Equal("less than or equal", d1(-100));
+            Assert.Equal("greater than", d1(50));
         }
 
-        [TestMethod]
+        [Fact]
         public void BranchingOverExceptionsNonGeneric()
         {
             {
@@ -187,7 +188,7 @@ namespace SigilTests
                     var shouldFail = hasNormalBranch.IsMatch(instrs);
                     if (shouldFail)
                     {
-                        Assert.Fail();
+                        Assert.True(false, "Expected exception was not thrown");
                     }
                 }
             }
@@ -226,13 +227,13 @@ namespace SigilTests
                     var shouldFail = hasNormalBranch.IsMatch(instrs);
                     if (shouldFail)
                     {
-                        Assert.Fail();
+                        Assert.True(false, "Expected exception was not thrown");
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void LeaveDataOnStackBetweenBranchesNonGeneric()
         {
             var il = Emit.NewDynamicMethod(typeof(int), Type.EmptyTypes, "LeaveDataOnStackBetweenBranches");
@@ -253,10 +254,10 @@ namespace SigilTests
             il.MarkLabel(b2); // incoming: 4
             il.Return();
             int i = il.CreateDelegate<Func<int>>()();
-            Assert.AreEqual(4, i);
+            Assert.Equal(4, i);
         }
 
-        [TestMethod]
+        [Fact]
         public void ShortFormNonGeneric()
         {
             {
@@ -288,13 +289,13 @@ namespace SigilTests
                     var shouldFail = hasNormalBranch.IsMatch(instrs);
                     if (shouldFail)
                     {
-                        Assert.Fail();
+                        Assert.True(false, "Expected exception was not thrown");
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ShortFormNoOptimizationsNonGeneric()
         {
             {
@@ -326,13 +327,13 @@ namespace SigilTests
                     var shouldFail = !hasNormalBranch.IsMatch(instrs);
                     if (shouldFail)
                     {
-                        Assert.Fail();
+                        Assert.True(false, "Expected exception was not thrown");
                     }
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void BinaryInputNonGeneric()
         {
             var emit = typeof(Emit);
@@ -366,7 +367,7 @@ namespace SigilTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void UnaryInputNonGeneric()
         {
             {
@@ -396,7 +397,7 @@ namespace SigilTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void MultiLabelNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(int), Type.EmptyTypes, "E1");
@@ -426,10 +427,10 @@ namespace SigilTests
 
             var del = e1.CreateDelegate<Func<int>>();
 
-            Assert.AreEqual(1, del());
+            Assert.Equal(1, del());
         }
 
-        [TestMethod]
+        [Fact]
         public void BrSNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(int), Type.EmptyTypes, "E1");
@@ -449,10 +450,10 @@ namespace SigilTests
 
             var del = e1.CreateDelegate<Func<int>>();
 
-            Assert.AreEqual(456, del());
+            Assert.Equal(456, del());
         }
 
-        [TestMethod]
+        [Fact]
         public void BrNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(int), Type.EmptyTypes, "E1");
@@ -474,10 +475,10 @@ namespace SigilTests
 
             var del = e1.CreateDelegate<Func<int>>();
 
-            Assert.AreEqual(111, del());
+            Assert.Equal(111, del());
         }
 
-        [TestMethod]
+        [Fact]
         public void BeqSNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(int), Type.EmptyTypes, "E1");
@@ -496,10 +497,10 @@ namespace SigilTests
 
             var del = e1.CreateDelegate<Func<int>>();
 
-            Assert.AreEqual(314, del());
+            Assert.Equal(314, del());
         }
 
-        [TestMethod]
+        [Fact]
         public void BeqNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(int), Type.EmptyTypes, "E1");
@@ -523,7 +524,7 @@ namespace SigilTests
 
             var del = e1.CreateDelegate<Func<int>>();
 
-            Assert.AreEqual(314, del());
+            Assert.Equal(314, del());
         }
     }
 }

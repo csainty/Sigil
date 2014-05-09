@@ -1,16 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class Converts
     {
-        [TestMethod]
+        [Fact]
         public void SimpleNonGeneric()
         {
             {
@@ -21,7 +22,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<int, byte>>();
 
-                Assert.AreEqual((byte)111, d1(111));
+                Assert.Equal((byte)111, d1(111));
             }
 
             {
@@ -32,7 +33,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<int, sbyte>>();
 
-                Assert.AreEqual((sbyte)-11, d1(-11));
+                Assert.Equal((sbyte)-11, d1(-11));
             }
 
             {
@@ -43,7 +44,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<int, short>>();
 
-                Assert.AreEqual((short)2111, d1(2111));
+                Assert.Equal((short)2111, d1(2111));
             }
 
             {
@@ -54,7 +55,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<int, ushort>>();
 
-                Assert.AreEqual(ushort.MaxValue, d1(ushort.MaxValue));
+                Assert.Equal(ushort.MaxValue, d1(ushort.MaxValue));
             }
 
             {
@@ -65,7 +66,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<byte, int>>();
 
-                Assert.AreEqual(123, d1(123));
+                Assert.Equal(123, d1(123));
             }
 
             {
@@ -79,7 +80,7 @@ namespace SigilTests
                 var x = (uint)int.MaxValue;
                 x++;
 
-                Assert.AreEqual(x, d1(x));
+                Assert.Equal(x, d1(x));
             }
 
             {
@@ -90,7 +91,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<float, long>>();
 
-                Assert.AreEqual(12345678, d1(12345678f));
+                Assert.Equal(12345678, d1(12345678f));
             }
 
             {
@@ -101,7 +102,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<float, ulong>>();
 
-                Assert.AreEqual((ulong)12345678, d1(12345678f));
+                Assert.Equal((ulong)12345678, d1(12345678f));
             }
 
             {
@@ -112,7 +113,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<int, float>>();
 
-                Assert.AreEqual(123f, d1(123));
+                Assert.Equal(123f, d1(123));
             }
 
             {
@@ -123,7 +124,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<int, double>>();
 
-                Assert.AreEqual(123.0, d1(123));
+                Assert.Equal(123.0, d1(123));
             }
 
             {
@@ -136,7 +137,7 @@ namespace SigilTests
 
                 var intPtr = new IntPtr(123);
 
-                Assert.AreEqual(intPtr, d1(123));
+                Assert.Equal(intPtr, d1(123));
             }
 
             {
@@ -149,11 +150,11 @@ namespace SigilTests
 
                 var uintPtr = new UIntPtr(123);
 
-                Assert.AreEqual(uintPtr, d1(123));
+                Assert.Equal(uintPtr, d1(123));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void OverflowsNonGeneric()
         {
             {
@@ -164,7 +165,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<int, byte>>();
 
-                Assert.AreEqual((byte)111, d1(111));
+                Assert.Equal((byte)111, d1(111));
             }
 
             {
@@ -175,7 +176,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<int, sbyte>>();
 
-                Assert.AreEqual((sbyte)-11, d1(-11));
+                Assert.Equal((sbyte)-11, d1(-11));
             }
 
             {
@@ -186,7 +187,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<int, short>>();
 
-                Assert.AreEqual((short)2111, d1(2111));
+                Assert.Equal((short)2111, d1(2111));
             }
 
             {
@@ -197,7 +198,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<int, ushort>>();
 
-                Assert.AreEqual(ushort.MaxValue, d1(ushort.MaxValue));
+                Assert.Equal(ushort.MaxValue, d1(ushort.MaxValue));
             }
 
             {
@@ -208,7 +209,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<byte, int>>();
 
-                Assert.AreEqual(123, d1(123));
+                Assert.Equal(123, d1(123));
             }
 
             {
@@ -222,7 +223,7 @@ namespace SigilTests
                 var x = (uint)int.MaxValue;
                 x++;
 
-                Assert.AreEqual(x, d1(x));
+                Assert.Equal(x, d1(x));
             }
 
             {
@@ -233,7 +234,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<float, long>>();
 
-                Assert.AreEqual(12345678, d1(12345678f));
+                Assert.Equal(12345678, d1(12345678f));
             }
 
             {
@@ -244,7 +245,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<float, ulong>>();
 
-                Assert.AreEqual((ulong)12345678, d1(12345678f));
+                Assert.Equal((ulong)12345678, d1(12345678f));
             }
 
             {
@@ -257,7 +258,7 @@ namespace SigilTests
 
                 var intPtr = new IntPtr(123);
 
-                Assert.AreEqual(intPtr, d1(123));
+                Assert.Equal(intPtr, d1(123));
             }
 
             {
@@ -270,11 +271,11 @@ namespace SigilTests
 
                 var uintPtr = new UIntPtr(123);
 
-                Assert.AreEqual(uintPtr, d1(123));
+                Assert.Equal(uintPtr, d1(123));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void UnsignedOverflowsNonGeneric()
         {
             {
@@ -285,7 +286,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<int, byte>>();
 
-                Assert.AreEqual((byte)111, d1(111));
+                Assert.Equal((byte)111, d1(111));
             }
 
             {
@@ -299,7 +300,7 @@ namespace SigilTests
                 try
                 {
                     d1(-11);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (OverflowException) { }
             }
@@ -312,7 +313,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<int, short>>();
 
-                Assert.AreEqual((short)2111, d1(2111));
+                Assert.Equal((short)2111, d1(2111));
             }
 
             {
@@ -323,7 +324,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<int, ushort>>();
 
-                Assert.AreEqual(ushort.MaxValue, d1(ushort.MaxValue));
+                Assert.Equal(ushort.MaxValue, d1(ushort.MaxValue));
             }
 
             {
@@ -334,7 +335,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<byte, int>>();
 
-                Assert.AreEqual(123, d1(123));
+                Assert.Equal(123, d1(123));
             }
 
             {
@@ -348,7 +349,7 @@ namespace SigilTests
                 var x = (uint)int.MaxValue;
                 x++;
 
-                Assert.AreEqual(x, d1(x));
+                Assert.Equal(x, d1(x));
             }
 
             {
@@ -359,7 +360,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<float, long>>();
 
-                Assert.AreEqual(12345678, d1(12345678f));
+                Assert.Equal(12345678, d1(12345678f));
             }
 
             {
@@ -370,7 +371,7 @@ namespace SigilTests
 
                 var d1 = e1.CreateDelegate<Func<float, ulong>>();
 
-                Assert.AreEqual((ulong)12345678, d1(12345678f));
+                Assert.Equal((ulong)12345678, d1(12345678f));
             }
         }
     }

@@ -1,16 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class LoadIndirect
     {
-        [TestMethod]
+        [Fact]
         public void UnalignedNonGeneric()
         {
             {
@@ -20,11 +21,11 @@ namespace SigilTests
                 e1.Return();
 
                 var d1 = e1.CreateDelegate<Func<byte, byte>>();
-                Assert.AreEqual(111, d1(111));
+                Assert.Equal(111, d1(111));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public unsafe void AllNonGeneric()
         {
             {
@@ -34,7 +35,7 @@ namespace SigilTests
                 e1.Return();
 
                 var d1 = e1.CreateDelegate<Func<byte, byte>>();
-                Assert.AreEqual(111, d1(111));
+                Assert.Equal(111, d1(111));
             }
 
             {
@@ -44,7 +45,7 @@ namespace SigilTests
                 e1.Return();
 
                 var d1 = e1.CreateDelegate<Func<sbyte, sbyte>>();
-                Assert.AreEqual(-111, d1(-111));
+                Assert.Equal(-111, d1(-111));
             }
 
             {
@@ -54,7 +55,7 @@ namespace SigilTests
                 e1.Return();
 
                 var d1 = e1.CreateDelegate<Func<short, short>>();
-                Assert.AreEqual(-111, d1(-111));
+                Assert.Equal(-111, d1(-111));
             }
 
             {
@@ -64,7 +65,7 @@ namespace SigilTests
                 e1.Return();
 
                 var d1 = e1.CreateDelegate<Func<ushort, ushort>>();
-                Assert.AreEqual((ushort)short.MaxValue, d1((ushort)short.MaxValue));
+                Assert.Equal((ushort)short.MaxValue, d1((ushort)short.MaxValue));
             }
 
             {
@@ -74,7 +75,7 @@ namespace SigilTests
                 e1.Return();
 
                 var d1 = e1.CreateDelegate<Func<int, int>>();
-                Assert.AreEqual(-111, d1(-111));
+                Assert.Equal(-111, d1(-111));
             }
 
             {
@@ -84,7 +85,7 @@ namespace SigilTests
                 e1.Return();
 
                 var d1 = e1.CreateDelegate<Func<uint, uint>>();
-                Assert.AreEqual((uint)int.MaxValue, d1((uint)int.MaxValue));
+                Assert.Equal((uint)int.MaxValue, d1((uint)int.MaxValue));
             }
 
             {
@@ -94,7 +95,7 @@ namespace SigilTests
                 e1.Return();
 
                 var d1 = e1.CreateDelegate<Func<long, long>>();
-                Assert.AreEqual(-111, d1(-111));
+                Assert.Equal(-111, d1(-111));
             }
 
             {
@@ -104,7 +105,7 @@ namespace SigilTests
                 e1.Return();
 
                 var d1 = e1.CreateDelegate<Func<ulong, ulong>>();
-                Assert.AreEqual((ulong)long.MaxValue, d1((ulong)long.MaxValue));
+                Assert.Equal((ulong)long.MaxValue, d1((ulong)long.MaxValue));
             }
 
             {
@@ -114,7 +115,7 @@ namespace SigilTests
                 e1.Return();
 
                 var d1 = e1.CreateDelegate<Func<float, float>>();
-                Assert.AreEqual(12.34f, d1(12.34f));
+                Assert.Equal(12.34f, d1(12.34f));
             }
 
             {
@@ -124,7 +125,7 @@ namespace SigilTests
                 e1.Return();
 
                 var d1 = e1.CreateDelegate<Func<double, double>>();
-                Assert.AreEqual(12.34, d1(12.34));
+                Assert.Equal(12.34, d1(12.34));
             }
 
             {
@@ -134,7 +135,7 @@ namespace SigilTests
                 e1.Return();
 
                 var d1 = e1.CreateDelegate<Func<object, object>>();
-                Assert.AreEqual("hello", d1("hello"));
+                Assert.Equal("hello", d1("hello"));
             }
 
             {
@@ -150,7 +151,7 @@ namespace SigilTests
 
                 var z = d1((IntPtr)y);
 
-                Assert.AreEqual((IntPtr)3, z);
+                Assert.Equal((IntPtr)3, z);
             }
         }
     }

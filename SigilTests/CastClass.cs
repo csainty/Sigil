@@ -1,16 +1,16 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class CastClass
     {
-        [TestMethod]
+        [Fact]
         public void VeryLongMethod()
         {
             var e1 = Emit<Func<List<string>, List<string>>>.NewDynamicMethod();
@@ -33,10 +33,10 @@ namespace SigilTests
 
             var x = new List<string> { "hello", "world" };
 
-            Assert.AreEqual(x, d1(x));
+            Assert.Equal(x, d1(x));
         }
 
-        [TestMethod]
+        [Fact]
         public void DisableEliding()
         {
             var e1 = Emit<Func<string, string>>.NewDynamicMethod();
@@ -48,11 +48,11 @@ namespace SigilTests
             string instrs;
             var d1 = e1.CreateDelegate(out instrs, OptimizationOptions.All & ~OptimizationOptions.EnableTrivialCastEliding);
 
-            Assert.AreEqual("foo", d1("foo"));
-            Assert.IsTrue(instrs.Contains("castclass"));
+            Assert.Equal("foo", d1("foo"));
+            Assert.True(instrs.Contains("castclass"));
         }
 
-        [TestMethod]
+        [Fact]
         public void Elide()
         {
             var e1 = Emit<Func<string, string>>.NewDynamicMethod();
@@ -64,11 +64,11 @@ namespace SigilTests
             string instrs;
             var d1 = e1.CreateDelegate(out instrs);
 
-            Assert.AreEqual("foo", d1("foo"));
-            Assert.IsFalse(instrs.Contains("castclass"));
+            Assert.Equal("foo", d1("foo"));
+            Assert.False(instrs.Contains("castclass"));
         }
 
-        [TestMethod]
+        [Fact]
         public void ElideBranched()
         {
             var e1 = Emit<Func<string, string>>.NewDynamicMethod();
@@ -93,11 +93,11 @@ namespace SigilTests
             string instrs;
             var d1 = e1.CreateDelegate(out instrs);
 
-            Assert.AreEqual("foo", d1("foo"));
-            Assert.IsFalse(instrs.Contains("castclass"));
+            Assert.Equal("foo", d1("foo"));
+            Assert.False(instrs.Contains("castclass"));
         }
 
-        [TestMethod]
+        [Fact]
         public void ElideManyBranched()
         {
             var e1 = Emit<Func<string, string>>.NewDynamicMethod();
@@ -128,11 +128,11 @@ namespace SigilTests
             string instrs;
             var d1 = e1.CreateDelegate(out instrs);
 
-            Assert.AreEqual("foo", d1("foo"));
-            Assert.IsFalse(instrs.Contains("castclass"));
+            Assert.Equal("foo", d1("foo"));
+            Assert.False(instrs.Contains("castclass"));
         }
 
-        [TestMethod]
+        [Fact]
         public void ManyBranched()
         {
             var e1 = Emit<Func<object, string>>.NewDynamicMethod();
@@ -163,11 +163,11 @@ namespace SigilTests
             string instrs;
             var d1 = e1.CreateDelegate(out instrs);
 
-            Assert.AreEqual("foo", d1("foo"));
-            Assert.IsTrue(instrs.Contains("castclass"));
+            Assert.Equal("foo", d1("foo"));
+            Assert.True(instrs.Contains("castclass"));
         }
 
-        [TestMethod]
+        [Fact]
         public void Simple()
         {
             var e1 = Emit<Func<object, string>>.NewDynamicMethod();
@@ -178,9 +178,9 @@ namespace SigilTests
             string instrs;
             var d1 = e1.CreateDelegate(out instrs);
 
-            Assert.AreEqual(null, d1(null));
-            Assert.AreEqual("hello", d1("hello"));
-            Assert.IsTrue(instrs.Contains("castclass"));
+            Assert.Equal(null, d1(null));
+            Assert.Equal("hello", d1("hello"));
+            Assert.True(instrs.Contains("castclass"));
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
@@ -7,12 +7,13 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class Arglist
     {
-        [TestMethod]
+        [Fact]
         public void SimpleNonGeneric()
         {
             MethodInfo mtd;
@@ -46,7 +47,7 @@ namespace SigilTests
                 var d2 = (Func<int>)e2.CreateDelegate(typeof(Func<int>), out instr2);
 
                 var i = d2();
-                Assert.AreNotEqual(0, i);
+                Assert.NotEqual(0, i);
             }
         }
     }

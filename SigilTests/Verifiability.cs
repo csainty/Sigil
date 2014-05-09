@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
@@ -20,7 +20,7 @@ namespace SigilTests
     /// and then confirm that Sigil won't allow that instruction (or instruction sequence) when in a "verified instructions only" mode.
     /// And then that the same sequence actually works in "unverified" mode.
     /// </summary>
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class Verifiability
     {
         class _Usage
@@ -30,7 +30,7 @@ namespace SigilTests
 #pragma warning restore 0649
         }
 
-        [TestMethod]
+        [Fact]
         public void Usage()
         {
             var e1 = Emit<Func<_Usage, string>>.NewDynamicMethod();
@@ -49,14 +49,14 @@ namespace SigilTests
             e1.Return();
 
             var x = e1.TraceOperationResultUsage();
-            Assert.AreEqual("(ldarg.0) result is used by (ldfld System.String Foo)", x.ElementAt(0).ToString());
-            Assert.AreEqual("(ldfld System.String Foo) result is used by (brfalse _label0, pop, ret)", x.ElementAt(1).ToString());
-            Assert.AreEqual("(dup) result is used by (brfalse _label0)", x.ElementAt(2).ToString());
-            Assert.AreEqual("(brfalse _label0) result is unused", x.ElementAt(3).ToString());
-            Assert.AreEqual("(ret) result is unused", x.ElementAt(4).ToString());
-            Assert.AreEqual("(pop) result is unused", x.ElementAt(5).ToString());
-            Assert.AreEqual("(ldstr foo) result is used by (ret)", x.ElementAt(6).ToString());
-            Assert.AreEqual("(ret) result is unused", x.ElementAt(7).ToString());
+            Assert.Equal("(ldarg.0) result is used by (ldfld System.String Foo)", x.ElementAt(0).ToString());
+            Assert.Equal("(ldfld System.String Foo) result is used by (brfalse _label0, pop, ret)", x.ElementAt(1).ToString());
+            Assert.Equal("(dup) result is used by (brfalse _label0)", x.ElementAt(2).ToString());
+            Assert.Equal("(brfalse _label0) result is unused", x.ElementAt(3).ToString());
+            Assert.Equal("(ret) result is unused", x.ElementAt(4).ToString());
+            Assert.Equal("(pop) result is unused", x.ElementAt(5).ToString());
+            Assert.Equal("(ldstr foo) result is used by (ret)", x.ElementAt(6).ToString());
+            Assert.Equal("(ret) result is unused", x.ElementAt(7).ToString());
         }
 
         class _FollowTrace
@@ -66,7 +66,7 @@ namespace SigilTests
 #pragma warning restore 0649
         }
 
-        [TestMethod]
+        [Fact]
         public void FollowTrace()
         {
             var e1 = Emit<Func<_FollowTrace, _FollowTrace, int>>.NewDynamicMethod();
@@ -102,11 +102,11 @@ namespace SigilTests
                     cur = x.Where(r => prev.Any(p => p.ResultUsedBy.Contains(r.ProducesResult))).ToList();
                 }
 
-                Assert.AreEqual(4, steps.Count);
-                Assert.AreEqual("(ldarg.0) result is used by (ldfld Int32 _Bar)", string.Join(", ", steps[0]));
-                Assert.AreEqual("(ldfld Int32 _Bar) result is used by (add)", string.Join(", ", steps[1]));
-                Assert.AreEqual("(add) result is used by (ret)", string.Join(", ", steps[2]));
-                Assert.AreEqual("(ret) result is unused", string.Join(", ", steps[3]));
+                Assert.Equal(4, steps.Count);
+                Assert.Equal("(ldarg.0) result is used by (ldfld Int32 _Bar)", string.Join(", ", steps[0]));
+                Assert.Equal("(ldfld Int32 _Bar) result is used by (add)", string.Join(", ", steps[1]));
+                Assert.Equal("(add) result is used by (ret)", string.Join(", ", steps[2]));
+                Assert.Equal("(ret) result is unused", string.Join(", ", steps[3]));
             }
 
             {
@@ -124,15 +124,15 @@ namespace SigilTests
                     cur = x.Where(r => prev.Any(p => p.ResultUsedBy.Contains(r.ProducesResult))).ToList();
                 }
 
-                Assert.AreEqual(4, steps.Count);
-                Assert.AreEqual("(ldarg.1) result is used by (ldfld Int32 _Bar)", string.Join(", ", steps[0]));
-                Assert.AreEqual("(ldfld Int32 _Bar) result is used by (mul)", string.Join(", ", steps[1]));
-                Assert.AreEqual("(mul) result is used by (stloc.0)", string.Join(", ", steps[2]));
-                Assert.AreEqual("(stloc.0) result is unused", string.Join(", ", steps[3]));
+                Assert.Equal(4, steps.Count);
+                Assert.Equal("(ldarg.1) result is used by (ldfld Int32 _Bar)", string.Join(", ", steps[0]));
+                Assert.Equal("(ldfld Int32 _Bar) result is used by (mul)", string.Join(", ", steps[1]));
+                Assert.Equal("(mul) result is used by (stloc.0)", string.Join(", ", steps[2]));
+                Assert.Equal("(stloc.0) result is unused", string.Join(", ", steps[3]));
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Ldelema()
         {
             try
@@ -148,7 +148,7 @@ namespace SigilTests
                 var d1 = (Action<int[]>)dyn.CreateDelegate(typeof(Action<int[]>));
 
                 d1(new int[] { 123 });
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (VerificationException) { }
 
@@ -163,11 +163,11 @@ namespace SigilTests
                 try
                 {
                     e1.LoadElementAddress<int>();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (InvalidOperationException e)
                 {
-                    Assert.AreEqual("LoadElementAddress isn't verifiable", e.Message);
+                    Assert.Equal("LoadElementAddress isn't verifiable", e.Message);
                 }
             }
 
@@ -186,7 +186,7 @@ namespace SigilTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Calli()
         {
             var writeLine = typeof(Console).GetMethod("WriteLine", Type.EmptyTypes);
@@ -202,7 +202,7 @@ namespace SigilTests
                 var d1 = (Action)dyn.CreateDelegate(typeof(Action));
 
                 d1();
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (VerificationException) { }
 
@@ -217,11 +217,11 @@ namespace SigilTests
                 try
                 {
                     e1.CallIndirect(CallingConventions.Standard);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (InvalidOperationException e)
                 {
-                    Assert.AreEqual("CallIndirect isn't verifiable", e.Message);
+                    Assert.Equal("CallIndirect isn't verifiable", e.Message);
                 }
             }
 
@@ -237,7 +237,7 @@ namespace SigilTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Localloc()
         {
             try
@@ -252,7 +252,7 @@ namespace SigilTests
                 var d1 = (Action)dyn.CreateDelegate(typeof(Action));
                 d1();
 
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (VerificationException) { }
 
@@ -267,11 +267,11 @@ namespace SigilTests
                 try
                 {
                     e1.LocalAllocate();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (InvalidOperationException e)
                 {
-                    Assert.AreEqual("LocalAllocate isn't verifiable", e.Message);
+                    Assert.Equal("LocalAllocate isn't verifiable", e.Message);
                 }
             }
 
@@ -288,7 +288,7 @@ namespace SigilTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Cpblk()
         {
             var src = Marshal.AllocHGlobal(8);
@@ -309,7 +309,7 @@ namespace SigilTests
                     var d1 = (Action<IntPtr, IntPtr>)dyn.CreateDelegate(typeof(Action<IntPtr, IntPtr>));
                     d1(dest, src);
 
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (VerificationException) { }
 
@@ -326,11 +326,11 @@ namespace SigilTests
                     try
                     {
                         e1.CopyBlock();
-                        Assert.Fail();
+                        Assert.True(false, "Expected exception was not thrown");
                     }
                     catch (InvalidOperationException e)
                     {
-                        Assert.AreEqual("CopyBlock isn't verifiable", e.Message);
+                        Assert.Equal("CopyBlock isn't verifiable", e.Message);
                     }
                 }
 
@@ -354,7 +354,7 @@ namespace SigilTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Initblk()
         {
             var blk = Marshal.AllocHGlobal(8);
@@ -374,7 +374,7 @@ namespace SigilTests
                     var d1 = (Action<IntPtr>)dyn.CreateDelegate(typeof(Action<IntPtr>));
                     d1(blk);
 
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (VerificationException) { }
 
@@ -391,11 +391,11 @@ namespace SigilTests
                     try
                     {
                         e1.InitializeBlock();
-                        Assert.Fail();
+                        Assert.True(false, "Expected exception was not thrown");
                     }
                     catch (InvalidOperationException e)
                     {
-                        Assert.AreEqual("InitializeBlock isn't verifiable", e.Message);
+                        Assert.Equal("InitializeBlock isn't verifiable", e.Message);
                     }
                 }
 
@@ -418,7 +418,7 @@ namespace SigilTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Jmp()
         {
             var writeLine = typeof(Console).GetMethod("WriteLine", Type.EmptyTypes);
@@ -433,7 +433,7 @@ namespace SigilTests
                 var d1 = (Action)dyn.CreateDelegate(typeof(Action));
                 d1();
 
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (VerificationException) { }
 
@@ -447,11 +447,11 @@ namespace SigilTests
                 try
                 {
                     e1.Jump(writeLine);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (InvalidOperationException e)
                 {
-                    Assert.AreEqual("Jump isn't verifiable", e.Message);
+                    Assert.Equal("Jump isn't verifiable", e.Message);
                 }
             }
 
@@ -471,7 +471,7 @@ namespace SigilTests
             public readonly int Field;
         }
 
-        [TestMethod]
+        [Fact]
         public void LdfldaInitOnly()
         {
             var fld = typeof(LdfldaClass).GetField("Field");
@@ -488,7 +488,7 @@ namespace SigilTests
                 var d1 = (Action<LdfldaClass>)dyn.CreateDelegate(typeof(Action<LdfldaClass>));
                 d1(new LdfldaClass());
 
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (VerificationException) { }
 
@@ -504,11 +504,11 @@ namespace SigilTests
                 {
 
                     e1.LoadFieldAddress(fld);
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (InvalidOperationException e)
                 {
-                    Assert.AreEqual("LoadFieldAddress on InitOnly fields is not verifiable", e.Message);
+                    Assert.Equal("LoadFieldAddress on InitOnly fields is not verifiable", e.Message);
                 }
             }
 
@@ -525,7 +525,7 @@ namespace SigilTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void StrictBranchVerification()
         {
             // See: https://github.com/kevin-montrose/Sigil/issues/15
@@ -548,11 +548,11 @@ namespace SigilTests
             {
                 il.Branch(b);       // <- should explode, stack is *known* to be empty at b but there's a constant on the stack at this branch
                 
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("Branch expected the stack of be empty", e.Message);
+                Assert.Equal("Branch expected the stack of be empty", e.Message);
             }
         }
     }

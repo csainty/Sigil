@@ -1,15 +1,15 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class TypedReferences
     {
         public static int _MakeRef(TypedReference a)
@@ -17,7 +17,7 @@ namespace SigilTests
             return __refvalue( a, int?) ?? 314159;
         }
 
-        [TestMethod]
+        [Fact]
         public void MakeRef()
         {
             var e1 = Emit<Func<int?, int>>.NewDynamicMethod();
@@ -34,11 +34,11 @@ namespace SigilTests
             var a = d1(123);
             var b = d1(null);
 
-            Assert.AreEqual(123, a);
-            Assert.AreEqual(314159, b);
+            Assert.Equal(123, a);
+            Assert.Equal(314159, b);
         }
 
-        [TestMethod]
+        [Fact]
         public void RefValue()
         {
             var e1 = Emit<Func<int>>.NewDynamicMethod();
@@ -57,10 +57,10 @@ namespace SigilTests
 
             var x = d1();
 
-            Assert.AreEqual(123, x);
+            Assert.Equal(123, x);
         }
 
-        [TestMethod]
+        [Fact]
         public void RefType()
         {
             var e1 = Emit<Func<Type>>.NewDynamicMethod();
@@ -79,7 +79,7 @@ namespace SigilTests
 
             var x = d1();
 
-            Assert.AreEqual(typeof(int?), x);
+            Assert.Equal(typeof(int?), x);
         }
     }
 }

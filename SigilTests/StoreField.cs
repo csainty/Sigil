@@ -1,14 +1,14 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class StoreField
     {
         class StoreFieldClass
@@ -22,7 +22,7 @@ namespace SigilTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Simple()
         {
             {
@@ -37,7 +37,7 @@ namespace SigilTests
                 StoreFieldClass.Static = 2;
                 d1(null);
 
-                Assert.AreEqual(12, StoreFieldClass.Static);
+                Assert.Equal(12, StoreFieldClass.Static);
             }
 
             {
@@ -53,7 +53,7 @@ namespace SigilTests
                 var x = new StoreFieldClass();
                 d1(x);
 
-                Assert.AreEqual(12, x.Instance);
+                Assert.Equal(12, x.Instance);
             }
         }
 
@@ -64,7 +64,7 @@ namespace SigilTests
 #pragma warning restore 0649
         }
 
-        [TestMethod]
+        [Fact]
         public void ValueType()
         {
             var field = typeof(_ValueType).GetField("A");
@@ -84,7 +84,7 @@ namespace SigilTests
             var d1 = e1.CreateDelegate();
 
             var x = d1();
-            Assert.AreEqual("hello world", x.A);
+            Assert.Equal("hello world", x.A);
             
         }
     }

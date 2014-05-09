@@ -1,16 +1,16 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class Compares
     {
-        [TestMethod]
+        [Fact]
         public void Equals()
         {
             var e1 = Emit<Func<int, int, bool>>.NewDynamicMethod();
@@ -21,11 +21,11 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.IsTrue(d1(1, 1));
-            Assert.IsFalse(d1(1, 2));
+            Assert.True(d1(1, 1));
+            Assert.False(d1(1, 2));
         }
 
-        [TestMethod]
+        [Fact]
         public void GreaterThan()
         {
             var e1 = Emit<Func<int, int, bool>>.NewDynamicMethod();
@@ -36,11 +36,11 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.IsTrue(d1(5, 1));
-            Assert.IsFalse(d1(1, 1));
+            Assert.True(d1(5, 1));
+            Assert.False(d1(1, 1));
         }
 
-        [TestMethod]
+        [Fact]
         public void LessThan()
         {
             var e1 = Emit<Func<int, int, bool>>.NewDynamicMethod();
@@ -51,11 +51,11 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.IsTrue(d1(6, 10));
-            Assert.IsFalse(d1(1, 1));
+            Assert.True(d1(6, 10));
+            Assert.False(d1(1, 1));
         }
 
-        [TestMethod]
+        [Fact]
         public void UnsignedCompareGreaterThan()
         {
             var e1 = Emit<Func<uint, uint, bool>>.NewDynamicMethod();
@@ -66,11 +66,11 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.IsTrue(d1(uint.MaxValue, (uint)int.MaxValue));
-            Assert.IsFalse(d1(1, 1));
+            Assert.True(d1(uint.MaxValue, (uint)int.MaxValue));
+            Assert.False(d1(1, 1));
         }
 
-        [TestMethod]
+        [Fact]
         public void UnsignedCompareLessThan()
         {
             var e1 = Emit<Func<uint, uint, bool>>.NewDynamicMethod();
@@ -81,8 +81,8 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.IsTrue(d1((uint)int.MaxValue, uint.MaxValue));
-            Assert.IsFalse(d1(1, 1));
+            Assert.True(d1((uint)int.MaxValue, uint.MaxValue));
+            Assert.False(d1(1, 1));
         }
     }
 }

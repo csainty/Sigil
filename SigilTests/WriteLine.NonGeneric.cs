@@ -4,14 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Sigil.NonGeneric;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class WriteLine
     {
-        [TestMethod]
+        [Fact]
         public void WriteLineFormatNonGeneric()
         {
             {
@@ -56,11 +56,11 @@ namespace SigilTests
                 var del = e.CreateDelegate<Func<string>>();
                 var val = del();
 
-                Assert.AreEqual("a: hello world; b: 16; c: \r\n", val);
+                Assert.Equal("a: hello world; b: 16; c: \r\n", val);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void WriteLineSimpleNonGeneric()
         {
             var el = Emit.NewDynamicMethod(typeof(string), Type.EmptyTypes);
@@ -93,7 +93,7 @@ namespace SigilTests
             var del = el.CreateDelegate<Func<string>>();
             var val = del();
 
-            Assert.AreEqual(guid + Environment.NewLine, val);
+            Assert.Equal(guid + Environment.NewLine, val);
         }
     }
 }

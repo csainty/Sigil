@@ -1,16 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class StoreArgument
     {
-        [TestMethod]
+        [Fact]
         public void AllNonGeneric()
         {
             var returnType = typeof(LotsOfParams).GetMethod("Invoke").ReturnType;
@@ -44,7 +45,7 @@ namespace SigilTests
 
             var x = (int)d1.DynamicInvoke(args.Cast<object>().ToArray());
 
-            Assert.AreEqual(args.Sum(), x);
+            Assert.Equal(args.Sum(), x);
         }
     }
 }

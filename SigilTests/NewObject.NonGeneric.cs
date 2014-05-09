@@ -1,16 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class NewObject
     {
-        [TestMethod]
+        [Fact]
         public void MultiParamNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(string), new [] { typeof(string), typeof(int), typeof(List<double>) });
@@ -25,10 +26,10 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<string, int, List<double>, string>>();
 
-            Assert.AreEqual("hello @10 ==> 1, 2.5, 5.1", d1("hello", 10, new List<double> { 1.0, 2.5, 5.1 }));
+            Assert.Equal("hello @10 ==> 1, 2.5, 5.1", d1("hello", 10, new List<double> { 1.0, 2.5, 5.1 }));
         }
 
-        [TestMethod]
+        [Fact]
         public void PrivateConstructorNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(string), new [] { typeof(int) }, "E1");
@@ -39,10 +40,10 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<int, string>>();
 
-            Assert.AreEqual("314159", d1(314159));
+            Assert.Equal("314159", d1(314159));
         }
 
-        [TestMethod]
+        [Fact]
         public void ReferenceTypeNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(RT), Type.EmptyTypes, "E1");
@@ -52,10 +53,10 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<RT>>();
 
-            Assert.AreEqual(314159, d1().A);
+            Assert.Equal(314159, d1().A);
         }
 
-        [TestMethod]
+        [Fact]
         public void ValueTypeNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(VT), Type.EmptyTypes, "E1");
@@ -65,7 +66,7 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<VT>>();
 
-            Assert.AreEqual(3.1415926, d1().B);
+            Assert.Equal(3.1415926, d1().B);
         }
     }
 }

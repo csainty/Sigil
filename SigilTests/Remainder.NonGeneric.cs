@@ -1,16 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class Remainder
     {
-        [TestMethod]
+        [Fact]
         public void SimpleNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(int), new [] { typeof(int), typeof(int) }, "E1");
@@ -21,10 +22,10 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<int, int, int>>();
 
-            Assert.AreEqual(8675309 % 314, d1(8675309, 314));
+            Assert.Equal(8675309 % 314, d1(8675309, 314));
         }
 
-        [TestMethod]
+        [Fact]
         public void UnsignedNonGneeric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(uint), new [] { typeof(uint), typeof(uint) }, "E1");
@@ -35,7 +36,7 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate<Func<uint, uint, uint>>();
 
-            Assert.AreEqual(uint.MaxValue % ((uint)1234), d1(uint.MaxValue, (uint)1234));
+            Assert.Equal(uint.MaxValue % ((uint)1234), d1(uint.MaxValue, (uint)1234));
         }
     }
 }

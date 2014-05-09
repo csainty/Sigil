@@ -1,16 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class CastClass
     {
-        [TestMethod]
+        [Fact]
         public void VeryLongMethodNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(List<String>), new [] { typeof(List<string>) });
@@ -33,10 +34,10 @@ namespace SigilTests
 
             var x = new List<string> { "hello", "world" };
 
-            Assert.AreEqual(x, d1(x));
+            Assert.Equal(x, d1(x));
         }
 
-        [TestMethod]
+        [Fact]
         public void DisableElidingNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(string), new [] { typeof(string) });
@@ -48,11 +49,11 @@ namespace SigilTests
             string instrs;
             var d1 = e1.CreateDelegate<Func<string, string>>(out instrs, Sigil.OptimizationOptions.All & ~Sigil.OptimizationOptions.EnableTrivialCastEliding);
 
-            Assert.AreEqual("foo", d1("foo"));
-            Assert.IsTrue(instrs.Contains("castclass"));
+            Assert.Equal("foo", d1("foo"));
+            Assert.True(instrs.Contains("castclass"));
         }
 
-        [TestMethod]
+        [Fact]
         public void ElideNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(string), new [] { typeof(string) });
@@ -64,11 +65,11 @@ namespace SigilTests
             string instrs;
             var d1 = e1.CreateDelegate<Func<string, string>>(out instrs);
 
-            Assert.AreEqual("foo", d1("foo"));
-            Assert.IsFalse(instrs.Contains("castclass"));
+            Assert.Equal("foo", d1("foo"));
+            Assert.False(instrs.Contains("castclass"));
         }
 
-        [TestMethod]
+        [Fact]
         public void ElideBranchedNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(string), new [] { typeof(string) });
@@ -93,11 +94,11 @@ namespace SigilTests
             string instrs;
             var d1 = e1.CreateDelegate<Func<string, string>>(out instrs);
 
-            Assert.AreEqual("foo", d1("foo"));
-            Assert.IsFalse(instrs.Contains("castclass"));
+            Assert.Equal("foo", d1("foo"));
+            Assert.False(instrs.Contains("castclass"));
         }
 
-        [TestMethod]
+        [Fact]
         public void ElideManyBranchedNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(string), new [] { typeof(string) });
@@ -128,11 +129,11 @@ namespace SigilTests
             string instrs;
             var d1 = e1.CreateDelegate<Func<string, string>>(out instrs);
 
-            Assert.AreEqual("foo", d1("foo"));
-            Assert.IsFalse(instrs.Contains("castclass"));
+            Assert.Equal("foo", d1("foo"));
+            Assert.False(instrs.Contains("castclass"));
         }
 
-        [TestMethod]
+        [Fact]
         public void ManyBranchedNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(string), new [] { typeof(object) });
@@ -163,11 +164,11 @@ namespace SigilTests
             string instrs;
             var d1 = e1.CreateDelegate<Func<object, string>>(out instrs);
 
-            Assert.AreEqual("foo", d1("foo"));
-            Assert.IsTrue(instrs.Contains("castclass"));
+            Assert.Equal("foo", d1("foo"));
+            Assert.True(instrs.Contains("castclass"));
         }
 
-        [TestMethod]
+        [Fact]
         public void SimpleNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(string), new [] { typeof(object) });
@@ -178,9 +179,9 @@ namespace SigilTests
             string instrs;
             var d1 = e1.CreateDelegate<Func<object, string>>(out instrs);
 
-            Assert.AreEqual(null, d1(null));
-            Assert.AreEqual("hello", d1("hello"));
-            Assert.IsTrue(instrs.Contains("castclass"));
+            Assert.Equal(null, d1(null));
+            Assert.Equal("hello", d1("hello"));
+            Assert.True(instrs.Contains("castclass"));
         }
     }
 }

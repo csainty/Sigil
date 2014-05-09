@@ -1,14 +1,14 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class NewObject
     {
         class ThreeClass
@@ -21,7 +21,7 @@ namespace SigilTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void MultiParam()
         {
             var e1 = Emit<Func<string, int, List<double>, string>>.NewDynamicMethod();
@@ -36,7 +36,7 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual("hello @10 ==> 1, 2.5, 5.1", d1("hello", 10, new List<double> { 1.0, 2.5, 5.1 }));
+            Assert.Equal("hello @10 ==> 1, 2.5, 5.1", d1("hello", 10, new List<double> { 1.0, 2.5, 5.1 }));
         }
 
         class Foo
@@ -54,7 +54,7 @@ namespace SigilTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void PrivateConstructor()
         {
             var e1 = Emit<Func<int, string>>.NewDynamicMethod("E1");
@@ -65,7 +65,7 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual("314159", d1(314159));
+            Assert.Equal("314159", d1(314159));
         }
 
         class RT
@@ -78,7 +78,7 @@ namespace SigilTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void ReferenceType()
         {
             var e1 = Emit<Func<RT>>.NewDynamicMethod("E1");
@@ -88,7 +88,7 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual(314159, d1().A);
+            Assert.Equal(314159, d1().A);
         }
 
         struct VT
@@ -102,7 +102,7 @@ namespace SigilTests
         }
 
 
-        [TestMethod]
+        [Fact]
         public void ValueType()
         {
             var e1 = Emit<Func<VT>>.NewDynamicMethod("E1");
@@ -112,7 +112,7 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual(3.1415926, d1().B);
+            Assert.Equal(3.1415926, d1().B);
         }
     }
 }

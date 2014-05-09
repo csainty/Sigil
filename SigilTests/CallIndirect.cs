@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -7,10 +6,11 @@ using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class CallIndirect
     {
         public static string Foo(int i)
@@ -25,7 +25,7 @@ namespace SigilTests
             return ret;
         }
 
-        [TestMethod]
+        [Fact]
         public void Simple()
         {
             var foo = typeof(CallIndirect).GetMethod("Foo");
@@ -38,7 +38,7 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual("BarBarBar", d1());
+            Assert.Equal("BarBarBar", d1());
         }
 
         public class VirtualClass
@@ -49,7 +49,7 @@ namespace SigilTests
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Virtual()
         {
             var toString = typeof(object).GetMethod("ToString");
@@ -63,7 +63,7 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual("I'm Virtual!", d1());
+            Assert.Equal("I'm Virtual!", d1());
         }
     }
 }

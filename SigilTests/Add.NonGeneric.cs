@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil.NonGeneric;
+﻿using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,12 +6,13 @@ using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class Add
     {
-        [TestMethod]
+        [Fact]
         public unsafe void PointerToPointerNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(int*), new[] { typeof(int), typeof(int*) });
@@ -29,10 +29,10 @@ namespace SigilTests
 
             Marshal.FreeHGlobal((IntPtr)ptr1);
 
-            Assert.AreEqual(((int)ptr1) + 4, (int)ptr2);
+            Assert.Equal(((int)ptr1) + 4, (int)ptr2);
         }
 
-        [TestMethod]
+        [Fact]
         public unsafe void ByRefToByRefNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(void), new [] { Type.GetType("System.Int32&"), typeof(int), Type.GetType("System.Int32&") });
@@ -47,10 +47,10 @@ namespace SigilTests
             int a = 2;
             d1(ref a, 4, ref a);
 
-            Assert.AreEqual(2, a);
+            Assert.Equal(2, a);
         }
 
-        [TestMethod]
+        [Fact]
         public void BlogPostNonGeneric()
         {
             {
@@ -63,7 +63,7 @@ namespace SigilTests
 
                 var del = (Func<int>)method.CreateDelegate(typeof(Func<int>));
 
-                Assert.AreEqual(3, del());
+                Assert.Equal(3, del());
             }
 
             {
@@ -78,11 +78,11 @@ namespace SigilTests
                 try
                 {
                     del();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (Exception e)
                 {
-                    Assert.AreEqual("Common Language Runtime detected an invalid program.", e.Message);
+                    Assert.Equal("Common Language Runtime detected an invalid program.", e.Message);
                 }
             }
 
@@ -98,16 +98,16 @@ namespace SigilTests
                     var del = (Func<int>)il.CreateDelegate(typeof(Func<int>));
 
                     del();
-                    Assert.Fail();
+                    Assert.True(false, "Expected exception was not thrown");
                 }
                 catch (Sigil.SigilVerificationException e)
                 {
-                    Assert.AreEqual("Add expects 2 values on the stack", e.Message);
+                    Assert.Equal("Add expects 2 values on the stack", e.Message);
                 }
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void IntIntNonGeneric()
         {
             var il = Emit.NewDynamicMethod(typeof(int), Type.EmptyTypes,"IntInt");
@@ -117,10 +117,10 @@ namespace SigilTests
             il.Return();
 
             var del = (Func<int>)il.CreateDelegate(typeof(Func<int>));
-            Assert.AreEqual(3, del());
+            Assert.Equal(3, del());
         }
 
-        [TestMethod]
+        [Fact]
         public void IntNativeIntNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(int), Type.EmptyTypes, "E1");
@@ -133,10 +133,10 @@ namespace SigilTests
 
             var d1 = (Func<int>)e1.CreateDelegate(typeof(Func<int>));
 
-            Assert.AreEqual(4, d1());
+            Assert.Equal(4, d1());
         }
 
-        [TestMethod]
+        [Fact]
         public void NativeIntIntNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(int), Type.EmptyTypes, "E1");
@@ -149,10 +149,10 @@ namespace SigilTests
 
             var d1 = (Func<int>)e1.CreateDelegate(typeof(Func<int>));
 
-            Assert.AreEqual(4, d1());
+            Assert.Equal(4, d1());
         }
 
-        [TestMethod]
+        [Fact]
         public void NativeIntNativeIntNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(int), Type.EmptyTypes, "E1");
@@ -166,10 +166,10 @@ namespace SigilTests
 
             var d1 = (Func<int>)e1.CreateDelegate(typeof(Func<int>));
 
-            Assert.AreEqual(4, d1());
+            Assert.Equal(4, d1());
         }
 
-        [TestMethod]
+        [Fact]
         public void IntPointerNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(int), new [] { typeof(int) }, "E1");
@@ -185,15 +185,15 @@ namespace SigilTests
             {
                 var x = d1(3);
 
-                Assert.IsTrue(x != 0);
+                Assert.True(x != 0);
             }
             catch
             {
-                Assert.Fail("ShouldBeLegal");
+                Assert.True(false, "ShouldBeLegal");
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void PointerIntNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(int), new [] { typeof(int) }, "E1");
@@ -209,15 +209,15 @@ namespace SigilTests
             {
                 var x = d1(3);
 
-                Assert.IsTrue(x != 0);
+                Assert.True(x != 0);
             }
             catch
             {
-                Assert.Fail("ShouldBeLegal");
+                Assert.True(false, "ShouldBeLegal");
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void PointerNativeIntNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(int), new [] { typeof(int) }, "E1");
@@ -234,15 +234,15 @@ namespace SigilTests
             {
                 var x = d1(3);
 
-                Assert.IsTrue(x != 0);
+                Assert.True(x != 0);
             }
             catch
             {
-                Assert.Fail("ShouldBeLegal");
+                Assert.True(false, "ShouldBeLegal");
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void LongLongNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(long), new [] { typeof(long), typeof(long) }, "E1");
@@ -253,10 +253,10 @@ namespace SigilTests
 
             var d1 = (Func<long, long, long>)e1.CreateDelegate(typeof(Func<long, long, long>));
 
-            Assert.AreEqual(2 * ((long)uint.MaxValue), d1(uint.MaxValue, uint.MaxValue));
+            Assert.Equal(2 * ((long)uint.MaxValue), d1(uint.MaxValue, uint.MaxValue));
         }
 
-        [TestMethod]
+        [Fact]
         public void FloatFloatNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(float), new [] { typeof(float), typeof(float) }, "E1");
@@ -267,10 +267,10 @@ namespace SigilTests
 
             var d1 = (Func<float, float, float>)e1.CreateDelegate(typeof(Func<float, float, float>));
 
-            Assert.AreEqual(3.14f + 1.59f, d1(3.14f, 1.59f));
+            Assert.Equal(3.14f + 1.59f, d1(3.14f, 1.59f));
         }
 
-        [TestMethod]
+        [Fact]
         public void DoubleDoubleNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(double), new [] { typeof(double), typeof(double) }, "E1");
@@ -281,10 +281,10 @@ namespace SigilTests
 
             var d1 = (Func<double, double, double>)e1.CreateDelegate(typeof(Func<double, double, double>));
 
-            Assert.AreEqual(3.14 + 1.59, d1(3.14, 1.59));
+            Assert.Equal(3.14 + 1.59, d1(3.14, 1.59));
         }
 
-        [TestMethod]
+        [Fact]
         public void OverflowNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(double), new [] { typeof(double), typeof(double) }, "E1");
@@ -295,10 +295,10 @@ namespace SigilTests
 
             var d1 = (Func<double, double, double>)e1.CreateDelegate(typeof(Func<double, double, double>));
 
-            Assert.AreEqual(3.14 + 1.59, d1(3.14, 1.59));
+            Assert.Equal(3.14 + 1.59, d1(3.14, 1.59));
         }
 
-        [TestMethod]
+        [Fact]
         public void UnsignedOverflowNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(double), new [] { typeof(double), typeof(double) }, "E1");
@@ -309,7 +309,7 @@ namespace SigilTests
 
             var d1 = (Func<double, double, double>)e1.CreateDelegate(typeof(Func<double, double, double>));
 
-            Assert.AreEqual(3.14 + 1.59, d1(3.14, 1.59));
+            Assert.Equal(3.14 + 1.59, d1(3.14, 1.59));
         }
     }
 }

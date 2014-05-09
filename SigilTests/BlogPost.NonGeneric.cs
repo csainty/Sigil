@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil;
 using Sigil.NonGeneric;
 using System;
@@ -6,12 +6,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class BlogPost
     {
-        [TestMethod]
+        [Fact]
         public void Block1NonGeneric()
         {
             var il = Emit.NewDynamicMethod(typeof(int), Type.EmptyTypes, "AddOneAndTwo");
@@ -24,15 +25,15 @@ namespace SigilTests
                 var del = il.CreateDelegate<Func<int>>();
                 del();
 
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("Add expects 2 values on the stack", e.Message);
+                Assert.Equal("Add expects 2 values on the stack", e.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public void Block2NonGeneric()
         {
             var il = Emit.NewDynamicMethod(typeof(string), new[] { typeof(string), typeof(Func<string, int>) }, "E1");
@@ -56,11 +57,11 @@ namespace SigilTests
 
                 var d1 = il.CreateDelegate<Func<string, Func<string, int>, string>>();
 
-                Assert.Fail();
+                Assert.True(false, "Expected exception was not thrown");
             }
             catch (SigilVerificationException e)
             {
-                Assert.AreEqual("Return expected a System.String; found int", e.Message);
+                Assert.Equal("Return expected a System.String; found int", e.Message);
             }
         }
     }

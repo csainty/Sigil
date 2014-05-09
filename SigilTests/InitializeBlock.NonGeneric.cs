@@ -1,16 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
 using Sigil.NonGeneric;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
     public partial class InitializeBlock
     {
-        [TestMethod]
+        [Fact]
         public void SimpleNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(void), new [] { typeof(byte[]) });
@@ -29,10 +30,10 @@ namespace SigilTests
             var b = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
             d1(b);
 
-            Assert.IsTrue(b.All(x => x == 101));
+            Assert.True(b.All(x => x == 101));
         }
 
-        [TestMethod]
+        [Fact]
         public void VolatileNonGeneric()
         {
             var e1 = Emit.NewDynamicMethod(typeof(void), new [] { typeof(byte[]) });
@@ -51,7 +52,7 @@ namespace SigilTests
             var b = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
             d1(b);
 
-            Assert.IsTrue(b.All(x => x == 101));
+            Assert.True(b.All(x => x == 101));
         }
     }
 }

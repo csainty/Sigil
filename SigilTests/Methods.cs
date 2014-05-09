@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,13 +6,14 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class Methods
     {
-        [TestMethod]
+        [Fact]
         public void Static()
         {
             var asm = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("Foo"), AssemblyBuilderAccess.Run);
@@ -32,10 +32,10 @@ namespace SigilTests
             var del = type.GetMethod("Static");
 
             var res = (string)del.Invoke(null, new object[] { 123 });
-            Assert.AreEqual("123", res);
+            Assert.Equal("123", res);
         }
 
-        [TestMethod]
+        [Fact]
         public void Instance()
         {
             var asm = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("Foo"), AssemblyBuilderAccess.Run);
@@ -57,10 +57,10 @@ namespace SigilTests
             var del = type.GetMethod("Instance");
 
             var res = (string)del.Invoke(inst, new object[] { 123 });
-            Assert.AreEqual("124", res);
+            Assert.Equal("124", res);
         }
 
-        [TestMethod]
+        [Fact]
         public void Recursive()
         {
             var asm = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("Foo"), AssemblyBuilderAccess.Run);
@@ -90,7 +90,7 @@ namespace SigilTests
             string instrs;
             e1.CreateMethod(out instrs);
 
-            Assert.AreEqual("ldarg.0\r\nldc.i4.0\r\nbne.un.s continue\r\nldc.i4.1\r\nret\r\n\r\ncontinue:\r\nldarg.0\r\ndup\r\nldc.i4.m1\r\nadd\r\ncall Recursive\r\nmul\r\nret\r\n", instrs);
+            Assert.Equal("ldarg.0\r\nldc.i4.0\r\nbne.un.s continue\r\nldc.i4.1\r\nret\r\n\r\ncontinue:\r\nldarg.0\r\ndup\r\nldc.i4.m1\r\nadd\r\ncall Recursive\r\nmul\r\nret\r\n", instrs);
 
             var type = t.CreateType();
             var recur = type.GetMethod("Recursive", BindingFlags.Public | BindingFlags.Static);
@@ -101,11 +101,11 @@ namespace SigilTests
             var three = (int)recur.Invoke(null, new object[] { 3 });
             var ten = (int)recur.Invoke(null, new object[] { 10 });
 
-            Assert.AreEqual(1, zero);
-            Assert.AreEqual(1 * 1, one);
-            Assert.AreEqual(2 * 1 * 1, two);
-            Assert.AreEqual(3 * 2 * 1 * 1, three);
-            Assert.AreEqual(10 * 9 * 8 * 7 * 6 * 5 * 4 * 3 * 2 * 1 * 1, ten);
+            Assert.Equal(1, zero);
+            Assert.Equal(1 * 1, one);
+            Assert.Equal(2 * 1 * 1, two);
+            Assert.Equal(3 * 2 * 1 * 1, three);
+            Assert.Equal(10 * 9 * 8 * 7 * 6 * 5 * 4 * 3 * 2 * 1 * 1, ten);
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sigil;
+﻿using Sigil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,13 +6,14 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class LoadElementAddress
     {
-        [TestMethod]
+        [Fact]
         public void Simple()
         {
             var e1 = Emit<Func<int[], int, int>>.NewDynamicMethod("E1");
@@ -26,11 +26,11 @@ namespace SigilTests
             string instrs;
             var d1 = e1.CreateDelegate(out instrs);
 
-            Assert.AreEqual(2, d1(new[] { 1, 2, 3 }, 1));
-            Assert.IsTrue(instrs.Contains("readonly."));
+            Assert.Equal(2, d1(new[] { 1, 2, 3 }, 1));
+            Assert.True(instrs.Contains("readonly."));
         }
 
-        [TestMethod]
+        [Fact]
         public void NotReadonly()
         {
             var e1 = Emit<Action<int[], int>>.NewDynamicMethod("E1");
@@ -50,14 +50,14 @@ namespace SigilTests
             var x = new[] { 1, 2, 3 };
             d1(x, 1);
 
-            Assert.AreEqual(1, x[0]);
-            Assert.AreEqual(3, x[1]);
-            Assert.AreEqual(3, x[2]);
+            Assert.Equal(1, x[0]);
+            Assert.Equal(3, x[1]);
+            Assert.Equal(3, x[2]);
 
-            Assert.IsFalse(instrs.Contains("readonly."));
+            Assert.False(instrs.Contains("readonly."));
         }
 
-        [TestMethod]
+        [Fact]
         public void ReadOnlyCall()
         {
             var toString = typeof(object).GetMethod("ToString");
@@ -73,11 +73,11 @@ namespace SigilTests
             string instrs;
             var d1 = e1.CreateDelegate(out instrs);
 
-            Assert.AreEqual("123", d1(0, new object[] { 123 }));
-            Assert.IsTrue(instrs.Contains("readonly."));
+            Assert.Equal("123", d1(0, new object[] { 123 }));
+            Assert.True(instrs.Contains("readonly."));
         }
 
-        [TestMethod]
+        [Fact]
         public void NotReadOnlyCall()
         {
             var toString = typeof(object).GetMethod("ToString");
@@ -95,8 +95,8 @@ namespace SigilTests
             string instrs;
             var d1 = e1.CreateDelegate(out instrs);
 
-            Assert.AreEqual("123", d1(0, new object[] { 123 }));
-            Assert.IsFalse(instrs.Contains("readonly."));
+            Assert.Equal("123", d1(0, new object[] { 123 }));
+            Assert.False(instrs.Contains("readonly."));
         }
     }
 }

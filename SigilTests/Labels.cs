@@ -1,19 +1,19 @@
 ﻿using System;
 using Sigil;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace SigilTests
 {
-    [TestClass, System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public partial class Labels
     {
-        [TestMethod]
+        [Fact]
         public void Lookup()
         {
             var e1 = Emit<Func<bool, bool>>.NewDynamicMethod();
             var f = e1.DefineLabel("false");
 
-            Assert.IsTrue(f == e1.Labels["false"]);
+            Assert.True(f == e1.Labels["false"]);
 
             e1.LoadArgument(0);
             e1.BranchIfFalse(f);
@@ -26,8 +26,8 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.IsTrue(d1(true));
-            Assert.IsFalse(d1(false));
+            Assert.True(d1(true));
+            Assert.False(d1(false));
         }
     }
 }
