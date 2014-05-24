@@ -22,7 +22,7 @@ namespace SigilTests
 
             try
             {
-                var e4 = Emit<string>.NewDynamicMethod("E4");
+                Emit<string>.NewDynamicMethod("E4");
                 Assert.Fail("Shouldn't be able to emit non-delegate");
             }
             catch (ArgumentException e)

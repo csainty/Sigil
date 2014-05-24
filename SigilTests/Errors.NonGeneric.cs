@@ -16,7 +16,7 @@ namespace SigilTests
             try
             {
                 var emit = Emit.NewDynamicMethod(typeof(void), Type.EmptyTypes);
-                var del = emit.CreateDelegate(typeof(string));
+                emit.CreateDelegate(typeof(string));
 
                 Assert.Fail();
             }
@@ -36,7 +36,7 @@ namespace SigilTests
                 emit.LoadConstant("hello world");
                 emit.Return();
 
-                var del = emit.CreateDelegate(typeof(Func<int>));
+                emit.CreateDelegate(typeof(Func<int>));
 
                 Assert.Fail();
             }
@@ -56,7 +56,7 @@ namespace SigilTests
 
                     emit.Return();
 
-                    var del = emit.CreateDelegate(typeof(Action<int, int>));
+                    emit.CreateDelegate(typeof(Action<int, int>));
 
                     Assert.Fail();
                 }
@@ -73,7 +73,7 @@ namespace SigilTests
 
                     emit.Return();
 
-                    var del = emit.CreateDelegate(typeof(Action<int, int>));
+                    emit.CreateDelegate(typeof(Action<int, int>));
 
                     Assert.Fail();
                 }
