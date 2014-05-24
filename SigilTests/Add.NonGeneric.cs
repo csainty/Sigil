@@ -66,6 +66,7 @@ namespace SigilTests
                 Assert.AreEqual(3, del());
             }
 
+#if !__MonoCS__ // Mono does validation at delegate creation that fails this test
             {
                 var method = new DynamicMethod("AddOneAndTwo", typeof(int), Type.EmptyTypes);
                 var il = method.GetILGenerator();
@@ -85,6 +86,7 @@ namespace SigilTests
                     Assert.AreEqual("Common Language Runtime detected an invalid program.", e.Message);
                 }
             }
+#endif
 
             {
 
