@@ -13,6 +13,7 @@ namespace TestRunner
     {
         static int Main(string[] args)
         {
+            var unattended = args.Contains("/unattended");
             var classes = Assembly.Load(new AssemblyName("SigilTests")).GetTypes().Where(t => t.GetCustomAttribute<TestClassAttribute>() != null).ToList();
 
             bool success = true;
@@ -42,7 +43,7 @@ namespace TestRunner
                         Console.WriteLine();
                         Console.WriteLine(failure.ToString());
 
-                        Console.ReadKey();
+                        if (!unattended) Console.ReadKey();
                     }
                 }
             }
