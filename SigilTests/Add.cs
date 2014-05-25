@@ -40,18 +40,21 @@ namespace SigilTests
         public unsafe void ByRefToByRef()
         {
             var e1 = Emit<ByRefToByRefDelegate>.NewDynamicMethod();
+            e1.LoadArgument(2);
             e1.LoadArgument(1);
             e1.LoadArgument(0);
+            e1.LoadIndirect<int>();
             e1.Add();
-            e1.StoreArgument(2);
+            e1.StoreIndirect<int>();
             e1.Return();
 
             var d1 = e1.CreateDelegate();
 
             int a = 2;
-            d1(ref a, 4, ref a);
+            int c = 0;
+            d1(ref a, 4, ref c);
 
-            Assert.AreEqual(2, a);
+            Assert.AreEqual(6, c);
         }
 
         [TestMethod]
