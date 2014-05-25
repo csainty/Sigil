@@ -296,7 +296,7 @@ namespace SigilTests
         [TestMethod]
         public void Overflow()
         {
-            var e1 = Emit<Func<double, double, double>>.NewDynamicMethod("E1");
+            var e1 = Emit<Func<int, int, int>>.NewDynamicMethod("E1");
             e1.LoadArgument(0);
             e1.LoadArgument(1);
             e1.AddOverflow();
@@ -304,13 +304,20 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual(3.14 + 1.59, d1(3.14, 1.59));
+            try
+            {
+                d1(int.MaxValue, 10);
+                Assert.Fail();
+            }
+            catch (OverflowException)
+            {
+            }
         }
 
         [TestMethod]
         public void UnsignedOverflow()
         {
-            var e1 = Emit<Func<double, double, double>>.NewDynamicMethod("E1");
+            var e1 = Emit<Func<uint, uint, uint>>.NewDynamicMethod("E1");
             e1.LoadArgument(0);
             e1.LoadArgument(1);
             e1.UnsignedAddOverflow();
@@ -318,7 +325,14 @@ namespace SigilTests
 
             var d1 = e1.CreateDelegate();
 
-            Assert.AreEqual(3.14 + 1.59, d1(3.14, 1.59));
+            try
+            {
+                d1(uint.MaxValue, 10);
+                Assert.Fail();
+            }
+            catch (OverflowException)
+            {
+            }
         }
     }
 }
